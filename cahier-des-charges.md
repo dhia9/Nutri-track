@@ -31,7 +31,7 @@ Le projet est limité à une application locale, sans synchronisation en ligne. 
 ## 2. Stack technique
 
 | Composant | Technologie | Rôle |
-|---|---|---|
+| --- | --- | --- |
 | Langage | Python | Logique applicative, algorithmes nutritionnels |
 | Interface graphique | CustomTkinter et Tkinter | UI moderne, widgets natifs |
 | Stockage utilisateur | JSON (un fichier par utilisateur) | Historique des journées, profil, préférences |
