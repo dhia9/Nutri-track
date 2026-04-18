@@ -11,21 +11,19 @@ NUTRITRACK/
 │    │   └── stats_page.py
 │    │
 │    ├── models/                    # Algorithmes et logique
-│    │   ├── nutrition_calc.py
-│    │   ├── threshold_check.py 
-│    │   └── recommender.py   
+│    │   ├── user.py
+│    │   ├── profile.py 
+│    │   └── nutrition.py   
 │    │
 │    ├── controllers/                    
-│    │   ├── nutrition_calc.py
-│    │   ├── threshold_check.py 
-│    │   └── recommender.py  
+│    │   ├── control_home_page.py
+│    │   ├── control_nutrition_page.py
+│    │   └── control_stats_page.py  
 │    │
 │    ├── data/        
 │    │   ├── json/              
-│    │   │    └── aliments.json
-│    │   │   
-│    │   ├── csv/               
-│    │   │    └── history.csv
+│    │   │   ├── aliments.json
+│    │   │   └── profils.json  
 │    │   │   
 │    │   └── data_loader.py     # accès aux fichiers             
 │    │
@@ -45,9 +43,9 @@ NUTRITRACK/
 │   └── test_data/
 │       └── test_data_loader.py
 │
-├── venv/                     # Environnement virtuel Python (non obligatoire)
-├── main.py                   # Point d'entrée (vu principale, lancement de l'app)
-├── .gitignore                # contient venv/
+├── venv/                     
+├── main.py                   
+├── .gitignore                
 ├── cahier-des-charges.md
 ├── Architecture.md            # Ce fichier
 ├── README.md
