@@ -3,152 +3,159 @@
 ```
 NUTRITRACK/
 │
-├── src/ 
-│    │
-│    ├── views/                       # Pages de l'interface (CustomTkinter)
-│    │   ├── home_page.py
-│    │   ├── nutrition_page.py
-│    │   └── stats_page.py
-│    │
-│    ├── models/                    # Algorithmes et logique
-│    │   ├── user.py
-│    │   ├── profile.py 
-│    │   └── nutrition.py   
-│    │
-│    ├── controllers/                    
-│    │   ├── control_home_page.py
-│    │   ├── control_nutrition_page.py
-│    │   └── control_stats_page.py  
-│    │
-│    ├── data/        
-│    │   ├── json/              
-│    │   │   ├── aliments.json
-│    │   │   └── profils.json  
-│    │   │   
-│    │   └── data_loader.py     # accès aux fichiers             
-│    │
-│    └── assets/                   # Ressources statiques
-│        ├── images/
-│        └── fonts/
+├── src/
+│   ├── views/                      # UI (CustomTkinter)
+│   │   ├── base_view.py
+│   │   ├── main_window.py
+│   │   ├── home_page.py
+│   │   ├── nutrition_page.py
+│   │   └── stats_page.py
+│   │
+│   ├── controllers/                # Orchestration / evenements
+│   │   ├── main_controller.py
+│   │   ├── home_controller.py
+│   │   ├── nutrition_controller.py
+│   │   └── stats_controller.py
+│   │
+│   ├── models/                     # Domaine
+│   │   ├── settings.py             # Liste des profils + regles
+│   │   ├── profile.py
+│   │   ├── menu.py
+│   │   ├── food.py
+│   │   ├── food_menu.py
+│   │   ├── macro.py
+│   │   └── macro_type.py
+│   │
+│   ├── data/                       # Acces aux donnees
+│   │   ├── data_loader.py
+│   │   ├── food_data.py
+│   │   └── json/
+│   │       ├── aliments.json
+│   │       └── profils.json
+│   │
+│   ├── utils/
+│   │   └── json_serializable.py
+│   │
+│   └── assets/                     # Ressources statiques
+│       ├── images/
+│       └── fonts/
 │
-├── tests/    
-│   │            
+├── tests/
 │   ├── test_models/
-│   │   ├── test_nutrition_calc.py
-│   │   └── test_threshold_check.py
-│   │
 │   ├── test_controllers/
-│   │   └── test_recommender.py
-│   │
 │   └── test_data/
-│       └── test_data_loader.py
 │
-├── venv/                     
-├── main.py                   
-├── .gitignore                
+├── venv/
+├── main.py
+├── .gitignore
 ├── cahier-des-charges.md
-├── Architecture.md            # Ce fichier
+├── Architecture.md                 # Ce fichier
 ├── README.md
 └── REQUIREMENTS.txt
 ```
 
 ```mermaid
- classDiagram
-    JsonSerializable <|-- Settings
-    Food <|-- FoodMenu
-    JsonSerializable <|-- FoodData
-    ctk <|-- View
-    ctk <|-- Window
-    MainController ..> Profile: current_profile
-    MainController ..> View
+classDiagram
+    direction LR
+
+    class CTkBase {
+        <<external>>
+    }
+
+    CTkBase <|-- Views
+    CTkBase <|-- Window
+
+    MainController ..> Settings: current_profile
+    MainController ..> FoodData
+    MainController ..> DataLoader
+    MainController ..> Views
     MainController ..> Window
-    MainController ..> Utils
-    Menu ..> FoodMenu: content
-    FoodData ..> Food: food_data
-    Profile ..> Menu: eating_habbits
-    Profile <.. Settings: profiles
-    Food ..> Macro: macros
-    Macro ..> MacroType: type
+
+    JsonSerializable <|-- Settings
+    JsonSerializable <|-- FoodData
+
+    Menu *-- FoodMenu: content
+    FoodMenu *-- Food: item
+    Food *-- Macro: macros
+    Macro --> MacroType: type
+    Profile *-- Menu: eating_habits
+    Settings o-- Profile: profiles
+    FoodData o-- Food: food_data
 
     namespace UI {
-        class ctk {
-            instance custom tkinter
-        }
-        class View {
-            +init(self)
-            +attributs ctk
+        class Views {
+            +__init__()
         }
         class Window {
-            +init(self)
-            +attributs ctk
+            +__init__()
+        }
+    }
+
+    namespace Controllers {
+        class MainController {
+            +current_profile: Profile
+            +event_handlers()
+            +__init__()
         }
     }
 
     namespace Models {
         class Settings {
-            +Profile[] profiles
-            +create_profile(self, attributes...)
+            +profiles: Profile[]
+            +create_profile(attributes...)
         }
         class Food {
-            +string: name
-            +Macro[]: macros
-            +init(self, name)
-        }
-        class FoodData {
-            +Food[]: food_data
+            +name: str
+            +macros: Macro[]
+            +__init__(name)
         }
         class FoodMenu {
-            +int: quantity
+            +quantity: int
         }
         class Macro {
-            +MacroType: type
-            +float: value
-            +init(self, type, value)
+            +type: MacroType
+            +value: float
+            +__init__(type, value)
         }
         class Menu {
-            +int: id
+            +id: int
             +date: date
-            +FoodMenu[]: content
+            +content: FoodMenu[]
         }
         class MacroType {
-            +CALORIE
-            +PROTEIN
-            +FAT
-            +CARBOHYDRATE
+            <<enum>>
+            CALORIE
+            PROTEIN
+            FAT
+            CARBOHYDRATE
         }
         class Profile {
-            +str: name
-            +int: age
-            +float: height
-            +float: weight
-            +str: sex
-            +float: target_weight
-            +Menu[]: eating_habbits
-            +init(self, attributes...)
-            +getIMC()
+            +name: str
+            +age: int
+            +height: float
+            +weight: float
+            +sex: str
+            +target_weight: float
+            +eating_habits: Menu[]
+            +__init__(attributes...)
+            +get_imc()
         }
     }
 
-    namespace Controller {
-        class MainController {
-            +Profile: current_profile
-            +Food[]: food_data
-            +event_handlers(self)
-            +init(self)
+    namespace Data {
+        class DataLoader {
+            +load_foods() Food[]
+            +load_profiles() Profile[]
+        }
+        class FoodData {
+            +food_data: Food[]
         }
     }
-    namespace Utilities {
-        class Utils {
-            +load_data() Food[]
-        }
+
+    namespace Utils {
         class JsonSerializable {
-            pas d'attributs
             +serialize(path)
             +deserialize(path)
         }
     }
-
-
-
-
 ```
