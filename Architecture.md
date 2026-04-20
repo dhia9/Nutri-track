@@ -8,12 +8,14 @@ NUTRITRACK/
 │   │   ├── base_view.py
 │   │   ├── main_window.py
 │   │   ├── home_page.py
+│   │   ├── login_page.py
 │   │   ├── nutrition_page.py
 │   │   └── stats_page.py
 │   │
 │   ├── controllers/                # Orchestration / evenements
 │   │   ├── main_controller.py
 │   │   ├── home_controller.py
+│   │   ├── login_controller.py
 │   │   ├── nutrition_controller.py
 │   │   └── stats_controller.py
 │   │
@@ -64,16 +66,13 @@ classDiagram
 
     CTkBase <|-- Views
     CTkBase <|-- Window
-
     MainController ..> Settings: current_profile
     MainController ..> FoodData
     MainController ..> DataLoader
     MainController ..> Views
     MainController ..> Window
-
     JsonSerializable <|-- Settings
     JsonSerializable <|-- FoodData
-
     Menu *-- FoodMenu: content
     FoodMenu *-- Food: item
     Food *-- Macro: macros
