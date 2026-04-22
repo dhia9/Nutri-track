@@ -1,4 +1,5 @@
-# Architecture
+Yanis Belaid, Marouan El-Hamdeoui, Nolan Mahadali, Léo Peyronnet, Dhia Somai
+# Architecture - Projet Nutritrack
 
 ## Vue d'ensemble
 
@@ -149,6 +150,8 @@ classDiagram
         }
     }
 ```
+
+_[Voir sur GitLab](https://gitlab.insa-lyon.fr/melhamdeou/nutritrack/-/blob/main/Architecture.md?ref_type=heads)_
 
 L'interface utilisateur repose sur des classes `Views` et `Window`, qui héritent d'une classe externe (`CTkBase`) issue
 de CustomTkinter. Bien que le diagramme ne montre qu'une seule vue et un seul contrôleur pour des raisons de lisibilité,
