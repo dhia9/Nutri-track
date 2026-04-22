@@ -31,13 +31,15 @@ class BaseView(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
 
         self.nav_buttons = {}
-        
+
         self._create_sidebar()
         self._create_page_container()
         self.current_page = None
-        self.set_existing_pages({
-            "Accueil": HomeView(self.pages_container),
-        })
+        self.set_existing_pages(
+            {
+                "Accueil": HomeView(self.pages_container),
+            }
+        )
         self.show_page("Accueil")
 
     def _create_sidebar(self):
@@ -125,7 +127,9 @@ class BaseView(ctk.CTk):
         self.pages_container.grid_rowconfigure(0, weight=1)
 
         # Vue placeholder tant qu'aucune page n'est injectée par le contrôleur
-        self.placeholder = ctk.CTkFrame(self.pages_container, fg_color=self.COLOR_CONTENT)
+        self.placeholder = ctk.CTkFrame(
+            self.pages_container, fg_color=self.COLOR_CONTENT
+        )
         self.placeholder.grid(row=0, column=0, sticky="nsew")
         self.placeholder.grid_columnconfigure(0, weight=1)
         self.placeholder.grid_rowconfigure(0, weight=1)
