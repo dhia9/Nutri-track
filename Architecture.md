@@ -1,5 +1,4 @@
 Yanis Belaid, Marouan El-Hamdeoui, Nolan Mahadali, Léo Peyronnet, Dhia Somai
-
 # Architecture - Projet Nutritrack
 
 ## Vue d'ensemble
@@ -49,7 +48,108 @@ NUTRITRACK/
 
 ## Schéma de classes
 
-![.gitlab/images/schema.svg](.gitlab/images/schema.svg)
+```mermaid
+classDiagram
+    direction LR
+
+    class CTkBase {
+        <<external>>
+    }
+
+    CTkBase <|-- Views
+    CTkBase <|-- Window
+    MainController ..> Settings: current_profile
+    MainController ..> FoodData
+    MainController ..> DataLoader
+    MainController ..> Views
+    MainController ..> Window
+    JsonSerializable <|-- Settings
+    JsonSerializable <|-- FoodData
+    Menu *-- FoodMenu: content
+    FoodMenu *-- Food: item
+    Food *-- Macro: macros
+    Macro --> MacroType: type
+    Profile *-- Menu: eating_habits
+    Settings o-- Profile: profiles
+    FoodData o-- Food: food_data
+
+    namespace UI {
+        class Views {
+            +__init__()
+        }
+        class Window {
+            +__init__()
+        }
+    }
+
+    namespace Controllers {
+        class MainController {
+            +current_profile: Profile
+            +event_handlers()
+            +__init__()
+        }
+    }
+
+    namespace Models {
+        class Settings {
+            +profiles: Profile[]
+            +create_profile(attributes...)
+        }
+        class Food {
+            +name: str
+            +macros: Macro[]
+            +__init__(name)
+        }
+        class FoodMenu {
+            +quantity: int
+        }
+        class Macro {
+            +type: MacroType
+            +value: float
+            +__init__(type, value)
+        }
+        class Menu {
+            +id: int
+            +date: date
+            +content: FoodMenu[]
+        }
+        class MacroType {
+            <<enum>>
+            CALORIE
+            PROTEIN
+            FAT
+            CARBOHYDRATE
+        }
+        class Profile {
+            +name: str
+            +age: int
+            +height: float
+            +weight: float
+            +sex: str
+            +target_weight: float
+            +eating_habits: Menu[]
+            +__init__(attributes...)
+            +get_imc()
+        }
+    }
+
+    namespace Data {
+        class DataLoader {
+            +load_foods() Food[]
+            +load_profiles() Profile[]
+        }
+        class FoodData {
+            +food_data: Food[]
+        }
+    }
+
+    namespace Utils {
+        class JsonSerializable {
+            +serialize(path)
+            +deserialize(path)
+        }
+    }
+```
 
 L'interface utilisateur repose sur des classes `Views` et `Window`, qui héritent d'une classe externe (`CTkBase`) issue
 de CustomTkinter. Bien que le diagramme ne montre qu'une seule vue et un seul contrôleur pour des raisons de lisibilité,
