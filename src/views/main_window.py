@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from home_page import HomeView
 
 
 class BaseView(ctk.CTk):
@@ -29,12 +30,15 @@ class BaseView(ctk.CTk):
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
 
-        self.pages = {}
-        self.current_page = None
         self.nav_buttons = {}
-
+        
         self._create_sidebar()
         self._create_page_container()
+        self.current_page = None
+        self.set_existing_pages({
+            "Accueil": HomeView(self.pages_container),
+        })
+        self.show_page("Accueil")
 
     def _create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
@@ -140,14 +144,21 @@ class BaseView(ctk.CTk):
             text_color=self.COLOR_TEXT_SECONDARY,
         ).grid(row=1, column=0)
 
-    def add_page(self, name, page_widget):
-        """Ajoute une page à l'application."""
+    def set_existing_pages(self, pages):
+        """Enregistre des pages deja creees pour la navigation.
+
+        Args:
+            pages: dictionnaire {"NomPage": widget_page}
+        """
+        self.pages = {}
+
         if hasattr(self, "placeholder") and self.placeholder.winfo_exists():
             self.placeholder.grid_remove()
 
-        page_widget.grid(row=0, column=0, sticky="nsew")
-        page_widget.grid_remove()
-        self.pages[name] = page_widget
+        for name, page_widget in pages.items():
+            page_widget.grid(row=0, column=0, sticky="nsew")
+            page_widget.grid_remove()
+            self.pages[name] = page_widget
 
     def show_page(self, page_name):
         """Affiche une page spécifique."""
@@ -173,11 +184,6 @@ class BaseView(ctk.CTk):
 
         self.pages[page_name].grid()
         self.current_page = page_name
-
-    def hide_page(self, page_name):
-        """Cache une page spécifique."""
-        if page_name in self.pages:
-            self.pages[page_name].grid_remove()
 
 
 if __name__ == "__main__":
