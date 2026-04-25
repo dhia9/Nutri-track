@@ -1,6 +1,5 @@
 import macro_type
 
-
 class Macro :
     def __init__(self, type , masse) :
         self.macrotype = type
