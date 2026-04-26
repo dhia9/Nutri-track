@@ -1,7 +1,7 @@
+from enum import Enum 
 
-class Macro_type :
-    def __init__(self , proteine , calorie , fat , carbohydrate):
-        self.proteine = proteine
-        self.calorie = calorie
-        self.fat = fat
-        self.carbohydrate = carbohydrate
+class MacroType(Enum):
+    CALORIE = 1
+    PROTEIN = 2
+    FAT = 3
+    CARBOHYDRATE = 4

@@ -1,23 +1,27 @@
-from macro_type import Macro_type
 
-class Macro(Macro_type) :
-    def __init__(self, masse : float, proteine : float, calorie : float, fat : float, carbohydrate : float) :
-        super().__init__(proteine, calorie, fat, carbohydrate)
-        self.masse = masse
-        self.proteine = self.proteine * (masse / 100)
-        self.calorie = self.calorie * (masse / 100)
-        self.fat = self.fat * (masse / 100)
-        self.carbohydrate = self.carbohydrate * (masse / 100)
 
-    
-        if masse < 0 :
+class Macro:
+    def __init__(self, masse: float, proteine: float, calorie: float, fat: float, carbohydrate: float):
+        
+        if masse < 0:
             raise ValueError("La masse doit être positive")
 
-    def __str__(self) :
-        return f"Il y a l'aliment = {self.macrotype}, qui pèse = {self.masse} grammes"
-    
+        self.masse = masse  
+        facteur = masse / 100
 
+        self.proteine = proteine * facteur
+        self.calorie = calorie * facteur
+        self.fat = fat * facteur
+        self.carbohydrate = carbohydrate * facteur
 
+    def __str__(self):
+        return (
+            f"Pour {self.masse}g : "
+            f"Protéines = {self.proteine}g, "
+            f"Calories = {self.calorie}kcal, "
+            f"Lipides = {self.fat}g, "
+            f"Glucides = {self.carbohydrate}g"
+        )
 
 
     
