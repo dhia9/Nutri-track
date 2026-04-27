@@ -1,10 +1,6 @@
 Yanis Belaid, Marouan El-Hamdeoui, Nolan Mahadali, Léo Peyronnet, Dhia Somai
+
 # Architecture - Projet Nutritrack
-
-## Vue d'ensemble
-
-Le projet Nutritrack est structuré selon une architecture MVC (Model-View-Controller) pour assurer une séparation claire
-des responsabilités et faciliter la maintenance. Voici une description détaillée de l'architecture proposée :
 
 ## Vue d'ensemble
 
