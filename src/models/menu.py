@@ -6,5 +6,5 @@ class Menu:
         self.date = date
         self.content = []
 
-    def add_food_menu(self, food_menu,quantity):
-        self.content.append(food_menu(quantity))
+    def add_food_menu(self, food,quantity):
+        self.content.append(FoodMenu(food, quantity))
