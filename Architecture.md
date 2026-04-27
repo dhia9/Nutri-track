@@ -1,5 +1,4 @@
 Yanis Belaid, Marouan El-Hamdeoui, Nolan Mahadali, Léo Peyronnet, Dhia Somai
-
 # Architecture - Projet Nutritrack
 
 ## Vue d'ensemble
