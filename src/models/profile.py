@@ -1,7 +1,7 @@
-from menu import Menu
+from src.models.model import Model
 
 
-class Profile:
+class Profile(Model):
     def __init__(self, name, age, weight, height, sex, target_weight):
         self.name = name
         self.age = age
