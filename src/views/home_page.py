@@ -80,8 +80,24 @@ class HomeView(ctk.CTkFrame):
 
         self.objectif= ctk.CTkLabel(frame_carre_noir, text="Objectif physique")
         self.objectif.grid(row=9,column=0,sticky="w",padx=20, pady=(0,10))
-        self.objectif=ctk.CTkOptionMenu(frame_carre_noir, values=["Perte de poids", "Maintien du poids", "Prise de poids"])
-        self.objectif.grid(row=10,column=0,sticky="w",padx=20, pady=(0,10))
+        
+        self.objectif_var = ctk.StringVar()
+        
+        vcmd = (self.register(self._validate_float), '%S')
+        self.objectif_Entry = ctk.CTkEntry(
+            frame_carre_noir,
+            textvariable=self.objectif_var,
+            placeholder_text="Objectif de Poids",
+            validate='key',
+            validatecommand=vcmd
+        )
+        self.objectif_Entry.grid(row=10,column=0,sticky="w",padx=20, pady=(0,10))
 
         self.boutton_valider= ctk.CTkButton(frame_carre_noir, text="Créer le profil")
         self.boutton_valider.grid(row=11,column=2,sticky="w",padx=20, pady=(10,20))
+
+    def _validate_float(self, char):
+        """Accepte uniquement les chiffres et virgule/point à la saisie"""
+        if char == '':  
+            return True
+        return char.isdigit() or char in ',.'
