@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from src.views.home_page import HomeView
 import src.controllers.main_controller as main_controller
+import tests.test_views.nutrition_page as nutrition_page
 
 
 class BaseView(ctk.CTk):
@@ -43,6 +44,7 @@ class BaseView(ctk.CTk):
         self.controller.set_existing_pages(
             {
                 "Accueil": HomeView(self.pages_container, controller=None),
+                "Nutrition": nutrition_page.NutritionView(self.pages_container, controller=None),
             }
         )
         self.controller.show_page("Accueil")
@@ -134,7 +136,7 @@ class BaseView(ctk.CTk):
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)
     
-    def show_page(self, page_name):
+    def show_page(self, page_name): # Permet de changer de page et d'afficher la page d'accueil par défaut
         self.controller.show_page(page_name)
 
 
