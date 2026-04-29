@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .home_page import HomeView
+from src.views.home_page import HomeView
 import src.controllers.main_controller as main_controller
 
 
@@ -18,6 +18,9 @@ class BaseView(ctk.CTk):
     def __init__(self, controller : main_controller.MainController = None):
         super().__init__()
         self.controller = controller
+        # Configurer la view du contrôleur AVANT d'utiliser ses méthodes
+        self.controller.view = self
+        
         self.title("Nutritrack")
         self.geometry("1280x760")
         self.minsize(960, 560)
@@ -39,7 +42,7 @@ class BaseView(ctk.CTk):
         # Déléguer la gestion des pages au contrôleur
         self.controller.set_existing_pages(
             {
-                "Accueil": HomeView(self.pages_container, controller=controller.home_controller),
+                "Accueil": HomeView(self.pages_container, controller=None),
             }
         )
         self.controller.show_page("Accueil")
@@ -127,28 +130,6 @@ class BaseView(ctk.CTk):
         self.pages_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
-
-        # Vue placeholder tant qu'aucune page n'est injectée par le contrôleur
-        self.placeholder = ctk.CTkFrame(
-            self.pages_container, fg_color=self.COLOR_CONTENT
-        )
-        self.placeholder.grid(row=0, column=0, sticky="nsew")
-        self.placeholder.grid_columnconfigure(0, weight=1)
-        self.placeholder.grid_rowconfigure(0, weight=1)
-
-        ctk.CTkLabel(
-            self.placeholder,
-            text="Zone de contenu",
-            font=ctk.CTkFont(size=28, weight="bold"),
-            text_color=self.COLOR_TEXT,
-        ).grid(row=0, column=0, pady=(0, 12))
-
-        ctk.CTkLabel(
-            self.placeholder,
-            text="Les autres pages s'afficheront ici.",
-            font=ctk.CTkFont(size=14),
-            text_color=self.COLOR_TEXT_SECONDARY,
-        ).grid(row=1, column=0)
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)
