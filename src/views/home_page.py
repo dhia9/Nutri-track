@@ -6,6 +6,10 @@ class HomeView(ctk.CTkFrame):
         super().__init__(parent)
         self.controller = controller
         
+        for i in range(10):
+            self.grid_columnconfigure(i, weight=1)
+            self.grid_rowconfigure(i, weight=1)
+        
 
         self.titre = ctk.CTkLabel(
             self,
@@ -37,55 +41,59 @@ class HomeView(ctk.CTkFrame):
         )
         self.label4.grid(row=4, column=0, columnspan=3, sticky="w", padx=20, pady=(300, 10))
 
+        
+        
+        
+        
+        self.frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_carre_noir.grid(row=5, rowspan=5, column=0, columnspan=10, padx=20, sticky="ew")
+        
+        for i in range(10):
+            self.frame_carre_noir.grid_columnconfigure(i, weight=1)
+            self.frame_carre_noir.grid_rowconfigure(i, weight=1)
 
-        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
-        frame_carre_noir.grid(row=5, rowspan=5, column=0, columnspan=3, padx=20, sticky="ew")
 
-
-
-
-
-        self.nom= ctk.CTkLabel(frame_carre_noir, text="Prénom et nom")
+        self.nom= ctk.CTkLabel(self.frame_carre_noir, text="Prénom et nom")
         self.nom.grid(row=5,column=0,sticky="w",padx=20, pady=(0,10))
-        self.nom2= ctk.CTkEntry(frame_carre_noir)
-        self.nom2.grid(row=6,column=0,columnspan= 3 ,sticky="w",padx=20)
+        self.nom2= ctk.CTkEntry(self.frame_carre_noir)
+        self.nom2.grid(row=6,column=0,columnspan=8,sticky="ew",padx=20)
 
-        self.age= ctk.CTkLabel(frame_carre_noir, text="Âge")
-        self.age.grid(row=5,column=1,sticky="w",padx=20, pady=(0,10))
-        self.age2= ctk.CTkEntry(frame_carre_noir)
-        self.age2.grid(row=6,column=1,sticky="w",padx=20)
+        self.age= ctk.CTkLabel(self.frame_carre_noir, text="Âge")
+        self.age.grid(row=5,column=9,sticky="w",padx=20, pady=(0,10))
+        self.age2= ctk.CTkEntry(self.frame_carre_noir)
+        self.age2.grid(row=6,column=9,sticky="w",padx=20)
 
-        self.taille= ctk.CTkLabel(frame_carre_noir, text="Taille (cm)")
+        self.taille= ctk.CTkLabel(self.frame_carre_noir, text="Taille (cm)")
         self.taille.grid(row=7,column=0,sticky="w",padx=20, pady=(0,10))
-        self.taille2= ctk.CTkEntry(frame_carre_noir)
+        self.taille2= ctk.CTkEntry(self.frame_carre_noir)
         self.taille2.grid(row=8,column=0,sticky="w",padx=20)
 
-        self.poids= ctk.CTkLabel(frame_carre_noir, text="Poids (kg)")
+        self.poids= ctk.CTkLabel(self.frame_carre_noir, text="Poids (kg)")
         self.poids.grid(row=7,column=1,sticky="w",padx=20, pady=(0,10))
-        self.poids2= ctk.CTkEntry(frame_carre_noir)
+        self.poids2= ctk.CTkEntry(self.frame_carre_noir)
         self.poids2.grid(row=8,column=1,sticky="w",padx=20)
 
-        self.sexe= ctk.CTkLabel(frame_carre_noir, text="Sexe")
+        self.sexe= ctk.CTkLabel(self.frame_carre_noir, text="Sexe")
         self.sexe.grid(row=7,column=2,sticky="w",padx=20, pady=(0,10))
 
         self.sexe_var = ctk.StringVar(value="Homme") 
 
-        self.boutton_sexe1= ctk.CTkRadioButton(frame_carre_noir,text="Homme",variable=self.sexe_var,value="Homme")
+        self.boutton_sexe1= ctk.CTkRadioButton(self.frame_carre_noir,text="Homme",variable=self.sexe_var,value="Homme")
         self.boutton_sexe1.grid(row=8,column=2,sticky="w",padx=20)
 
-        self.boutton_sexe2= ctk.CTkRadioButton(frame_carre_noir,text="Femme",variable=self.sexe_var,value="Femme")
+        self.boutton_sexe2= ctk.CTkRadioButton(self.frame_carre_noir,text="Femme",variable=self.sexe_var,value="Femme")
         self.boutton_sexe2.grid(row=8,column=2,sticky="w",padx=120)
 
 
 
-        self.objectif= ctk.CTkLabel(frame_carre_noir, text="Objectif poids (kg)")
+        self.objectif= ctk.CTkLabel(self.frame_carre_noir, text="Objectif poids (kg)")
         self.objectif.grid(row=9,column=0,sticky="w",padx=20, pady=(0,10))
         
         self.objectif_var = ctk.StringVar()
         
         vcmd = (self.register(self._validate_float), '%S')
         self.objectif_Entry = ctk.CTkEntry(
-            frame_carre_noir,
+            self.frame_carre_noir,
             textvariable=self.objectif_var,
             placeholder_text="Objectif de Poids",
             validate='key',
@@ -93,7 +101,7 @@ class HomeView(ctk.CTkFrame):
         )
         self.objectif_Entry.grid(row=10,column=0,sticky="w",padx=20, pady=(0,10))
 
-        self.boutton_valider= ctk.CTkButton(frame_carre_noir, text="Créer le profil")
+        self.boutton_valider= ctk.CTkButton(self.frame_carre_noir, text="Créer le profil")
         self.boutton_valider.grid(row=11,column=2,sticky="w",padx=20, pady=(10,20))
 
     def _validate_float(self, char):

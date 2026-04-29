@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from home_page import HomeView
+from nutrition_page import NutritionView
 
 
 class BaseView(ctk.CTk):
@@ -37,7 +38,8 @@ class BaseView(ctk.CTk):
         self.current_page = None
         self.set_existing_pages(
             {
-                "Accueil": HomeView(self.pages_container),
+                "Accueil": HomeView(self.pages_container, controller=self),
+                "Nutrition": NutritionView(self.pages_container, controller=self),
             }
         )
         self.show_page("Accueil")
