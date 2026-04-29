@@ -1,0 +1,33 @@
+{
+  "profiles": [
+    {
+      "name": "Alice",
+      "age": 30,
+      "weight": 62.5,
+      "height": 1.68,
+      "sex": "F",
+      "target_weight": 60.0,
+      "eating_habits": [
+        {
+          "id": 1,
+          "date": "2026-04-28",
+          "content": [
+            {
+              "name": "Yogurt",
+              "quantity": 2,
+              "macros": [
+                {
+                  "masse": 100,
+                  "proteine": 5,
+                  "calorie": 60,
+                  "fat": 1,
+                  "carbohydrate": 8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

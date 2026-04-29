@@ -14,6 +14,9 @@ class Settings(JsonSerializable):
     def create_profile(self, name, age, height, weight, sex, target_weight):
         new_profile = Profile(name, age, weight, height, sex, target_weight)
         self.profiles.append(new_profile)
+        self.serialize(
+            "./src/data/settings.json"
+        )  # Sauvegarder le profil après sa création
 
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):

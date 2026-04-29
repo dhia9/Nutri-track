@@ -1,10 +1,10 @@
 import customtkinter as ctk
-from src.views.home_page import HomeView
 import src.controllers.main_controller as main_controller
-import tests.test_views.nutrition_page as nutrition_page
+import src.views.home_page as home_page
+import tests.test_views.nutrition_page as nutrition_page # juste un test pour vérifier la navigation, à remplacer par la vrai page
 
 
-class BaseView(ctk.CTk):
+class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
 
     COLOR_BG = "#121212"
@@ -16,12 +16,12 @@ class BaseView(ctk.CTk):
     COLOR_TEXT = "#F1F1F1"
     COLOR_TEXT_SECONDARY = "#A8AFB6"
 
-    def __init__(self, controller : main_controller.MainController = None):
+    def __init__(self, controller: main_controller.MainController = None):
         super().__init__()
         self.controller = controller
         # Configurer la view du contrôleur AVANT d'utiliser ses méthodes
         self.controller.view = self
-        
+
         self.title("Nutritrack")
         self.geometry("1280x760")
         self.minsize(960, 560)
@@ -43,8 +43,12 @@ class BaseView(ctk.CTk):
         # Déléguer la gestion des pages au contrôleur
         self.controller.set_existing_pages(
             {
-                "Accueil": HomeView(self.pages_container, controller=None),
-                "Nutrition": nutrition_page.NutritionView(self.pages_container, controller=None),
+                "Accueil": home_page.HomePage(
+                    self.pages_container, main_controller=self.controller
+                ),
+                "Nutrition": nutrition_page.NutritionPage(
+                    self.pages_container, controller=self.controller
+                ),
             }
         )
         self.controller.show_page("Accueil")
@@ -135,12 +139,14 @@ class BaseView(ctk.CTk):
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)
-    
-    def show_page(self, page_name): # Permet de changer de page et d'afficher la page d'accueil par défaut
+
+    def show_page(
+        self, page_name
+    ):  # Permet de changer de page et d'afficher la page d'accueil par défaut
         self.controller.show_page(page_name)
 
 
 if __name__ == "__main__":
     controller = main_controller.MainController()
-    app = BaseView(controller=controller)
+    app = MainPage(controller=controller)
     app.mainloop()
