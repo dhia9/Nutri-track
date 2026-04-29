@@ -12,7 +12,7 @@ class HomeView(ctk.CTkFrame):
             text="Bienvenue sur NutriTrack",
             font=ctk.CTkFont(size=26, weight="bold"),
         )
-        self.titre.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=10)
+        self.titre.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(10,0))
 
         self.profil = ctk.CTkLabel(
             self,
