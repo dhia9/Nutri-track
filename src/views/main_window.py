@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from home_page import HomeView
+from .home_page import HomeView
+import src.controllers.main_controller as main_controller
 
 
 class BaseView(ctk.CTk):
@@ -14,8 +15,9 @@ class BaseView(ctk.CTk):
     COLOR_TEXT = "#F1F1F1"
     COLOR_TEXT_SECONDARY = "#A8AFB6"
 
-    def __init__(self):
+    def __init__(self, controller : main_controller.MainController = None):
         super().__init__()
+        self.controller = controller
         self.title("Nutritrack")
         self.geometry("1280x760")
         self.minsize(960, 560)
@@ -34,13 +36,13 @@ class BaseView(ctk.CTk):
 
         self._create_sidebar()
         self._create_page_container()
-        self.current_page = None
-        self.set_existing_pages(
+        # Déléguer la gestion des pages au contrôleur
+        self.controller.set_existing_pages(
             {
-                "Accueil": HomeView(self.pages_container),
+                "Accueil": HomeView(self.pages_container, controller=controller.home_controller),
             }
         )
-        self.show_page("Accueil")
+        self.controller.show_page("Accueil")
 
     def _create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
@@ -110,7 +112,7 @@ class BaseView(ctk.CTk):
             border_color=self.COLOR_BUTTON,
             corner_radius=10,
             height=42,
-            command=lambda: self.show_page(page_name),
+            command=lambda: self.controller.show_page(page_name),
             anchor="w",
         )
         return btn
@@ -149,47 +151,13 @@ class BaseView(ctk.CTk):
         ).grid(row=1, column=0)
 
     def set_existing_pages(self, pages):
-        """Enregistre des pages deja creees pour la navigation.
-
-        Args:
-            pages: dictionnaire {"NomPage": widget_page}
-        """
-        self.pages = {}
-
-        if hasattr(self, "placeholder") and self.placeholder.winfo_exists():
-            self.placeholder.grid_remove()
-
-        for name, page_widget in pages.items():
-            page_widget.grid(row=0, column=0, sticky="nsew")
-            page_widget.grid_remove()
-            self.pages[name] = page_widget
-
+        self.controller.set_existing_pages(pages)
+    
     def show_page(self, page_name):
-        """Affiche une page spécifique."""
-        if page_name not in self.pages:
-            return
-
-        if self.current_page and self.current_page in self.pages:
-            self.pages[self.current_page].grid_remove()
-
-        for name, btn in self.nav_buttons.items():
-            if name == page_name:
-                btn.configure(
-                    fg_color=self.COLOR_ACCENT,
-                    text_color="#0D281C",
-                    border_color=self.COLOR_ACCENT,
-                )
-            else:
-                btn.configure(
-                    fg_color=self.COLOR_BUTTON,
-                    text_color=self.COLOR_TEXT,
-                    border_color=self.COLOR_BUTTON,
-                )
-
-        self.pages[page_name].grid()
-        self.current_page = page_name
+        self.controller.show_page(page_name)
 
 
 if __name__ == "__main__":
-    app = BaseView()
+    controller = main_controller.MainController()
+    app = BaseView(controller=controller)
     app.mainloop()

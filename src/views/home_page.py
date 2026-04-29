@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import src.controllers.home_controller as home_controller
 
 
 class HomeView(ctk.CTkFrame):
