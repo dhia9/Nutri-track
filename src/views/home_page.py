@@ -12,7 +12,7 @@ class HomeView(ctk.CTkFrame):
             text="Bienvenue sur NutriTrack",
             font=ctk.CTkFont(size=26, weight="bold"),
         )
-        self.titre.grid(row=0, column=0, columnspan=3, sticky="w", padx=20)
+        self.titre.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=10)
 
         self.profil = ctk.CTkLabel(
             self,
@@ -20,7 +20,7 @@ class HomeView(ctk.CTkFrame):
             font=ctk.CTkFont(size=13),
             text_color="#A8AFB6",
         )
-        self.profil.grid(row=1, column=0, columnspan=3, sticky="w", padx=20, pady=(20, 10))
+        self.profil.grid(row=1, column=0, columnspan=3, sticky="w", padx=20)
 
         self.label3 = ctk.CTkLabel(
             self,
@@ -38,7 +38,7 @@ class HomeView(ctk.CTkFrame):
         self.label4.grid(row=4, column=0, columnspan=3, sticky="w", padx=20, pady=(300, 10))
 
 
-        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#2A2D30")
+        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         frame_carre_noir.grid(row=5, rowspan=5, column=0, columnspan=3, padx=20, sticky="ew")
 
 
