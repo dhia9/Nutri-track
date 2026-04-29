@@ -38,50 +38,50 @@ class HomeView(ctk.CTkFrame):
         self.label4.grid(row=4, column=0, columnspan=3, sticky="w", padx=20, pady=(300, 10))
 
 
-        frame_carre_bleu = ctk.CTkFrame(self, corner_radius=15, fg_color="#1E293B")
-        frame_carre_bleu.grid(row=5, rowspan=5, column=0, columnspan=3, padx=20, sticky="ew")
+        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#2A2D30")
+        frame_carre_noir.grid(row=5, rowspan=5, column=0, columnspan=3, padx=20, sticky="ew")
 
 
 
 
 
-        self.nom= ctk.CTkLabel(frame_carre_bleu, text="Prénom et nom")
+        self.nom= ctk.CTkLabel(frame_carre_noir, text="Prénom et nom")
         self.nom.grid(row=5,column=0,sticky="w",padx=20, pady=(0,10))
-        self.nom2= ctk.CTkEntry(frame_carre_bleu)
+        self.nom2= ctk.CTkEntry(frame_carre_noir)
         self.nom2.grid(row=6,column=0,columnspan= 3 ,sticky="w",padx=20)
 
-        self.age= ctk.CTkLabel(frame_carre_bleu, text="Âge")
+        self.age= ctk.CTkLabel(frame_carre_noir, text="Âge")
         self.age.grid(row=5,column=1,sticky="w",padx=20, pady=(0,10))
-        self.age2= ctk.CTkEntry(frame_carre_bleu)
+        self.age2= ctk.CTkEntry(frame_carre_noir)
         self.age2.grid(row=6,column=1,sticky="w",padx=20)
 
-        self.taille= ctk.CTkLabel(frame_carre_bleu, text="Taille (cm)")
+        self.taille= ctk.CTkLabel(frame_carre_noir, text="Taille (cm)")
         self.taille.grid(row=7,column=0,sticky="w",padx=20, pady=(0,10))
-        self.taille2= ctk.CTkEntry(frame_carre_bleu)
+        self.taille2= ctk.CTkEntry(frame_carre_noir)
         self.taille2.grid(row=8,column=0,sticky="w",padx=20)
 
-        self.poids= ctk.CTkLabel(frame_carre_bleu, text="Poids (kg)")
+        self.poids= ctk.CTkLabel(frame_carre_noir, text="Poids (kg)")
         self.poids.grid(row=7,column=1,sticky="w",padx=20, pady=(0,10))
-        self.poids2= ctk.CTkEntry(frame_carre_bleu)
+        self.poids2= ctk.CTkEntry(frame_carre_noir)
         self.poids2.grid(row=8,column=1,sticky="w",padx=20)
 
-        self.sexe= ctk.CTkLabel(frame_carre_bleu, text="Sexe")
+        self.sexe= ctk.CTkLabel(frame_carre_noir, text="Sexe")
         self.sexe.grid(row=7,column=2,sticky="w",padx=20, pady=(0,10))
 
         self.sexe_var = ctk.StringVar(value="Homme") 
 
-        self.boutton_sexe1= ctk.CTkRadioButton(frame_carre_bleu,text="Homme",variable=self.sexe_var,value="Homme")
+        self.boutton_sexe1= ctk.CTkRadioButton(frame_carre_noir,text="Homme",variable=self.sexe_var,value="Homme")
         self.boutton_sexe1.grid(row=8,column=2,sticky="w",padx=20)
 
-        self.boutton_sexe2= ctk.CTkRadioButton(frame_carre_bleu,text="Femme",variable=self.sexe_var,value="Femme")
+        self.boutton_sexe2= ctk.CTkRadioButton(frame_carre_noir,text="Femme",variable=self.sexe_var,value="Femme")
         self.boutton_sexe2.grid(row=8,column=2,sticky="w",padx=120)
 
 
 
-        self.objectif= ctk.CTkLabel(frame_carre_bleu, text="Objectif physique")
+        self.objectif= ctk.CTkLabel(frame_carre_noir, text="Objectif physique")
         self.objectif.grid(row=9,column=0,sticky="w",padx=20, pady=(0,10))
-        self.objectif=ctk.CTkOptionMenu(frame_carre_bleu, values=["Perte de poids", "Maintien du poids", "Prise de poids"])
+        self.objectif=ctk.CTkOptionMenu(frame_carre_noir, values=["Perte de poids", "Maintien du poids", "Prise de poids"])
         self.objectif.grid(row=10,column=0,sticky="w",padx=20, pady=(0,10))
 
-        self.boutton_valider= ctk.CTkButton(frame_carre_bleu, text="Créer le profil")
+        self.boutton_valider= ctk.CTkButton(frame_carre_noir, text="Créer le profil")
         self.boutton_valider.grid(row=11,column=2,sticky="w",padx=20, pady=(10,20))
