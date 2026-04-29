@@ -9,7 +9,12 @@ class JsonSerializable(Model):
     Tous les attributs publics d'instance sont sérialisés.
     """
 
-    def serialize(self, path: str, *, indent: int = 2) -> None:
-        """Écrit cet objet en JSON dans *path*."""
+    def serialize(self, path: str, indent: int = 2) -> None:
+        """
+        Sérialise la classe en JSON et stocke le fichier dans le chemin spécifié.
+        :param path: Chemin où stocker le fichier JSON
+        :param indent: Indentation du fichier JSON (2 par défaut)
+        :return: None
+        """
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(self.to_dict(), fh, indent=indent)
