@@ -107,9 +107,13 @@ class HomePage(ctk.CTkFrame):
 
         self.boutton_valider = ctk.CTkButton(frame_carre_noir, text="Créer le profil")
         self.boutton_valider.grid(row=11, column=2, sticky="w", padx=20, pady=(10, 20))
+        self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
 
     def _validate_float(self, char):
         """Accepte uniquement les chiffres et virgule/point à la saisie"""
         if char == "":
             return True
         return char.isdigit() or char in ",."
+
+    def create_profile(self):
+        self.controlleur.create_profile()
