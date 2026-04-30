@@ -1,19 +1,24 @@
 import customtkinter as ctk
 
+from datetime import datetime, timedelta
+
 class NutritionView(ctk.CTkFrame):
     def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
+        self.current_date = datetime.now()
+        
+        
         for i in range(10):
             self.grid_columnconfigure(i, weight=1)
             self.grid_rowconfigure(i, weight=1)
 
 
-        self.title = ctk.CTkLabel(self,text="Gestion nutritionnelle", font=ctk.CTkFont(size=26, weight="bold"))
-        self.title.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(10,0))
+        self.title = ctk.CTkLabel(self,text="🍽️Gestion nutritionnelle", font=ctk.CTkFont(size=26, weight="bold"))
+        self.title.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(0,0))
 
         self.tiltle2 = ctk.CTkLabel(self,text="Profil : ", font=ctk.CTkFont(size=13), text_color="#A8AFB6")
-        self.tiltle2.grid(row=1, column=0, columnspan=3, sticky="w", padx=20)
+        self.tiltle2.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(50,0))
 
 
         self.frame_carre_noir1 = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
@@ -54,9 +59,51 @@ class NutritionView(ctk.CTkFrame):
         self.glucides_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
 
         self.lipides_label = ctk.CTkLabel(self.frame_carre_noir4, text="Lipides", font=ctk.CTkFont(size=13))
-        self.lipides_label.grid(row=0, column=0, sticky="w",    padx=15, pady=(10,0))   
+        self.lipides_label.grid(row=0, column=0, sticky="w",padx=15, pady=(10,0))   
 
         
+        
+        
+        
+        date_frame = ctk.CTkFrame(self, fg_color="#000000", corner_radius=10)
+        date_frame.grid(row=0, column=8, sticky="w", padx=10, pady=5)
+
+        self.button_previous=ctk.CTkButton(date_frame, text="◀", width=30, fg_color="#000000",
+                      font=ctk.CTkFont(size=14), hover_color="#F1F1F1")
+        self.button_previous.grid(row=0, column=0, padx=4)
+        
+        self.button_previous.bind("<Button-1>", self.previous_day)  
+        
+        self.date_label = ctk.CTkLabel(
+            date_frame,
+            text=datetime.now().strftime("  %A %d %B %Y  ").capitalize(),
+            font=ctk.CTkFont(size=13, weight="bold"),
+        )
+        self.date_label.grid(row=0, column=1, padx=4)
+        
+        self.button_next=ctk.CTkButton(date_frame, text="▶", width=30, fg_color="#0F0A0A",
+                      font=ctk.CTkFont(size=14), hover_color="#F1F1F1") 
+        self.button_next.grid(row=0, column=2, padx=4)
+        self.button_next.bind("<Button-1>", self.next_day)
+
+
+    def update_date(self):
+        #Mettre a jour sur la vue la date affiché dans le label
+        self.date_label.configure(text=self.current_date.strftime("  %A %d %B %Y  ").capitalize())
+
+
+    def previous_day(self,event):
+        #Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+        self.current_date -=timedelta(days=1)
+        self.update_date()
+
+    def next_day(self,event):
+        #Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+        self.current_date +=timedelta(days=1)
+        self.update_date()
+
+
+
 
         
 
