@@ -57,19 +57,38 @@ class HomePage(ctk.CTkFrame):
         self.nom_entry = ctk.CTkEntry(frame_carre_noir)
         self.nom_entry.grid(row=6, column=0, columnspan=3, sticky="w", padx=20)
 
+        # Créer les validateurs
+        int_vcmd = (self.register(self._validate_int), "%S") #Valide que les entiers
+        float_vcmd = (self.register(self._validate_float), "%S")  # Valide que les nombres à virgule (donc nombres + ".")
+
+        # Âge
         self.age_label = ctk.CTkLabel(frame_carre_noir, text="Âge")
         self.age_label.grid(row=5, column=1, sticky="w", padx=20, pady=(0, 10))
-        self.age_entry = ctk.CTkEntry(frame_carre_noir)
+        self.age_entry = ctk.CTkEntry(
+            frame_carre_noir,
+            validate="key",
+            validatecommand=int_vcmd,
+        )
         self.age_entry.grid(row=6, column=1, sticky="w", padx=20)
 
+        # Taille
         self.taille_label = ctk.CTkLabel(frame_carre_noir, text="Taille (cm)")
         self.taille_label.grid(row=7, column=0, sticky="w", padx=20, pady=(0, 10))
-        self.taille_entry = ctk.CTkEntry(frame_carre_noir)
+        self.taille_entry = ctk.CTkEntry(
+            frame_carre_noir,
+            validate="key",
+            validatecommand=int_vcmd,
+        )
         self.taille_entry.grid(row=8, column=0, sticky="w", padx=20)
 
+        # Poids
         self.poids_label = ctk.CTkLabel(frame_carre_noir, text="Poids (kg)")
         self.poids_label.grid(row=7, column=1, sticky="w", padx=20, pady=(0, 10))
-        self.poids_entry = ctk.CTkEntry(frame_carre_noir)
+        self.poids_entry = ctk.CTkEntry(
+            frame_carre_noir,
+            validate="key",
+            validatecommand=float_vcmd,
+        )
         self.poids_entry.grid(row=8, column=1, sticky="w", padx=20)
 
         self.sexe_label = ctk.CTkLabel(frame_carre_noir, text="Sexe")
@@ -87,18 +106,18 @@ class HomePage(ctk.CTkFrame):
         )
         self.boutton_sexe2.grid(row=8, column=2, sticky="w", padx=120)
 
+        # Objectif poids
         self.objectif_label = ctk.CTkLabel(frame_carre_noir, text="Objectif poids (kg)")
         self.objectif_label.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
 
         self.objectif_var = ctk.StringVar()
 
-        vcmd = (self.register(self._validate_float), "%S")
         self.objectif_Entry = ctk.CTkEntry(
             frame_carre_noir,
             textvariable=self.objectif_var,
             placeholder_text="Objectif de Poids",
             validate="key",
-            validatecommand=vcmd,
+            validatecommand=float_vcmd,
         )
         self.objectif_Entry.grid(row=10, column=0, sticky="w", padx=20, pady=(0, 10))
 
@@ -106,11 +125,17 @@ class HomePage(ctk.CTkFrame):
         self.boutton_valider.grid(row=11, column=2, sticky="w", padx=20, pady=(10, 20))
         self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
 
+    def _validate_int(self, char):
+        """Accepte uniquement les chiffres entiers"""
+        if char == "":
+            return True
+        return char.isdigit()
+
     def _validate_float(self, char):
         """Accepte uniquement les chiffres et virgule/point à la saisie"""
         if char == "":
             return True
-        return char.isdigit() or char in ",."
+        return char.isdigit() or char == "."
 
     def create_profile(self):
         self.controlleur.create_profile()

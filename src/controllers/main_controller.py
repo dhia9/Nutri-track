@@ -19,6 +19,7 @@ class MainController:
         self.settings.deserialize(
             os.path.join(self.settings.app_data_dir, "settings.json")
         )  # Charger les données depuis le fichier JSON
+        # print("dossier de données:", self.settings.app_data_dir) # Pour voir où sont stockées les données, à supprimer après vérification
 
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.

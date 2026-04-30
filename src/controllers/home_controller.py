@@ -1,4 +1,5 @@
 import src.views.home_page as home_page
+import src.views.message_box as message_box
 
 
 class HomeController:
@@ -24,16 +25,22 @@ class HomeController:
         # Valider les données (ex: vérifier que l'âge est un nombre)
         if (
             not nom
-            and not self.existing_name_profile(
-                nom
-            )  # Vérifier que le nom n'est pas vide et n'existe pas déjà
             or not age.isdigit()
             or not taille.isdigit()
             or not poids.isdigit()
             or sex not in ["Homme", "Femme"]  # Pas nécessaire mais on sait jamais
             or not objectif.isdigit()
         ):
-            print("Données invalides")
+            message_box.CTkMessageBox(
+                title="Erreur",
+                message="Veuillez remplir tous les champs correctement.",
+            )
+            return
+        if self.existing_name_profile(nom):
+            message_box.CTkMessageBox(
+                title="Erreur",
+                message="Un profil avec ce nom existe déjà. Veuillez choisir un autre nom.",
+            )
             return
 
         # Créer un nouvel objet Profile
@@ -44,4 +51,16 @@ class HomeController:
             height=float(taille),
             sex=sex,
             target_weight=float(objectif),
+        )
+        # Vider les champs du formulaire
+        self.view.nom_entry.delete(0, "end")
+        self.view.age_entry.delete(0, "end")
+        self.view.taille_entry.delete(0, "end")
+        self.view.poids_entry.delete(0, "end")
+        self.view.objectif_Entry.delete(0, "end")
+        self.view.sexe_var.set("Homme")
+        # Afficher un message de succès
+        message_box.CTkMessageBox(
+            title="Succès",
+            message="Profil créé avec succès !",
         )
