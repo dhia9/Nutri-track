@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-import tests.test_views.nutrition_page as nutrition_page # juste un test pour vérifier la navigation, à remplacer par la vrai page
+import tests.test_views.nutrition_page as nutrition_page  # juste un test pour vérifier la navigation, à remplacer par la vrai page
 
 
 class MainPage(ctk.CTk):
@@ -144,9 +144,3 @@ class MainPage(ctk.CTk):
         self, page_name
     ):  # Permet de changer de page et d'afficher la page d'accueil par défaut
         self.controller.show_page(page_name)
-
-
-if __name__ == "__main__":
-    controller = main_controller.MainController()
-    app = MainPage(controller=controller)
-    app.mainloop()

@@ -88,9 +88,7 @@ class HomePage(ctk.CTkFrame):
         )
         self.boutton_sexe2.grid(row=8, column=2, sticky="w", padx=120)
 
-        self.objectif_label = ctk.CTkLabel(
-            frame_carre_noir, text="Objectif poids (kg)"
-        )
+        self.objectif_label = ctk.CTkLabel(frame_carre_noir, text="Objectif poids (kg)")
         self.objectif_label.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
 
         self.objectif_var = ctk.StringVar()

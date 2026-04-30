@@ -2,7 +2,7 @@ from src.models.model import Model
 
 
 class Profile(Model):
-    def __init__(self, name, age, weight, height, sex, target_weight):
+    def __init__(self, name, age, height, weight, sex, target_weight):
         self.name = name
         self.age = age
         self.weight = weight

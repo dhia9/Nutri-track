@@ -7,6 +7,12 @@ class HomeController:
         self.view: home_page.HomePage = None
         self.main_controller = main_controller
 
+    def existing_name_profile(self, name):
+        for profile in self.main_controller.settings.profiles:
+            if profile.name == name:
+                return True
+        return False
+
     def create_profile(self):
         # Récupérer les données du formulaire
         nom = self.view.nom_entry.get()
@@ -19,10 +25,13 @@ class HomeController:
         # Valider les données (ex: vérifier que l'âge est un nombre)
         if (
             not nom
+            and not self.existing_name_profile(
+                nom
+            )  # Vérifier que le nom n'est pas vide et n'existe pas déjà
             or not age.isdigit()
             or not taille.isdigit()
             or not poids.isdigit()
-            or not sex in ["Homme", "Femme"] # Pas nécessaire mais on sait jamais
+            or not sex in ["Homme", "Femme"]  # Pas nécessaire mais on sait jamais
             or not objectif.isdigit()
         ):
             print("Données invalides")

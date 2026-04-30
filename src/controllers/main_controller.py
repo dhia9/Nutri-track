@@ -3,6 +3,7 @@ import src.views.main_window as main_page
 import src.controllers.home_controller as home_controller
 
 import src.models.settings as settings
+import os
 
 
 class MainController:
@@ -16,7 +17,7 @@ class MainController:
 
         self.settings = settings.Settings()
         self.settings.deserialize(
-            "./src/data/settings.json"
+            os.path.join(self.settings.app_data_dir, "settings.json")
         )  # Charger les données depuis le fichier JSON
 
     def set_existing_pages(self, pages):
