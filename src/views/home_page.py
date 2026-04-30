@@ -1,9 +1,8 @@
 import customtkinter as ctk
-import src.controllers.main_controller as main_controller
 
 
 class HomePage(ctk.CTkFrame):
-    def __init__(self, parent, main_controller: main_controller.MainController = None):
+    def __init__(self, parent, main_controller):
         super().__init__(parent)
         self.main_controller = main_controller  # initialiser le contrôleur principal pour pouvoir accéder à ses méthodes et données
         self.main_controller.controllers["Home"].view = (
@@ -88,9 +87,7 @@ class HomePage(ctk.CTkFrame):
         )
         self.boutton_sexe2.grid(row=8, column=2, sticky="w", padx=120)
 
-        self.objectif_label = ctk.CTkLabel(
-            frame_carre_noir, text="Objectif poids (kg)"
-        )
+        self.objectif_label = ctk.CTkLabel(frame_carre_noir, text="Objectif poids (kg)")
         self.objectif_label.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
 
         self.objectif_var = ctk.StringVar()

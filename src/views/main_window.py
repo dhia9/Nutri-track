@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-import tests.test_views.nutrition_page as nutrition_page # juste un test pour vérifier la navigation, à remplacer par la vrai page
 
 
 class MainPage(ctk.CTk):
@@ -16,7 +15,7 @@ class MainPage(ctk.CTk):
     COLOR_TEXT = "#F1F1F1"
     COLOR_TEXT_SECONDARY = "#A8AFB6"
 
-    def __init__(self, controller: main_controller.MainController = None):
+    def __init__(self, controller):
         super().__init__()
         self.controller = controller
         # Configurer la view du contrôleur AVANT d'utiliser ses méthodes
@@ -45,9 +44,6 @@ class MainPage(ctk.CTk):
             {
                 "Accueil": home_page.HomePage(
                     self.pages_container, main_controller=self.controller
-                ),
-                "Nutrition": nutrition_page.NutritionPage(
-                    self.pages_container, controller=self.controller
                 ),
             }
         )
@@ -117,7 +113,7 @@ class MainPage(ctk.CTk):
             fg_color=self.COLOR_BUTTON,
             text_color=self.COLOR_TEXT,
             hover_color=self.COLOR_BUTTON_HOVER,
-            border_width=1.5,
+            border_width=2,
             border_color=self.COLOR_BUTTON,
             corner_radius=10,
             height=42,

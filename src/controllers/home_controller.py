@@ -1,9 +1,8 @@
-import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
 
 
 class HomeController:
-    def __init__(self, main_controller: main_controller.MainController = None):
+    def __init__(self, main_controller):
         self.view: home_page.HomePage = None
         self.main_controller = main_controller
 
@@ -22,7 +21,7 @@ class HomeController:
             or not age.isdigit()
             or not taille.isdigit()
             or not poids.isdigit()
-            or not sex in ["Homme", "Femme"] # Pas nécessaire mais on sait jamais
+            or sex not in ["Homme", "Femme"]  # Pas nécessaire mais on sait jamais
             or not objectif.isdigit()
         ):
             print("Données invalides")
