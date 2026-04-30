@@ -14,9 +14,16 @@ class CTkMessageBox(ctk.CTkToplevel):
         button = ctk.CTkButton(self, text=button_text, command=self.destroy)
         button.pack(pady=10)
 
-        self.bind("<FocusOut>", lambda e: self.destroy()) # ferme la fenetre si un appuie en dehors
+        # Centrer la messagebox l'écran
+        self.update_idletasks()  # update les dimensions de la fenêtre avant de calculer la position
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = (screen_width // 2) - 150 
+        y = (screen_height // 2) - 75 
+        self.geometry(f"+{x}+{y}")
 
         self.grab_set()
+        self.wait_window() # Empèche l'utilisateur d'interagir avec la fenêtre principale tant que le message box est ouvert
 
 
 # Utilisation
