@@ -1,9 +1,8 @@
 import customtkinter as ctk
-import src.controllers.main_controller as main_controller
 
 
 class HomePage(ctk.CTkFrame):
-    def __init__(self, parent, main_controller: main_controller.MainController = None):
+    def __init__(self, parent, main_controller):
         super().__init__(parent)
         self.main_controller = main_controller  # initialiser le contrôleur principal pour pouvoir accéder à ses méthodes et données
         self.main_controller.controllers["Home"].view = (
