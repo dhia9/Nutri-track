@@ -24,7 +24,7 @@ class MainPage(ctk.CTk):
         self.title("Nutritrack")
         self.geometry("1280x760")
         self.minsize(960, 560)
-        
+
         self.update_idletasks()  # update les dimensions de la fenêtre avant de calculer la position
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()

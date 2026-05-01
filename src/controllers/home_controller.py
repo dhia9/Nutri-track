@@ -32,12 +32,14 @@ class HomeController:
             or not objectif.isdigit()
         ):
             message_box.CTkMessageBox(
+                self.main_controller.view,  # On attache la message box à la fenêtre principale pour qu'elle soit modale
                 title="Erreur",
                 message="Veuillez remplir tous les champs correctement.",
             )
             return
         if self.existing_name_profile(nom):
             message_box.CTkMessageBox(
+                self.main_controller.view,
                 title="Erreur",
                 message="Un profil avec ce nom existe déjà. Veuillez choisir un autre nom.",
             )
@@ -61,6 +63,7 @@ class HomeController:
         self.view.sexe_var.set("Homme")
         # Afficher un message de succès
         message_box.CTkMessageBox(
+            self.main_controller.view,
             title="Succès",
             message="Profil créé avec succès !",
         )

@@ -12,22 +12,25 @@ import appdirs
 class Settings(JsonSerializable):
     def __init__(self):
         self.profiles = []
-        
-        self.app_data_dir = appdirs.user_data_dir("Nutritrack")
-        os.makedirs(self.app_data_dir, exist_ok=True)
+
+        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
         # créer le fichier settings.json s'il n'existe pas déjà
-        settings_path = os.path.join(self.app_data_dir, "settings.json")
+        settings_path = os.path.join(
+            appdirs.user_data_dir("Nutritrack"), "settings.json"
+        )
         if not os.path.isfile(settings_path):
             with open(settings_path, "w", encoding="utf-8") as f:
-                json.dump({"profiles": []}, f, indent=4) # Fait en sorte que le fichier contienne une structure de base même s'il n'y a pas encore de profils, pour éviter les erreurs de lecture du JSON plus tard
+                json.dump(
+                    {"profiles": []}, f, indent=4
+                )  # Fait en sorte que le fichier contienne une structure de base même s'il n'y a pas encore de profils, pour éviter les erreurs de lecture du JSON plus tard
 
     def create_profile(self, name, age, height, weight, sex, target_weight):
-        
+
         new_profile = Profile(name, age, height, weight, sex, target_weight)
         self.profiles.append(new_profile)
-        
+
         self.serialize(
-            os.path.join(self.app_data_dir, "settings.json")
+            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Sauvegarder le profil après sa création
 
     # charger le dico Settings stocké dans le fichier

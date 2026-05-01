@@ -4,6 +4,7 @@ import src.controllers.home_controller as home_controller
 
 import src.models.settings as settings
 import os
+import appdirs
 
 
 class MainController:
@@ -17,9 +18,9 @@ class MainController:
 
         self.settings = settings.Settings()
         self.settings.deserialize(
-            os.path.join(self.settings.app_data_dir, "settings.json")
+            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
-        # print("dossier de données:", self.settings.app_data_dir) # Pour voir où sont stockées les données, à supprimer après vérification
+        # print("dossier de données:", appdirs.user_data_dir("Nutritrack")) # Pour voir où sont stockées les données, à supprimer après vérification
 
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.

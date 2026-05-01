@@ -58,8 +58,11 @@ class HomePage(ctk.CTkFrame):
         self.nom_entry.grid(row=6, column=0, columnspan=3, sticky="w", padx=20)
 
         # Créer les validateurs
-        int_vcmd = (self.register(self._validate_int), "%S") #Valide que les entiers
-        float_vcmd = (self.register(self._validate_float), "%S")  # Valide que les nombres à virgule (donc nombres + ".")
+        int_vcmd = (self.register(self._validate_int), "%S")  # Valide que les entiers
+        float_vcmd = (
+            self.register(self._validate_float),
+            "%S",
+        )  # Valide que les nombres à virgule (donc nombres + ".")
 
         # Âge
         self.age_label = ctk.CTkLabel(frame_carre_noir, text="Âge")
