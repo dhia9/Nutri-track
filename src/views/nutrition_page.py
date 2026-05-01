@@ -3,19 +3,24 @@ import customtkinter as ctk
 from datetime import datetime, timedelta
 
 class NutritionView(ctk.CTkFrame):
-    def __init__(self, parent, controller=None):
+    def __init__(self, parent, controller=None): 
         super().__init__(parent)
         self.controller = controller
         self.current_date = datetime.now()
+        
+        #self.profile = controller.current_profile
+        #self.menu = controller.current_menu                a voir comment c'est appeler dans le main controller
+        
         
         
         for i in range(10):
             self.grid_columnconfigure(i, weight=1)
             self.grid_rowconfigure(i, weight=1)
-
+        
+        self.grid_rowconfigure(0, weight=0)
 
         self.title = ctk.CTkLabel(self,text="🍽️Gestion nutritionnelle", font=ctk.CTkFont(size=26, weight="bold"))
-        self.title.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(0,0))
+        self.title.grid(row=0, column=0, columnspan=3, sticky="w", padx=20)
 
         self.tiltle2 = ctk.CTkLabel(self,text="Profil : ", font=ctk.CTkFont(size=13), text_color="#A8AFB6")
         self.tiltle2.grid(row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(50,0))
@@ -69,7 +74,7 @@ class NutritionView(ctk.CTkFrame):
         date_frame.grid(row=0, column=8, sticky="w", padx=10, pady=5)
 
         self.button_previous=ctk.CTkButton(date_frame, text="◀", width=30, fg_color="#000000",
-                      font=ctk.CTkFont(size=14), hover_color="#F1F1F1")
+                        font=ctk.CTkFont(size=14), hover_color="#F1F1F1",corner_radius=10)
         self.button_previous.grid(row=0, column=0, padx=4)
         
         self.button_previous.bind("<Button-1>", self.previous_day)  
@@ -77,12 +82,12 @@ class NutritionView(ctk.CTkFrame):
         self.date_label = ctk.CTkLabel(
             date_frame,
             text=datetime.now().strftime("  %A %d %B %Y  ").capitalize(),
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=13, weight="bold"),corner_radius=10
         )
         self.date_label.grid(row=0, column=1, padx=4)
         
         self.button_next=ctk.CTkButton(date_frame, text="▶", width=30, fg_color="#0F0A0A",
-                      font=ctk.CTkFont(size=14), hover_color="#F1F1F1") 
+                      font=ctk.CTkFont(size=14), hover_color="#F1F1F1",corner_radius=10) 
         self.button_next.grid(row=0, column=2, padx=4)
         self.button_next.bind("<Button-1>", self.next_day)
 
