@@ -1,5 +1,15 @@
+# Fichiers de configuration de l'IDE
 .idea
 
+# Fichiers de configuration de l'environnement virtuel
 venv/
+
+# Fichiers Python compilés indésirables
 *.pyc
 __pycache__/
+
+# Fichier Personnel de l'utilisateur
+
+# Fichiers de test
+tests/
+

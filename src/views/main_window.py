@@ -1,8 +1,9 @@
 import customtkinter as ctk
-from home_page import HomeView
+import src.controllers.main_controller as main_controller
+import src.views.home_page as home_page
 
 
-class BaseView(ctk.CTk):
+class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
 
     COLOR_BG = "#121212"
@@ -14,11 +15,22 @@ class BaseView(ctk.CTk):
     COLOR_TEXT = "#F1F1F1"
     COLOR_TEXT_SECONDARY = "#A8AFB6"
 
-    def __init__(self):
+    def __init__(self, controller):
         super().__init__()
+        self.controller = controller
+        # Configurer la view du contrôleur AVANT d'utiliser ses méthodes
+        self.controller.view = self
+
         self.title("Nutritrack")
         self.geometry("1280x760")
         self.minsize(960, 560)
+
+        self.update_idletasks()  # update les dimensions de la fenêtre avant de calculer la position
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = (screen_width // 2) - (1280 // 2)
+        y = (screen_height // 2) - (760 // 2)
+        self.geometry(f"+{x}+{y}")
 
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
@@ -34,13 +46,15 @@ class BaseView(ctk.CTk):
 
         self._create_sidebar()
         self._create_page_container()
-        self.current_page = None
-        self.set_existing_pages(
+        # Déléguer la gestion des pages au contrôleur
+        self.controller.set_existing_pages(
             {
-                "Accueil": HomeView(self.pages_container),
+                "Accueil": home_page.HomePage(
+                    self.pages_container, main_controller=self.controller
+                ),
             }
         )
-        self.show_page("Accueil")
+        self.controller.show_page("Accueil")
 
     def _create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
@@ -106,11 +120,11 @@ class BaseView(ctk.CTk):
             fg_color=self.COLOR_BUTTON,
             text_color=self.COLOR_TEXT,
             hover_color=self.COLOR_BUTTON_HOVER,
-            border_width=1.5,
+            border_width=2,
             border_color=self.COLOR_BUTTON,
             corner_radius=10,
             height=42,
-            command=lambda: self.show_page(page_name),
+            command=lambda: self.controller.show_page(page_name),
             anchor="w",
         )
         return btn
@@ -126,70 +140,10 @@ class BaseView(ctk.CTk):
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
 
-        # Vue placeholder tant qu'aucune page n'est injectée par le contrôleur
-        self.placeholder = ctk.CTkFrame(
-            self.pages_container, fg_color=self.COLOR_CONTENT
-        )
-        self.placeholder.grid(row=0, column=0, sticky="nsew")
-        self.placeholder.grid_columnconfigure(0, weight=1)
-        self.placeholder.grid_rowconfigure(0, weight=1)
-
-        ctk.CTkLabel(
-            self.placeholder,
-            text="Zone de contenu",
-            font=ctk.CTkFont(size=28, weight="bold"),
-            text_color=self.COLOR_TEXT,
-        ).grid(row=0, column=0, pady=(0, 12))
-
-        ctk.CTkLabel(
-            self.placeholder,
-            text="Les autres pages s'afficheront ici.",
-            font=ctk.CTkFont(size=14),
-            text_color=self.COLOR_TEXT_SECONDARY,
-        ).grid(row=1, column=0)
-
     def set_existing_pages(self, pages):
-        """Enregistre des pages deja creees pour la navigation.
+        self.controller.set_existing_pages(pages)
 
-        Args:
-            pages: dictionnaire {"NomPage": widget_page}
-        """
-        self.pages = {}
-
-        if hasattr(self, "placeholder") and self.placeholder.winfo_exists():
-            self.placeholder.grid_remove()
-
-        for name, page_widget in pages.items():
-            page_widget.grid(row=0, column=0, sticky="nsew")
-            page_widget.grid_remove()
-            self.pages[name] = page_widget
-
-    def show_page(self, page_name):
-        """Affiche une page spécifique."""
-        if page_name not in self.pages:
-            return
-
-        if self.current_page and self.current_page in self.pages:
-            self.pages[self.current_page].grid_remove()
-
-        for name, btn in self.nav_buttons.items():
-            if name == page_name:
-                btn.configure(
-                    fg_color=self.COLOR_ACCENT,
-                    text_color="#0D281C",
-                    border_color=self.COLOR_ACCENT,
-                )
-            else:
-                btn.configure(
-                    fg_color=self.COLOR_BUTTON,
-                    text_color=self.COLOR_TEXT,
-                    border_color=self.COLOR_BUTTON,
-                )
-
-        self.pages[page_name].grid()
-        self.current_page = page_name
-
-
-if __name__ == "__main__":
-    app = BaseView()
-    app.mainloop()
+    def show_page(
+        self, page_name
+    ):  # Permet de changer de page et d'afficher la page d'accueil par défaut
+        self.controller.show_page(page_name)

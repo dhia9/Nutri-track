@@ -5,15 +5,32 @@ from src.models.macro import Macro
 from src.models.menu import Menu
 from src.models.profile import Profile
 from src.utils.json_serializable import JsonSerializable
+import os
+import appdirs
 
 
 class Settings(JsonSerializable):
     def __init__(self):
         self.profiles = []
 
+        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
+        # créer le fichier settings.json s'il n'existe pas déjà
+        settings_path = os.path.join(
+            appdirs.user_data_dir("Nutritrack"), "settings.json"
+        )
+        if not os.path.isfile(settings_path):
+            self.serialize(
+                settings_path
+            )  # Créer un fichier JSON vide avec les données initiales
+
     def create_profile(self, name, age, height, weight, sex, target_weight):
-        new_profile = Profile(name, age, weight, height, sex, target_weight)
+
+        new_profile = Profile(name, age, height, weight, sex, target_weight)
         self.profiles.append(new_profile)
+
+        self.serialize(
+            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
+        )  # Sauvegarder le profil après sa création
 
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
