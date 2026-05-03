@@ -19,11 +19,7 @@ class Settings(JsonSerializable):
             appdirs.user_data_dir("Nutritrack"), "settings.json"
         )
         if not os.path.isfile(settings_path):
-            with open(settings_path, "w", encoding="utf-8") as f:
-                json.dump(
-                    {"profiles": []}, f, indent=4
-                )  # Fait en sorte que le fichier contienne une structure de base même s'il n'y a pas encore de profils, pour éviter les erreurs de lecture du JSON plus tard
-
+            self.serialize(settings_path)  # Créer un fichier JSON vide avec les données initiales
     def create_profile(self, name, age, height, weight, sex, target_weight):
 
         new_profile = Profile(name, age, height, weight, sex, target_weight)
