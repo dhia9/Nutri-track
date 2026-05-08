@@ -1,5 +1,6 @@
 import src.views.home_page as home_page
 import src.views.message_box as message_box
+from src.models.profile import Profile
 
 
 class HomeController:
@@ -67,3 +68,8 @@ class HomeController:
             title="Succès",
             message="Profil créé avec succès !",
         )
+
+    def select_profile(self, profile: Profile):
+        self.main_controller.current_profile = profile
+        if self.view is not None:
+            self.view.set_selected_profile(profile)
