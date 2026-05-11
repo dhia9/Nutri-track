@@ -2,8 +2,9 @@ import os
 
 import appdirs
 import src.controllers.home_controller as home_controller
+import src.controllers.settings_controller as settings_controller
 import src.models.settings as settings
-
+import src.controllers.settings_controller as settings_controller
 
 class MainController:
     def __init__(self):
@@ -11,7 +12,8 @@ class MainController:
         self.pages = {}
         self.current_page = None
         self.controllers = {
-            "Home": home_controller.HomeController(self)
+            "Home": home_controller.HomeController(self),
+            "Settings": settings_controller.SettingsController(self)
         }  # Dico pour stocker les sous contrôlleur de chaque page
         self.settings = settings.Settings()
         self.settings.deserialize(

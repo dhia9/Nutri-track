@@ -12,7 +12,7 @@ import appdirs
 class Settings(JsonSerializable):
     def __init__(self):
         self.profiles = []
-
+        print(appdirs.user_data_dir("Nutritrack"))
         os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
         # créer le fichier settings.json s'il n'existe pas déjà
         settings_path = os.path.join(

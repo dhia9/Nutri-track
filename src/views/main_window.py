@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-
+import src.views.settings_page as settings_page
 
 class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
@@ -52,6 +52,9 @@ class MainPage(ctk.CTk):
                 "Accueil": home_page.HomePage(
                     self.pages_container, main_controller=self.controller
                 ),
+                "Paramètres": settings_page.SettingsPage(
+                    self.pages_container, main_controller=self.controller)
+                
             }
         )
         self.controller.show_page("Accueil")
@@ -97,7 +100,7 @@ class MainPage(ctk.CTk):
         self.nav_container.grid(row=3, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
-        pages_config = ["Accueil", "Nutrition", "Statistiques"]
+        pages_config = ["Accueil", "Nutrition", "Statistiques", "Paramètres"]
         for index, page_name in enumerate(pages_config):
             btn = self._create_nav_button(self.nav_container, page_name)
             btn.grid(row=index, column=0, sticky="ew", padx=6, pady=6)
