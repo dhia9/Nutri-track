@@ -32,6 +32,16 @@ class Settings(JsonSerializable):
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Sauvegarder le profil après sa création
 
+    def delete_profile(self, name):
+        for profile in self.profiles :
+            if profile.name == name :
+                self.profiles.remove(profile)
+
+        self.serialize(
+            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
+        )
+
+        
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
         try:

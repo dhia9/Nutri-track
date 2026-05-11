@@ -30,7 +30,19 @@ class SettingsController:
             home_view._render_profiles()
 
     def delete_profile(self):
+        profile = self.main_controller.current_profile
+        if not profile:
+            message_box.CTkMessageBox(
+                self.main_controller.view,
+                title="Erreur",
+                message="Aucun profil sélectionné.",
+            )
+            return
+        else :
+            self.main_controller.settings.delete_profile(profile.name)
+            self.main_controller.current_profile = None
+            
         home_view = self.main_controller.controllers["Home"].view
         if home_view is not None:  
             home_view._render_profiles()
-        pass
+        

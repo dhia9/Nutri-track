@@ -10,6 +10,7 @@ class SettingsPage(ctk.CTkFrame):
 
         self.main_controller = main_controller
         self.main_controller.controllers["Settings"].view = self
+        # ajout du controleur de la page 
         self.controlleur = self.main_controller.controllers["Settings"]
         self.profile = self.main_controller.current_profile
 
@@ -93,8 +94,8 @@ class SettingsPage(ctk.CTkFrame):
 
         self.label_objectif = ctk.CTkLabel(self.frame_carre_noir, text="Objectif (kg)")
         self.label_objectif.grid(row=3, column=1, sticky="w", padx  =20, pady=(16, 10))
-        self.objectif_Entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.target_weight}")
-        self.objectif_Entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0,10))
+        self.objectif_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.target_weight}")
+        self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0,10))
 
         self.label_sexe = ctk.CTkLabel(self.frame_carre_noir, text="Sexe")
         self.label_sexe.grid(row=0, column=1, sticky="w", padx=20, pady=(16, 10))
@@ -108,8 +109,9 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_modifier = ctk.CTkButton(self.frame_carre_noir, text="Modifier le profil", command=self.edit_profile)
         self.boutton_modifier.grid(row=12, column=0, sticky="ew", padx=20, pady=(16, 20))
 
+        
         #Bouton supprimer le profil 
-        self.boutton_supprimer = ctk.CTkButton(self.frame_carre_noir, text="Supprimer le profil", bg_color="red", hover_color="#ff4d4d")
+        self.boutton_supprimer = ctk.CTkButton(self.frame_carre_noir, text="Supprimer le profil", bg_color="red", hover_color="#ff4d4d", command=self.delete_profile)
         self.boutton_supprimer.grid(row=12, column=1,sticky="w", padx=20, pady=(16, 20))
 
 
@@ -175,10 +177,22 @@ class SettingsPage(ctk.CTkFrame):
         if weight == "":
             weight = self.profile.weight
 
-        target_weight = self.objectif_Entry.get()
+        target_weight = self.objectif_entry.get()
         if target_weight == "":
             target_weight = self.profile.target_weight
 
         sex = self.sexe_var.get()
 
         self.controlleur.edit_profile(name, age, height, weight, target_weight, sex)
+
+        self.nom_entry.delete(0, "end")
+        self.age_entry.delete(0, "end")
+        self.taille_entry.delete(0, "end")
+        self.poids_entry.delete(0,"end")
+        self.objectif_entry.delete(0, "end")
+
+        # reste a modifier le fichier json
+
+    
+    def delete_profile(self):
+        self.controlleur.delete_profile()
