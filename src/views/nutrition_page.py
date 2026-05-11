@@ -91,6 +91,36 @@ class NutritionView(ctk.CTkFrame):
         self.button_next.grid(row=0, column=2, padx=4)
         self.button_next.bind("<Button-1>", self.next_day)
 
+        self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_ajout.grid(row=5, column=0, columnspan=3, rowspan= 2, padx=10, pady=20, sticky="ew")
+        
+        self.menu=ctk.CTkLabel(self.frame_ajout, text="✚ Ajouter un aliment ", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
+        self.menu.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
+       
+        self.text_aliment=ctk.CTkLabel(self.frame_ajout, text="Entrez vos aliments du jour", font=ctk.CTkFont(size=11), text_color="#A8AFB6")
+        self.text_aliment.grid(row=1, column=0, sticky="w", padx=15, pady=(10,0))
+        
+        self.text=ctk.CTkEntry(self.frame_ajout, width=300)
+        self.text.grid(row=2, column=0,columnspan=10, sticky="w", padx=15, pady=(10,0))
+
+        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_aliment.grid(row=5, column=3, columnspan=5, rowspan= 2, padx=10, pady=20, sticky="ew")
+
+        self.menu=ctk.CTkLabel(self.frame_aliment, text="📋 Aliment du jour", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
+        self.menu.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
+       
+
+
+
+
+
+
+
+
+
+
+
+
 
     def update_date(self):
         #Mettre a jour sur la vue la date affiché dans le label
