@@ -11,11 +11,13 @@ NutriTrack est une application desktop développée en Python, permettant à cha
 ## Installation
 
 ```
+py -m venv venv
+venv\Scripts\activate # Pour Windows, sur Linux/Mac : source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Base de données
 
-Les données sont issues du site [ciqual.aneses.fr](https://ciqual.aneses.fr), qui fournit une base de données complète
+Les données sont issues du site [ciqual.anses.fr](https://ciqual.anses.fr/), qui fournit une base de données complète
 sur la composition nutritionnelle des aliments. Cette base de données est intégrée dans l'application pour permettre aux
 utilisateurs de rechercher et d'ajouter facilement des aliments à leur suivi nutritionnel.

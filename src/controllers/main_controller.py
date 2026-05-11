@@ -1,10 +1,8 @@
-import src.views.main_window as main_page
-
-import src.controllers.home_controller as home_controller
-
-import src.models.settings as settings
 import os
+
 import appdirs
+import src.controllers.home_controller as home_controller
+import src.models.settings as settings
 
 
 class MainController:
@@ -15,12 +13,13 @@ class MainController:
         self.controllers = {
             "Home": home_controller.HomeController(self)
         }  # Dico pour stocker les sous contrôlleur de chaque page
-
         self.settings = settings.Settings()
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
-        # print("dossier de données:", appdirs.user_data_dir("Nutritrack")) # Pour voir où sont stockées les données, à supprimer après vérification
+        self.current_profile = (
+            self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
+        )
 
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.
