@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
+import src.controllers.settings_controller as settings_controller
 
 class SettingsPage(ctk.CTkFrame):
 
@@ -103,10 +104,11 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_sexe2 = ctk.CTkRadioButton(self.frame_carre_noir, text="Femme", variable=self.sexe_var, value="Femme")
         self.boutton_sexe2.grid(row=2, column=1, sticky="w", padx=20, pady=(0,10))
 
-
-        self.boutton_modifier = ctk.CTkButton(self.frame_carre_noir, text="Modifier le profil")
+        # Bouton modifier ke profil
+        self.boutton_modifier = ctk.CTkButton(self.frame_carre_noir, text="Modifier le profil", command=self.edit_profile)
         self.boutton_modifier.grid(row=12, column=0, sticky="ew", padx=20, pady=(16, 20))
 
+        #Bouton supprimer le profil 
         self.boutton_supprimer = ctk.CTkButton(self.frame_carre_noir, text="Supprimer le profil", bg_color="red", hover_color="#ff4d4d")
         self.boutton_supprimer.grid(row=12, column=1,sticky="w", padx=20, pady=(16, 20))
 
@@ -156,3 +158,27 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0,10))
 
     
+    def edit_profile(self):
+
+        name = self.nom_entry.get()
+        if name == "":
+            name = self.profile.name
+        age = self.age_entry.get()
+        if age == "":
+            age = self.profile.age
+
+        height = self.taille_entry.get()
+        if height == "":
+            height = self.profile.height
+
+        weight = self.poids_entry.get()
+        if weight == "":
+            weight = self.profile.weight
+
+        target_weight = self.objectif_Entry.get()
+        if target_weight == "":
+            target_weight = self.profile.target_weight
+
+        sex = self.sexe_var.get()
+
+        self.controlleur.edit_profile(name, age, height, weight, target_weight, sex)
