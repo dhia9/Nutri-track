@@ -141,9 +141,9 @@ class SettingsPage(ctk.CTkFrame):
         self.mode_app_label = ctk.CTkLabel(self.frame_carre_noir2, text="Mode d'affichage de l'application :" , font=ctk.CTkFont(size=16, weight="bold"))
         self.mode_app_label.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 10))
         self.mode_var = ctk.StringVar(value="dark")
-        self.boutton_mode=ctk.CTkRadioButton(self.frame_carre_noir2, text="Clair", variable=self.mode_var, value="light")
+        self.boutton_mode=ctk.CTkRadioButton(self.frame_carre_noir2, text="Clair", variable=self.mode_var, value="light", command=self.change_mode)
         self.boutton_mode.grid(row=1, column=0, sticky="w", padx=20, pady=(0,10))
-        self.boutton_mode2=ctk.CTkRadioButton(self.frame_carre_noir2, text="Sombre", variable=self.mode_var, value="dark")
+        self.boutton_mode2=ctk.CTkRadioButton(self.frame_carre_noir2, text="Sombre", variable=self.mode_var, value="dark", command= self.change_mode)
         self.boutton_mode2.grid(row=2, column=0, sticky="w", padx=20, pady=(0,10))
 
         self.theme_label = ctk.CTkLabel(self.frame_carre_noir2, text="Thème de l'application :" , font=ctk.CTkFont(size=16, weight="bold"))
@@ -197,3 +197,7 @@ class SettingsPage(ctk.CTkFrame):
     
     def delete_profile(self):
         self.controlleur.delete_profile()
+
+    def change_mode(self):
+        mode = self.mode_var.get()
+        ctk.set_appearance_mode(mode)
