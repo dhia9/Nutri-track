@@ -3,6 +3,7 @@ import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
 import src.views.settings_page as settings_page
 
+
 class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
 
@@ -53,8 +54,8 @@ class MainPage(ctk.CTk):
                     self.pages_container, main_controller=self.controller
                 ),
                 "Paramètres": settings_page.SettingsPage(
-                    self.pages_container, main_controller=self.controller)
-                
+                    self.pages_container, main_controller=self.controller
+                ),
             }
         )
         self.controller.show_page("Accueil")
