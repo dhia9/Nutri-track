@@ -15,12 +15,6 @@ class HomePage(ctk.CTkFrame):
 
         self.grid_columnconfigure((0, 1, 2), weight=1)
         self.profile_buttons = {}
-        self.controller = controller
-        
-        for i in range(10):
-            self.grid_columnconfigure(i, weight=1)
-            self.grid_rowconfigure(i, weight=1)
-        
 
         self.titre = ctk.CTkLabel(
             self,
@@ -140,7 +134,7 @@ class HomePage(ctk.CTkFrame):
         self.objectif_var = ctk.StringVar()
 
         self.objectif_Entry = ctk.CTkEntry(
-            self.frame_carre_noir,
+            frame_carre_noir,
             textvariable=self.objectif_var,
             placeholder_text="Objectif de Poids",
             validate="key",
