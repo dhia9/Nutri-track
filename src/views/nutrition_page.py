@@ -103,7 +103,7 @@ class NutritionView(ctk.CTkFrame):
         self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_aliment.grid(row=5, column=3, columnspan=10, rowspan= 10, padx=10, pady=20, sticky="ew")
 
-        self.menu=ctk.CTkLabel(self.frame_aliment, text="📋 Aliment du jour", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
+        self.menu=ctk.CTkLabel(self.frame_aliment, text="📋 Aliments du jour", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
         self.menu.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
 
         self.progress_calories= ctk.CTkProgressBar(
