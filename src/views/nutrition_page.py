@@ -2,6 +2,9 @@ import customtkinter as ctk
 
 from datetime import datetime, timedelta
 
+from distributed import progress
+from flask import app
+
 class NutritionView(ctk.CTkFrame):
     def __init__(self, parent, controller=None): 
         super().__init__(parent)
@@ -97,20 +100,53 @@ class NutritionView(ctk.CTkFrame):
         self.bouton_aliment=ctk.CTkButton(self.frame_ajout, text="✚ Ajouter un aliment ", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
         self.bouton_aliment.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
 
-
-        self.text_aliment=ctk.CTkLabel(self.frame_ajout, text="Recherche un aliment", font=ctk.CTkFont(size=11), text_color="#A8AFB6")
-        self.text_aliment.grid(row=1, column=0, sticky="w", padx=15, pady=(10,0))
-        
-        self.text=ctk.CTkEntry(self.frame_ajout, width=300)
-        self.text.grid(row=2, column=0,columnspan=10, sticky="w", padx=15, pady=(10,0))
-
         self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_aliment.grid(row=5, column=3, columnspan=10, rowspan= 10, padx=10, pady=20, sticky="ew")
 
         self.menu=ctk.CTkLabel(self.frame_aliment, text="📋 Aliment du jour", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
         self.menu.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
-       
 
+        self.progress_calories= ctk.CTkProgressBar(
+        self.frame_carre_noir1,
+        width=300,
+        height=10,
+        corner_radius=5,
+        progress_color="#4CAF50",   
+        fg_color="#2A2A4A"          
+        )
+        self.progress_calories.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
+
+        self.progress_protéine= ctk.CTkProgressBar(
+        self.frame_carre_noir2,
+        width=300,
+        height=10,
+        corner_radius=5,
+        progress_color="#4CAF50",   
+        fg_color="#2A2A4A"          
+        )
+        self.progress_protéine.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
+
+        self.progress_glucides= ctk.CTkProgressBar(
+        self.frame_carre_noir3,
+        width=300,
+        height=10,
+        corner_radius=5,
+        progress_color="#4CAF50",   
+        fg_color="#2A2A4A"          
+        )
+        self.progress_glucides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
+
+        self.progress_lipides= ctk.CTkProgressBar(
+        self.frame_carre_noir4,
+        width=300,
+        height=10,
+        corner_radius=5,
+        progress_color="#4CAF50",   
+        fg_color="#2A2A4A"          
+        )
+        self.progress_lipides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
+
+        
 
 
 
