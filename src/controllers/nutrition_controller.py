@@ -135,6 +135,20 @@ class NutritionController:
                     total_macros["fats"] += macro.fat * ratio
         return total_macros
 
+    def delete_menu(self, menu_time: str):
+        """Supprime un menu par sa date (timestamp) et met à jour l'affichage."""
+        if self.current_profile is None:
+            return
+        self.current_profile.eating_habits = [
+            menu
+            for menu in self.current_profile.eating_habits
+            if menu.date != menu_time
+        ]
+        self.main_controller.settings.serialize(
+            appdirs.user_data_dir("Nutritrack") + "/settings.json"
+        )
+        self.display_menus()
+
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
         # Nettoyer la scrollable frame
@@ -167,15 +181,31 @@ class NutritionController:
                 self.view.menus_scrollable_frame, fg_color="#2A2A4A", corner_radius=8
             )
             menu_frame.pack(fill="x", padx=5, pady=5)
-            
+
+            header_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+            header_frame.pack(fill="x", padx=10, pady=(8, 0))
+
             # Afficher l'heure du menu
             time_label = ctk.CTkLabel(
-                menu_frame,
+                header_frame,
                 text=menu_time.split(" ")[1],  # Extraire l'heure (HH:MM:SS)
                 font=ctk.CTkFont(size=11, weight="bold"),
                 text_color="#4CAF50",
             )
-            time_label.pack(anchor="w", padx=10, pady=(8, 0))
+            time_label.pack(side="left")
+
+            delete_button = ctk.CTkButton(
+                header_frame,
+                text="Supprimer",
+                width=90,
+                height=24,
+                corner_radius=6,
+                fg_color="#D9534F",
+                hover_color="#C9302C",
+                text_color="#FFFFFF",
+                command=lambda mt=menu_time: self.delete_menu(mt),
+            )
+            delete_button.pack(side="right")
             
             # Afficher les aliments du menu
             for food_menu in menu_obj.content:
