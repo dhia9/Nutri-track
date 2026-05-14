@@ -6,14 +6,14 @@ from src.utils.json_serializable import JsonSerializable
 
 
 class FoodData(JsonSerializable):
-    def __init__(self, content:list = []):
+    def __init__(self, content: list = []):
         self.content = content
 
     def deserialize(self, path):
         try:
             # Lire les fichiers depuis le JSON
             with open(path, "r", encoding="utf-8") as f:
-                data:list = json.load(f)
+                data: list = json.load(f)
 
             # Pour chaque Aliment/plat sotcké dans la BDD
             for data_food in data["content"]:

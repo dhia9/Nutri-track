@@ -54,7 +54,7 @@ class Settings(JsonSerializable):
                 # Récupérer les menus. On commence par chercher dans la liste
                 for data_menu in data_profile["eating_habits"]:
                     # Initialiser un objet Menu avec ses attributs
-                    menu = Menu(data_menu["id"], data_menu["date"])
+                    menu = Menu(data_menu["date"])
 
                     # Peupler le contenu du Menu par extraction des informations dans la liste content
                     for data_food in data_menu["content"]:

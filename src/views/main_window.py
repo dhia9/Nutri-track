@@ -51,8 +51,11 @@ class MainPage(ctk.CTk):
         self.controller.set_existing_pages(
             {
                 "Accueil": home_page.HomePage(
-                    self.pages_container, main_controller=self.controller),
-                "Nutrition": NutritioPage(self.pages_container, main_controller=self.controller),
+                    self.pages_container, main_controller=self.controller
+                ),
+                "Nutrition": NutritioPage(
+                    self.pages_container, main_controller=self.controller
+                ),
             }
         )
         self.controller.show_page("Accueil")
