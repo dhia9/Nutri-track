@@ -1,3 +1,5 @@
+import profile
+
 import src.views.home_page as home_page
 import src.views.message_box as message_box
 from src.models.profile import Profile
@@ -73,3 +75,7 @@ class HomeController:
         self.main_controller.current_profile = profile
         if self.view is not None:
             self.view.set_selected_profile(profile)
+
+        settings_view = self.main_controller.controllers["Settings"].view
+        if settings_view is not None:
+            settings_view.update_profile_details(profile)
