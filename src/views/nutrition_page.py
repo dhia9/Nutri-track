@@ -1,20 +1,18 @@
 import customtkinter as ctk
 
 from datetime import datetime, timedelta
+from src.controllers.main_controller import MainController
 
-from distributed import progress
-from flask import app
-
-class NutritionView(ctk.CTkFrame):
-    def __init__(self, parent, controller=None): 
+class NutritioPage(ctk.CTkFrame):
+    def __init__(self, parent, main_controller : MainController): 
         super().__init__(parent)
-        self.controller = controller
+        self.parent = parent
+        self.main_controller = main_controller
+        self.controller = self.main_controller.controllers["Nutrition"]
+        self.controller.view = self  # Assigner la view au contrôleur
         self.current_date = datetime.now()
         
-        #self.profile = controller.current_profile
-        #self.menu = controller.current_menu                a voir comment c'est appeler dans le main controller
-        
-        
+        self.liste_aliments = []
         
         for i in range(10):
             self.grid_columnconfigure(i, weight=1)
@@ -97,8 +95,56 @@ class NutritionView(ctk.CTkFrame):
         self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_ajout.grid(row=5, column=0, columnspan=3, rowspan= 10, padx=10, pady=20, sticky="ew")
         
+        for i in range(10):
+            self.frame_ajout.grid_columnconfigure(i, weight=1)
+            self.frame_ajout.grid_rowconfigure(i, weight=1)
+        
         self.bouton_aliment=ctk.CTkButton(self.frame_ajout, text="✚ Ajouter un aliment ", font=ctk.CTkFont(size=18, weight="bold"), text_color="#A8AFB6")
         self.bouton_aliment.grid(row=0, column=0, sticky="w", padx=15, pady=(10,0))
+
+        # Barre de recherche
+        self.search_entry = ctk.CTkEntry(
+            self.frame_ajout,
+            placeholder_text="🔍 Rechercher un aliment...",
+            fg_color="#2A2A4A",
+            border_color="#4CAF50",
+            border_width=2,
+            text_color="#FFFFFF"
+        )
+        self.search_entry.grid(row=1, column=0, columnspan=10, sticky="ew", padx=15, pady=(15,10))
+        self.search_entry.bind("<KeyRelease>", self.search_foods)  # Binder la recherche
+
+        # Frame scrollable pour la liste d'aliments
+        self.items_frame = ctk.CTkScrollableFrame(
+            self.frame_ajout,
+            fg_color="#35393D",
+            corner_radius=10
+        )
+        self.items_frame.grid(row=2, column=0, columnspan=10, rowspan=8, sticky="nsew", padx=15, pady=(0,10))
+
+        self.food_items = {}
+        #example_foods = ["Pomme", "Poulet grillé", "Riz blanc", "Brocoli", "Œuf", "Yaourt nature", "Pain complet", "Saumon"]
+        list_food = []
+        self.fill_food_list(list_food)
+        
+        for food in list_food:
+            item_frame = ctk.CTkFrame(self.items_frame, fg_color="#2A2A4A", corner_radius=8)
+            item_frame.pack(fill="x", padx=5, pady=5)
+            
+            var = ctk.StringVar(value="off")
+            checkbox = ctk.CTkCheckBox(
+                item_frame,
+                text=food,
+                variable=var,
+                onvalue="on",
+                offvalue="off",
+                text_color="#FFFFFF",
+                fg_color="#4CAF50",
+                checkmark_color="#35393D"
+            )
+            checkbox.pack(side="left", padx=10, pady=10, fill="x", expand=True)
+            
+            self.food_items[food] = {"var": var, "checkbox": checkbox, "frame": item_frame}
 
         self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_aliment.grid(row=5, column=3, columnspan=10, rowspan= 10, padx=10, pady=20, sticky="ew")
@@ -111,7 +157,7 @@ class NutritionView(ctk.CTkFrame):
         width=300,
         height=10,
         corner_radius=5,
-        progress_color="#4CAF50",   
+        progress_color="#2DBA7F",   
         fg_color="#2A2A4A"          
         )
         self.progress_calories.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
@@ -121,7 +167,7 @@ class NutritionView(ctk.CTkFrame):
         width=300,
         height=10,
         corner_radius=5,
-        progress_color="#4CAF50",   
+        progress_color="#2DBA7F",   
         fg_color="#2A2A4A"          
         )
         self.progress_protéine.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
@@ -131,7 +177,7 @@ class NutritionView(ctk.CTkFrame):
         width=300,
         height=10,
         corner_radius=5,
-        progress_color="#4CAF50",   
+        progress_color="#2DBA7F",   
         fg_color="#2A2A4A"          
         )
         self.progress_glucides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
@@ -141,8 +187,8 @@ class NutritionView(ctk.CTkFrame):
         width=300,
         height=10,
         corner_radius=5,
-        progress_color="#4CAF50",   
-        fg_color="#2A2A4A"          
+        progress_color="#2DBA7F",   
+        fg_color="#2A2A4A"         
         )
         self.progress_lipides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10,0))
 
@@ -174,6 +220,14 @@ class NutritionView(ctk.CTkFrame):
         #Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
         self.current_date +=timedelta(days=1)
         self.update_date()
+        
+    def fill_food_list(self, food_list):
+        self.controller.fill_food_list(food_list)
+
+    def search_foods(self, event):
+        """Callback pour la barre de recherche"""
+        query = self.search_entry.get()
+        self.controller.search_foods(query)
 
 
 

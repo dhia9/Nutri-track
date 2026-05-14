@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-from src.views.nutrition_page import NutritionView
+from src.views.nutrition_page import NutritioPage
 
 
 class MainPage(ctk.CTk):
@@ -52,7 +52,7 @@ class MainPage(ctk.CTk):
             {
                 "Accueil": home_page.HomePage(
                     self.pages_container, main_controller=self.controller),
-                "Nutrition": NutritionView(self.pages_container, controller=self),
+                "Nutrition": NutritioPage(self.pages_container, main_controller=self.controller),
             }
         )
         self.controller.show_page("Accueil")
