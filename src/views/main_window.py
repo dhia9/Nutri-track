@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-from src.views.nutrition_page import NutritioPage
+from src.views.nutrition_page import NutritionPage
 
 
 class MainPage(ctk.CTk):
@@ -47,18 +47,22 @@ class MainPage(ctk.CTk):
 
         self._create_sidebar()
         self._create_page_container()
-        # Déléguer la gestion des pages au contrôleur
-        self.controller.set_existing_pages(
-            {
-                "Accueil": home_page.HomePage(
-                    self.pages_container, main_controller=self.controller
-                ),
-                "Nutrition": NutritioPage(
-                    self.pages_container, main_controller=self.controller
-                ),
-            }
+        self.home_page = home_page.HomePage(
+            self.pages_container, main_controller=self.controller
         )
+        self.nutrition_page = None
+
+        pages = {"Accueil": self.home_page}
+        if self.controller.current_profile is not None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Nutrition"] = self.nutrition_page
+
+        # Déléguer la gestion des pages au contrôleur
+        self.controller.set_existing_pages(pages)
         self.controller.show_page("Accueil")
+        self._update_nav_buttons()
 
     def _create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
@@ -143,6 +147,31 @@ class MainPage(ctk.CTk):
         self.pages_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
+
+    def _update_nav_buttons(self):
+        profile_selected = self.controller.current_profile is not None
+        for name, btn in self.nav_buttons.items():
+            if name == "Accueil":
+                continue
+            enabled = profile_selected and name in self.controller.pages
+            btn.configure(
+                state="normal" if enabled else "disabled",
+                text_color=(
+                    self.COLOR_TEXT if enabled else self.COLOR_TEXT_SECONDARY
+                ),
+            )
+
+    def enable_profile_pages(self):
+        if "Nutrition" not in self.controller.pages:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages = {"Accueil": self.home_page, "Nutrition": self.nutrition_page}
+            self.controller.set_existing_pages(pages)
+
+        current = self.controller.current_page or "Accueil"
+        self.controller.show_page(current)
+        self._update_nav_buttons()
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)

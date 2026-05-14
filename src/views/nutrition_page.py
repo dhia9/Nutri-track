@@ -4,14 +4,13 @@ from datetime import datetime, timedelta
 from src.controllers.main_controller import MainController
 
 
-class NutritioPage(ctk.CTkFrame):
+class NutritionPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller: MainController):
         super().__init__(parent)
         self.parent = parent
         self.main_controller = main_controller
         self.controller = self.main_controller.controllers["Nutrition"]
         self.controller.view = self  # Assigner la view au contrôleur
-        self.current_date = datetime.now()
 
         self.liste_aliments = []
 
@@ -113,11 +112,11 @@ class NutritioPage(ctk.CTkFrame):
         )
         self.button_previous.grid(row=0, column=0, padx=4)
 
-        self.button_previous.bind("<Button-1>", self.previous_day)
+        self.button_previous.bind("<Button-1>", self.controller.previous_day)
 
         self.date_label = ctk.CTkLabel(
             date_frame,
-            text=datetime.now().strftime("  %A %d %B %Y  ").capitalize(),
+            text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),
             font=ctk.CTkFont(size=13, weight="bold"),
             corner_radius=10,
         )
@@ -133,7 +132,7 @@ class NutritioPage(ctk.CTkFrame):
             corner_radius=10,
         )
         self.button_next.grid(row=0, column=2, padx=4)
-        self.button_next.bind("<Button-1>", self.next_day)
+        self.button_next.bind("<Button-1>", self.controller.next_day)
 
         self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_ajout.grid(
@@ -146,7 +145,7 @@ class NutritioPage(ctk.CTkFrame):
 
         self.bouton_aliment = ctk.CTkButton(
             self.frame_ajout,
-            text="✚ Ajouter un aliment ",
+            text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=18, weight="bold"),
             text_color="#A8AFB6",
             command=self.add_menu,
@@ -211,18 +210,40 @@ class NutritioPage(ctk.CTkFrame):
                 "frame": item_frame,
             }
 
-        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D", height=200)
         self.frame_aliment.grid(
             row=5, column=3, columnspan=10, rowspan=10, padx=10, pady=20, sticky="ew"
         )
 
-        self.menu = ctk.CTkLabel(
+        for i in range(10):
+            self.frame_aliment.grid_columnconfigure(i, weight=1)
+            self.frame_aliment.grid_rowconfigure(i, weight=1)
+
+        for i in range(10):
+            self.frame_aliment.grid_columnconfigure(i, weight=1)
+            self.frame_aliment.grid_rowconfigure(i, weight=1)
+
+        self.frame_aliment_label = ctk.CTkLabel(
             self.frame_aliment,
-            text="📋 Aliments du jour",
+            text="📋 Menus du jour",
             font=ctk.CTkFont(size=18, weight="bold"),
             text_color="#A8AFB6",
         )
-        self.menu.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.frame_aliment_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+
+        # Scrollable frame pour afficher les menus du jour
+        self.menus_scrollable_frame = ctk.CTkScrollableFrame(
+            self.frame_aliment, fg_color="#35393D", corner_radius=10
+        )
+        self.menus_scrollable_frame.grid(
+            row=1,
+            column=0,
+            columnspan=10,
+            rowspan=9,
+            sticky="nsew",
+            padx=15,
+            pady=(10, 10),
+        )
 
         self.progress_calories = ctk.CTkProgressBar(
             self.frame_carre_noir1,
@@ -264,21 +285,42 @@ class NutritioPage(ctk.CTkFrame):
         )
         self.progress_lipides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
-    def update_date(self):
-        # Mettre a jour sur la vue la date affiché dans le label
-        self.date_label.configure(
-            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
+        # Labels pour afficher les valeurs des macros
+        self.calories_value_label = ctk.CTkLabel(
+            self.frame_carre_noir1,
+            text="0 kcal",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#4CAF50",
         )
+        self.calories_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
 
-    def previous_day(self, event):
-        # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
-        self.current_date -= timedelta(days=1)
-        self.update_date()
+        self.proteines_value_label = ctk.CTkLabel(
+            self.frame_carre_noir2,
+            text="0 g",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#4CAF50",
+        )
+        self.proteines_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
 
-    def next_day(self, event):
-        # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
-        self.current_date += timedelta(days=1)
-        self.update_date()
+        self.glucides_value_label = ctk.CTkLabel(
+            self.frame_carre_noir3,
+            text="0 g",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#4CAF50",
+        )
+        self.glucides_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+
+        self.lipides_value_label = ctk.CTkLabel(
+            self.frame_carre_noir4,
+            text="0 g",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#4CAF50",
+        )
+        self.lipides_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+
+        # Afficher les menus initialement après la création de tous les labels
+        self.display_menus()
+
 
     def fill_food_list(self, food_list):
         self.controller.fill_food_list(food_list)
@@ -290,3 +332,12 @@ class NutritioPage(ctk.CTkFrame):
 
     def add_menu(self):
         self.controller.add_menu()
+
+    def menu_today(self, date:datetime.date):
+        self.controller.menu_today(date)
+    
+    def macros_today(self, date:datetime.date):
+        self.controller.macros_today(date)
+
+    def display_menus(self):
+        self.controller.display_menus()

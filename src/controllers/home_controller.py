@@ -70,6 +70,6 @@ class HomeController:
         )
 
     def select_profile(self, profile: Profile):
-        self.main_controller.current_profile = profile
+        self.main_controller.set_current_profile(profile)
         if self.view is not None:
             self.view.set_selected_profile(profile)

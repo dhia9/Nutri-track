@@ -15,9 +15,7 @@ class MainController:
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
-        self.current_profile = (
-            self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
-        )
+        self.current_profile = None
 
         self.controllers = {
             "Home": home_controller.HomeController(self),
@@ -44,8 +42,18 @@ class MainController:
             page_widget.grid_remove()  # On cache dirrectement => pour la fluidité de la navigation
             self.pages[name] = page_widget  # Enregistrer la page dans le dictionnaire
 
+    def set_current_profile(self, profile):
+        self.current_profile = profile
+        nutrition = self.controllers.get("Nutrition")
+        if nutrition and hasattr(nutrition, "set_current_profile"):
+            nutrition.set_current_profile(profile)
+        if self.view is not None and hasattr(self.view, "enable_profile_pages"):
+            self.view.enable_profile_pages()
+
     def show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
+        if self.current_profile is None and page_name != "Accueil":
+            return
         if page_name not in self.pages:
             return
 
