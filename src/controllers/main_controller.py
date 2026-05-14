@@ -6,6 +6,7 @@ import src.controllers.settings_controller as settings_controller
 import src.models.settings as settings
 import src.controllers.settings_controller as settings_controller
 
+
 class MainController:
     def __init__(self):
         self.view = None  # La vue principale (MainPage) sera assignée après sa création pour éviter les problèmes de dépendances circulaires
@@ -13,7 +14,7 @@ class MainController:
         self.current_page = None
         self.controllers = {
             "Home": home_controller.HomeController(self),
-            "Settings": settings_controller.SettingsController(self)
+            "Settings": settings_controller.SettingsController(self),
         }  # Dico pour stocker les sous contrôlleur de chaque page
         self.settings = settings.Settings()
         self.settings.deserialize(
