@@ -45,8 +45,8 @@ class MainPage(ctk.CTk):
 
         self.nav_buttons = {}
 
-        self._create_sidebar()
-        self._create_page_container()
+        self.create_sidebar()
+        self.create_page_container()
         self.home_page = home_page.HomePage(
             self.pages_container, main_controller=self.controller
         )
@@ -62,9 +62,9 @@ class MainPage(ctk.CTk):
         # Déléguer la gestion des pages au contrôleur
         self.controller.set_existing_pages(pages)
         self.controller.show_page("Accueil")
-        self._update_nav_buttons()
+        self.controller.update_nav_buttons()
 
-    def _create_sidebar(self):
+    def create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
         self.sidebar = ctk.CTkFrame(
             self,
@@ -107,7 +107,7 @@ class MainPage(ctk.CTk):
 
         pages_config = ["Accueil", "Nutrition", "Statistiques"]
         for index, page_name in enumerate(pages_config):
-            btn = self._create_nav_button(self.nav_container, page_name)
+            btn = self.create_nav_button(self.nav_container, page_name)
             btn.grid(row=index, column=0, sticky="ew", padx=6, pady=6)
             self.nav_buttons[page_name] = btn
 
@@ -119,7 +119,7 @@ class MainPage(ctk.CTk):
         )
         footer_label.grid(row=5, column=0, sticky="sw", padx=20, pady=(0, 20))
 
-    def _create_nav_button(self, parent, page_name):
+    def create_nav_button(self, parent, page_name):
         """Crée un bouton de navigation stylisé."""
         btn = ctk.CTkButton(
             parent,
@@ -137,7 +137,7 @@ class MainPage(ctk.CTk):
         )
         return btn
 
-    def _create_page_container(self):
+    def create_page_container(self):
         """Crée la zone de droite qui affichera les autres pages."""
         self.pages_container = ctk.CTkFrame(
             self,
@@ -148,30 +148,12 @@ class MainPage(ctk.CTk):
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
 
-    def _update_nav_buttons(self):
-        profile_selected = self.controller.current_profile is not None
-        for name, btn in self.nav_buttons.items():
-            if name == "Accueil":
-                continue
-            enabled = profile_selected and name in self.controller.pages
-            btn.configure(
-                state="normal" if enabled else "disabled",
-                text_color=(
-                    self.COLOR_TEXT if enabled else self.COLOR_TEXT_SECONDARY
-                ),
-            )
-
-    def enable_profile_pages(self):
-        if "Nutrition" not in self.controller.pages:
+    def build_profile_pages(self):
+        if self.nutrition_page is None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
             )
-            pages = {"Accueil": self.home_page, "Nutrition": self.nutrition_page}
-            self.controller.set_existing_pages(pages)
-
-        current = self.controller.current_page or "Accueil"
-        self.controller.show_page(current)
-        self._update_nav_buttons()
+        return {"Accueil": self.home_page, "Nutrition": self.nutrition_page}
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)
