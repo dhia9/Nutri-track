@@ -1,6 +1,6 @@
-import customtkinter as ctk
+from datetime import datetime
 
-from datetime import datetime, timedelta
+import customtkinter as ctk
 from src.controllers.main_controller import MainController
 
 
@@ -181,7 +181,6 @@ class NutritionPage(ctk.CTkFrame):
         )
 
         self.food_items = {}
-        # example_foods = ["Pomme", "Poulet grillé", "Riz blanc", "Brocoli", "Œuf", "Yaourt nature", "Pain complet", "Saumon"]
         list_food = []
         self.fill_food_list(list_food)
 
@@ -210,7 +209,9 @@ class NutritionPage(ctk.CTkFrame):
                 "frame": item_frame,
             }
 
-        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D", height=200)
+        self.frame_aliment = ctk.CTkFrame(
+            self, corner_radius=15, fg_color="#35393D", height=200
+        )
         self.frame_aliment.grid(
             row=5, column=3, columnspan=10, rowspan=10, padx=10, pady=20, sticky="ew"
         )
@@ -229,7 +230,9 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=18, weight="bold"),
             text_color="#A8AFB6",
         )
-        self.frame_aliment_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.frame_aliment_label.grid(
+            row=0, column=0, sticky="w", padx=15, pady=(10, 0)
+        )
 
         # Scrollable frame pour afficher les menus du jour
         self.menus_scrollable_frame = ctk.CTkScrollableFrame(
@@ -255,7 +258,7 @@ class NutritionPage(ctk.CTkFrame):
         )
         self.progress_calories.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
-        self.progress_protéine = ctk.CTkProgressBar(
+        self.progress_proteine = ctk.CTkProgressBar(
             self.frame_carre_noir2,
             width=300,
             height=10,
@@ -263,7 +266,7 @@ class NutritionPage(ctk.CTkFrame):
             progress_color="#2DBA7F",
             fg_color="#2A2A4A",
         )
-        self.progress_protéine.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
+        self.progress_proteine.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
         self.progress_glucides = ctk.CTkProgressBar(
             self.frame_carre_noir3,
@@ -292,7 +295,9 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#4CAF50",
         )
-        self.calories_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.calories_value_label.grid(
+            row=2, column=0, sticky="w", padx=15, pady=(10, 0)
+        )
 
         self.proteines_value_label = ctk.CTkLabel(
             self.frame_carre_noir2,
@@ -300,7 +305,9 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#4CAF50",
         )
-        self.proteines_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.proteines_value_label.grid(
+            row=2, column=0, sticky="w", padx=15, pady=(10, 0)
+        )
 
         self.glucides_value_label = ctk.CTkLabel(
             self.frame_carre_noir3,
@@ -308,7 +315,9 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#4CAF50",
         )
-        self.glucides_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.glucides_value_label.grid(
+            row=2, column=0, sticky="w", padx=15, pady=(10, 0)
+        )
 
         self.lipides_value_label = ctk.CTkLabel(
             self.frame_carre_noir4,
@@ -316,11 +325,12 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#4CAF50",
         )
-        self.lipides_value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+        self.lipides_value_label.grid(
+            row=2, column=0, sticky="w", padx=15, pady=(10, 0)
+        )
 
         # Afficher les menus initialement après la création de tous les labels
         self.display_menus()
-
 
     def fill_food_list(self, food_list):
         self.controller.fill_food_list(food_list)
@@ -333,10 +343,10 @@ class NutritionPage(ctk.CTkFrame):
     def add_menu(self):
         self.controller.add_menu()
 
-    def menu_today(self, date:datetime.date):
+    def menu_today(self, date: datetime.date):
         self.controller.menu_today(date)
-    
-    def macros_today(self, date:datetime.date):
+
+    def macros_today(self, date: datetime.date):
         self.controller.macros_today(date)
 
     def display_menus(self):

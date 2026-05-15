@@ -60,9 +60,7 @@ class MainController:
             btn.configure(
                 state="normal" if enabled else "disabled",
                 text_color=(
-                    self.view.COLOR_TEXT
-                    if enabled
-                    else self.view.COLOR_TEXT_SECONDARY
+                    self.view.COLOR_TEXT if enabled else self.view.COLOR_TEXT_SECONDARY
                 ),
             )
 

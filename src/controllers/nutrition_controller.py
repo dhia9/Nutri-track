@@ -1,10 +1,11 @@
-import src.controllers.main_controller as main_controller
-import src.data.food_data as food_data
-import src.views.food_quantity as food_quantity
-import src.models.menu as menu
 from datetime import datetime, timedelta
+
 import appdirs
 import customtkinter as ctk
+import src.controllers.main_controller as main_controller
+import src.data.food_data as food_data
+import src.models.menu as menu
+import src.views.food_quantity as food_quantity
 
 
 class NutritionController:
@@ -53,7 +54,7 @@ class NutritionController:
             else:
                 # Cacher l'aliment
                 food_data["frame"].pack_forget()
-    
+
     def previous_day(self, event):
         # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
         self.current_date -= timedelta(days=1)
@@ -102,28 +103,30 @@ class NutritionController:
         self.main_controller.settings.serialize(
             appdirs.user_data_dir("Nutritrack") + "/settings.json"
         )  # Sauvegarder les données après l'ajout du menu
-        
+
         # Décocher toutes les cases
         for food_name, data in self.view.food_items.items():
             data["var"].set("off")
-        
+
         self.display_menus()  # Mettre à jour l'affichage des menus après l'ajout
 
-    def menus_today(self, date:datetime.date):
+    def menus_today(self, date: datetime.date):
         """Retourne les menus consommés par l'utilisateur à un jour donné"""
-        profile_menus = dict()
+        profile_menus = {}
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
-        
+
         for menu in self.current_profile.eating_habits:
-            if menu.date.startswith(date_str):  # Vérifier si le menu correspond à la date donnée   
+            if menu.date.startswith(
+                date_str
+            ):  # Vérifier si le menu correspond à la date donnée
                 profile_menus[menu.date] = menu
         return profile_menus
-    
-    def macros_today(self, date:datetime.date):
+
+    def macros_today(self, date: datetime.date):
         """Retourne les macros consommés par l'utilisateur à un jour donné"""
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
         menus = self.menus_today(date)
-        
+
         for menu in menus.values():
             for food_menu in menu.content:
                 if food_menu.macros:
@@ -154,10 +157,10 @@ class NutritionController:
         # Nettoyer la scrollable frame
         for widget in self.view.menus_scrollable_frame.winfo_children():
             widget.destroy()
-        
+
         # Récupérer les menus du jour
         menus = self.menus_today(self.current_date)
-        
+
         # Afficher "Aucun menu consommé" s'il n'y a pas de menu
         if not menus:
             no_menu_label = ctk.CTkLabel(
@@ -173,7 +176,7 @@ class NutritionController:
             self.view.glucides_value_label.configure(text="0 g")
             self.view.lipides_value_label.configure(text="0 g")
             return
-        
+
         # Afficher chaque menu du jour
         for menu_time, menu_obj in menus.items():
             # Créer un frame pour chaque menu
@@ -206,7 +209,7 @@ class NutritionController:
                 command=lambda mt=menu_time: self.delete_menu(mt),
             )
             delete_button.pack(side="right")
-            
+
             # Afficher les aliments du menu
             for food_menu in menu_obj.content:
                 food_label = ctk.CTkLabel(
@@ -216,19 +219,19 @@ class NutritionController:
                     text_color="#FFFFFF",
                 )
                 food_label.pack(anchor="w", padx=20, pady=2)
-        
+
         # Mettre à jour les labels des macros totales
         macros = self.macros_today(self.current_date)
         self.view.calories_value_label.configure(text=f"{int(macros['calories'])} kcal")
         self.view.proteines_value_label.configure(text=f"{int(macros['proteins'])} g")
-        self.view.glucides_value_label.configure(text=f"{int(macros['carbohydrate'])} g")
+        self.view.glucides_value_label.configure(
+            text=f"{int(macros['carbohydrate'])} g"
+        )
         self.view.lipides_value_label.configure(text=f"{int(macros['fats'])} g")
 
-    
     def update_date(self):
         # Mettre a jour sur la vue la date affiché dans le label
         self.view.date_label.configure(
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
         self.display_menus()
-    
