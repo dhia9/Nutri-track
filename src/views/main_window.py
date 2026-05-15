@@ -1,4 +1,8 @@
+import os
+import tkinter as tk
+
 import customtkinter as ctk
+from PIL import Image
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
 from src.views.nutrition_page import NutritionPage
@@ -24,6 +28,24 @@ class MainPage(ctk.CTk):
         self.controller.view = self
 
         self.title("Nutritrack")
+        logo_path = os.path.normpath(
+            os.path.join(os.getcwd(), "src", "assets", "images", "Logo_sans_txt.png")
+        )
+        self._sidebar_logo = None
+        if os.path.exists(logo_path):
+            self._icon_image = tk.PhotoImage(file=logo_path)
+            self.iconphoto(True, self._icon_image)
+            logo_image = Image.open(logo_path)
+            orig_width, orig_height = logo_image.size
+            base_size = 48
+            scale_factor = 4
+            target_width = base_size * scale_factor
+            target_height = max(1, int(target_width * orig_height / orig_width))
+            self._sidebar_logo = ctk.CTkImage(
+                light_image=logo_image,
+                dark_image=logo_image,
+                size=(target_width, target_height),
+            )
         self.geometry("1280x760")
         self.minsize(960, 560)
 
@@ -84,21 +106,20 @@ class MainPage(ctk.CTk):
         self.sidebar.grid_rowconfigure(4, weight=1)
         self.sidebar.grid_columnconfigure(0, weight=1)
 
-        title_label = ctk.CTkLabel(
-            self.sidebar,
-            text="NUTRITRACK",
-            font=ctk.CTkFont(size=26, weight="bold"),
-            text_color=self.COLOR_TEXT,
-        )
-        title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(24, 2))
-
-        subtitle_label = ctk.CTkLabel(
-            self.sidebar,
-            text="Suivi nutritionnel",
-            font=ctk.CTkFont(size=12),
-            text_color=self.COLOR_TEXT_SECONDARY,
-        )
-        subtitle_label.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 24))
+        if self._sidebar_logo is not None:
+            ctk.CTkLabel(
+                self.sidebar,
+                text="",
+                image=self._sidebar_logo,
+            ).grid(row=0, column=0, sticky="w", padx=20, pady=(20, 2))
+        else:
+            title_label = ctk.CTkLabel(
+                self.sidebar,
+                text="NUTRITRACK",
+                font=ctk.CTkFont(size=26, weight="bold"),
+                text_color=self.COLOR_TEXT,
+            )
+            title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(24, 2))
 
         nav_label = ctk.CTkLabel(
             self.sidebar,
@@ -106,10 +127,10 @@ class MainPage(ctk.CTk):
             font=ctk.CTkFont(size=11, weight="bold"),
             text_color=self.COLOR_TEXT_SECONDARY,
         )
-        nav_label.grid(row=2, column=0, sticky="w", padx=20, pady=(0, 10))
+        nav_label.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
 
         self.nav_container = ctk.CTkFrame(self.sidebar, fg_color=self.COLOR_SIDEBAR)
-        self.nav_container.grid(row=3, column=0, sticky="ew", padx=14)
+        self.nav_container.grid(row=2, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
         pages_config = ["Accueil", "Nutrition", "Statistiques"]
