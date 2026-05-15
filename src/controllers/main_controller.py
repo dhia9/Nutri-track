@@ -55,7 +55,10 @@ class MainController:
         nutrition = self.controllers.get("Nutrition")
         if nutrition and hasattr(nutrition, "set_current_profile"):
             nutrition.set_current_profile(profile)
-        self.enable_profile_pages()
+        if self.view is not None and hasattr(self.view, "reload_profile_pages"):
+            self.view.reload_profile_pages()
+        else:
+            self.enable_profile_pages()
 
     def update_nav_buttons(self):
         if self.view is None:

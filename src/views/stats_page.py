@@ -100,9 +100,9 @@ class StatsPage(ctk.CTkFrame):
 
     def _chart_macros_pie(self, data, parent):
         card = self._create_card(parent, "Macros")
-        avg_p = sum(d["proteins"] for d in data) / len(data)
-        avg_c = sum(d["carbs"] for d in data) / len(data)
-        avg_f = sum(d["fats"] for d in data) / len(data)
+        avg_p = self.controller.mesure_avg(data, "proteins")
+        avg_c = self.controller.mesure_avg(data, "carbs")
+        avg_f = self.controller.mesure_avg(data, "fats")
         fig, ax = plt.subplots(figsize=(4, 4))
         ax.pie(
             [avg_p, avg_c, avg_f],
@@ -119,17 +119,11 @@ class StatsPage(ctk.CTkFrame):
         )
         self._embed(fig, card)
 
-    def mesure_avg(self, data, macro_type):
-        s = 0
-        for d in data:
-            s += d[macro_type]
-        return s / len(data)
-
     def _chart_macros_bar(self, data, parent):
         card = self._create_card(parent, "Comparaison")
-        avg_p = self.mesure_avg(data, "proteins")
-        avg_c = self.mesure_avg(data, "carbs")
-        avg_f = self.mesure_avg(data, "fats")
+        avg_p = self.controller.mesure_avg(data, "proteins")
+        avg_c = self.controller.mesure_avg(data, "carbs")
+        avg_f = self.controller.mesure_avg(data, "fats")
         fig, ax = plt.subplots(figsize=(4, 4))
         bars = ax.bar(
             [1, 2, 3], [avg_p, avg_c, avg_f], color=[C_PURPLE, C_BLUE, C_ORANGE]

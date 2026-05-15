@@ -53,6 +53,7 @@ class MainPage(ctk.CTk):
             self.pages_container, main_controller=self.controller
         )
         self.nutrition_page = None
+        self.stats_page = None
 
         pages = {"Accueil": self.home_page}
         if self.controller.current_profile is not None:
@@ -159,7 +160,42 @@ class MainPage(ctk.CTk):
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
             )
-        return {"Accueil": self.home_page, "Nutrition": self.nutrition_page}
+        if self.stats_page is None:
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+        return {
+            "Accueil": self.home_page,
+            "Nutrition": self.nutrition_page,
+            "Statistiques": self.stats_page,
+        }
+
+    def reload_profile_pages(self):
+        if self.nutrition_page is not None and self.nutrition_page.winfo_exists():
+            self.nutrition_page.destroy()
+        if self.stats_page is not None and self.stats_page.winfo_exists():
+            self.stats_page.destroy()
+
+        self.nutrition_page = None
+        self.stats_page = None
+
+        pages = {"Accueil": self.home_page}
+        if self.controller.current_profile is not None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Nutrition"] = self.nutrition_page
+            pages["Statistiques"] = self.stats_page
+
+        self.controller.set_existing_pages(pages)
+        target_page = self.controller.current_page
+        if target_page not in pages:
+            target_page = "Accueil"
+        self.controller.show_page(target_page)
+        self.controller.update_nav_buttons()
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)

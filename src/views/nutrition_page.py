@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import customtkinter as ctk
 from src.controllers.main_controller import MainController
 
@@ -98,7 +96,7 @@ class NutritionPage(ctk.CTkFrame):
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=18, weight="bold"),
             text_color="#A8AFB6",
-            command=self.add_menu,
+            command=self.controller.add_menu,
         )
         self.bouton_aliment.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
 
@@ -114,7 +112,10 @@ class NutritionPage(ctk.CTkFrame):
         self.search_entry.grid(
             row=1, column=0, columnspan=10, sticky="ew", padx=15, pady=(15, 10)
         )
-        self.search_entry.bind("<KeyRelease>", self.search_foods)
+        self.search_entry.bind(
+            "<KeyRelease>",
+            lambda event: self.controller.search_foods(self.search_entry.get()),
+        )
 
         # Frame scrollable pour la liste d'aliments
         self.items_frame = ctk.CTkScrollableFrame(
@@ -132,7 +133,7 @@ class NutritionPage(ctk.CTkFrame):
 
         self.food_items = {}
         list_food = []
-        self.fill_food_list(list_food)
+        self.controller.fill_food_list(list_food)
 
         for food in list_food:
             item_frame = ctk.CTkFrame(
@@ -278,7 +279,7 @@ class NutritionPage(ctk.CTkFrame):
         )
 
         # Afficher les menus initialement après la création de tous les labels
-        self.display_menus()
+        self.controller.display_menus()
 
     def _configure_frame_grid(self, frame):
         """Factorisation : Configure la grille d'un frame avec poids égal"""
@@ -327,22 +328,3 @@ class NutritionPage(ctk.CTkFrame):
         value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_value_label", value_label)
 
-    def fill_food_list(self, food_list):
-        self.controller.fill_food_list(food_list)
-
-    def search_foods(self, event):
-        """Callback pour la barre de recherche"""
-        query = self.search_entry.get()
-        self.controller.search_foods(query)
-
-    def add_menu(self):
-        self.controller.add_menu()
-
-    def menu_today(self, date: datetime.date):
-        self.controller.menu_today(date)
-
-    def macros_today(self, date: datetime.date):
-        self.controller.macros_today(date)
-
-    def display_menus(self):
-        self.controller.display_menus()
