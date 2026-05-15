@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
+import src.views.stats_page as stats_page
 import src.views.settings_page as settings_page
 
 
@@ -26,7 +27,8 @@ class MainPage(ctk.CTk):
         self.geometry("1280x760")
         self.minsize(960, 560)
 
-        self.update_idletasks()  # update les dimensions de la fenêtre avant de calculer la position
+        # update les dimensions de la fenêtre avant de calculer la position
+        self.update_idletasks()
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         x = (screen_width // 2) - (1280 // 2)
@@ -51,6 +53,9 @@ class MainPage(ctk.CTk):
         self.controller.set_existing_pages(
             {
                 "Accueil": home_page.HomePage(
+                    self.pages_container, main_controller=self.controller
+                ),
+                "Statistiques": stats_page.StatsPage(
                     self.pages_container, main_controller=self.controller
                 ),
                 "Paramètres": settings_page.SettingsPage(
