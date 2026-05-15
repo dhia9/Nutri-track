@@ -4,25 +4,34 @@ import appdirs
 import src.controllers.home_controller as home_controller
 import src.controllers.nutrition_controller as nutrition_controller
 import src.models.settings as settings
+from src.controllers.stats_controller import StatsController
 
 
 class MainController:
     def __init__(self):
-        self.view = None  # La vue principale (MainPage) sera assignée après sa création pour éviter les problèmes de dépendances circulaires
+        # La vue principale (MainPage) sera assignée après sa création pour éviter les problèmes de dépendances circulaires
+        self.view = None
         self.pages = {}
         self.current_page = None
-        self.settings = settings.Settings()
-        self.settings.deserialize(
-            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
-        )  # Charger les données depuis le fichier JSON
-        self.current_profile = None
-
         self.controllers = {
             "Home": home_controller.HomeController(self),
             "Nutrition": nutrition_controller.NutritionController(
                 self
-            ),  # Placeholder pour le contrôleur de la page Nutrition
+            ),
+            "Stats": StatsController(self),
         }  # Dico pour stocker les sous contrôlleur de chaque page
+        self.settings = settings.Settings()
+        self.settings.deserialize(
+            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
+        )  # Charger les données depuis le fichier JSON
+        self.current_profile = (
+            self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
+        )
+
+    def show_page(self, page_name):
+        page = self.pages[page_name]
+        page.grid(row=0, column=0, sticky="nsew")
+        page.tkraise()
 
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.
@@ -40,7 +49,8 @@ class MainController:
         for name, page_widget in pages.items():
             page_widget.grid(row=0, column=0, sticky="nsew")  # On affiche
             page_widget.grid_remove()  # On cache dirrectement => pour la fluidité de la navigation
-            self.pages[name] = page_widget  # Enregistrer la page dans le dictionnaire
+            # Enregistrer la page dans le dictionnaire
+            self.pages[name] = page_widget
 
     def set_current_profile(self, profile):
         self.current_profile = profile
