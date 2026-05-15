@@ -14,89 +14,35 @@ class NutritionPage(ctk.CTkFrame):
 
         self.liste_aliments = []
 
+        # Configuration du grid principal
         for i in range(10):
             self.grid_columnconfigure(i, weight=1)
-            self.grid_rowconfigure(i, weight=1)
+        for i in range(15):
+            self.grid_rowconfigure(i, weight=1 if i >= 5 else 0)
 
-        self.grid_rowconfigure(0, weight=0)
-
+        # Titre principal
         self.title = ctk.CTkLabel(
             self,
-            text="🍽️Gestion nutritionnelle",
+            text="Gestion nutritionnelle",
             font=ctk.CTkFont(size=26, weight="bold"),
         )
-        self.title.grid(row=0, column=0, columnspan=3, sticky="w", padx=20)
+        self.title.grid(
+            row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(10, 0)
+        )
 
+        # Sous-titre Profil
         self.tiltle2 = ctk.CTkLabel(
             self, text="Profil : ", font=ctk.CTkFont(size=13), text_color="#A8AFB6"
         )
         self.tiltle2.grid(
-            row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(50, 0)
+            row=1, column=0, columnspan=3, sticky="w", padx=20, pady=(5, 0)
         )
 
-        self.frame_carre_noir1 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
-        )
-        self.frame_carre_noir1.grid(
-            row=2, column=0, columnspan=2, padx=10, pady=20, sticky="ew"
-        )
-
-        for i in range(10):
-            self.frame_carre_noir1.grid_columnconfigure(i, weight=1)
-            self.frame_carre_noir1.grid_rowconfigure(i, weight=1)
-
-        self.frame_carre_noir2 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
-        )
-        self.frame_carre_noir2.grid(
-            row=2, column=2, columnspan=3, padx=10, pady=20, sticky="ew"
-        )
-
-        for i in range(10):
-            self.frame_carre_noir2.grid_columnconfigure(i, weight=1)
-            self.frame_carre_noir2.grid_rowconfigure(i, weight=1)
-
-        self.frame_carre_noir3 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
-        )
-        self.frame_carre_noir3.grid(
-            row=2, column=5, columnspan=3, padx=10, pady=20, sticky="ew"
-        )
-
-        for i in range(10):
-            self.frame_carre_noir3.grid_columnconfigure(i, weight=1)
-            self.frame_carre_noir3.grid_rowconfigure(i, weight=1)
-
-        self.frame_carre_noir4 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
-        )
-        self.frame_carre_noir4.grid(
-            row=2, column=8, columnspan=2, padx=10, pady=20, sticky="ew"
-        )
-
-        for i in range(10):
-            self.frame_carre_noir4.grid_columnconfigure(i, weight=1)
-            self.frame_carre_noir4.grid_rowconfigure(i, weight=1)
-
-        self.calories_label = ctk.CTkLabel(
-            self.frame_carre_noir1, text="Calories", font=ctk.CTkFont(size=13)
-        )
-        self.calories_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
-
-        self.proteines_label = ctk.CTkLabel(
-            self.frame_carre_noir2, text="Protéines", font=ctk.CTkFont(size=13)
-        )
-        self.proteines_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
-
-        self.glucides_label = ctk.CTkLabel(
-            self.frame_carre_noir3, text="Glucides", font=ctk.CTkFont(size=13)
-        )
-        self.glucides_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
-
-        self.lipides_label = ctk.CTkLabel(
-            self.frame_carre_noir4, text="Lipides", font=ctk.CTkFont(size=13)
-        )
-        self.lipides_label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+        # Cartes de macros (Calories, Protéines, Glucides, Lipides)
+        self._create_macro_card("Calories", "frame_carre_noir1", 2, 0, 2)
+        self._create_macro_card("Protéines", "frame_carre_noir2", 2, 2, 3)
+        self._create_macro_card("Glucides", "frame_carre_noir3", 2, 5, 3)
+        self._create_macro_card("Lipides", "frame_carre_noir4", 2, 8, 2)
 
         date_frame = ctk.CTkFrame(self, fg_color="#000000", corner_radius=10)
         date_frame.grid(row=0, column=8, sticky="w", padx=10, pady=5)
@@ -136,12 +82,16 @@ class NutritionPage(ctk.CTkFrame):
 
         self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_ajout.grid(
-            row=5, column=0, columnspan=3, rowspan=10, padx=10, pady=20, sticky="ew"
+            row=5,
+            column=0,
+            columnspan=3,
+            rowspan=10,
+            padx=10,
+            pady=(10, 5),
+            sticky="nsew",
         )
 
-        for i in range(10):
-            self.frame_ajout.grid_columnconfigure(i, weight=1)
-            self.frame_ajout.grid_rowconfigure(i, weight=1)
+        self._configure_frame_grid(self.frame_ajout)
 
         self.bouton_aliment = ctk.CTkButton(
             self.frame_ajout,
@@ -164,7 +114,7 @@ class NutritionPage(ctk.CTkFrame):
         self.search_entry.grid(
             row=1, column=0, columnspan=10, sticky="ew", padx=15, pady=(15, 10)
         )
-        self.search_entry.bind("<KeyRelease>", self.search_foods)  # Binder la recherche
+        self.search_entry.bind("<KeyRelease>", self.search_foods)
 
         # Frame scrollable pour la liste d'aliments
         self.items_frame = ctk.CTkScrollableFrame(
@@ -209,20 +159,18 @@ class NutritionPage(ctk.CTkFrame):
                 "frame": item_frame,
             }
 
-        self.frame_aliment = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D", height=200
-        )
+        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         self.frame_aliment.grid(
-            row=5, column=3, columnspan=10, rowspan=10, padx=10, pady=20, sticky="ew"
+            row=5,
+            column=3,
+            columnspan=7,
+            rowspan=10,
+            padx=10,
+            pady=(10, 5),
+            sticky="nsew",
         )
 
-        for i in range(10):
-            self.frame_aliment.grid_columnconfigure(i, weight=1)
-            self.frame_aliment.grid_rowconfigure(i, weight=1)
-
-        for i in range(10):
-            self.frame_aliment.grid_columnconfigure(i, weight=1)
-            self.frame_aliment.grid_rowconfigure(i, weight=1)
+        self._configure_frame_grid(self.frame_aliment)
 
         self.frame_aliment_label = ctk.CTkLabel(
             self.frame_aliment,
@@ -331,6 +279,53 @@ class NutritionPage(ctk.CTkFrame):
 
         # Afficher les menus initialement après la création de tous les labels
         self.display_menus()
+
+    def _configure_frame_grid(self, frame):
+        """Factorisation : Configure la grille d'un frame avec poids égal"""
+        for i in range(10):
+            frame.grid_columnconfigure(i, weight=1)
+            frame.grid_rowconfigure(i, weight=1)
+
+    def _create_macro_card(self, macro_name, frame_attr, row, col_start, col_span):
+        """Factorisation : Crée une carte de macro (Calories, Protéines, etc.)"""
+        frame = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        frame.grid(
+            row=row,
+            column=col_start,
+            columnspan=col_span,
+            padx=10,
+            pady=20,
+            sticky="ew",
+        )
+        self._configure_frame_grid(frame)
+        setattr(self, frame_attr, frame)
+
+        # Label du titre
+        label = ctk.CTkLabel(frame, text=macro_name, font=ctk.CTkFont(size=13))
+        label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
+        setattr(self, f"{macro_name.lower()}_label", label)
+
+        # Barre de progression
+        progress = ctk.CTkProgressBar(
+            frame,
+            width=300,
+            height=10,
+            corner_radius=5,
+            progress_color="#2DBA7F",
+            fg_color="#2A2A4A",
+        )
+        progress.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
+        setattr(self, f"progress_{macro_name.lower()}", progress)
+
+        # Label de valeur
+        value_label = ctk.CTkLabel(
+            frame,
+            text="0",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#4CAF50",
+        )
+        value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
+        setattr(self, f"{macro_name.lower()}_value_label", value_label)
 
     def fill_food_list(self, food_list):
         self.controller.fill_food_list(food_list)

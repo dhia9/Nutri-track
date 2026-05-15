@@ -1,9 +1,9 @@
 import customtkinter as ctk
 
 
-class FoodQuantity(ctk.CTk):
-    def __init__(self, food_list):
-        super().__init__()
+class FoodQuantity(ctk.CTkToplevel):
+    def __init__(self, food_list, parent=None):
+        super().__init__(parent)
         self.food_list = food_list
         self.quantities = {}  # Dictionnaire pour stocker les valeurs des entries
 
@@ -12,8 +12,21 @@ class FoodQuantity(ctk.CTk):
         self.geometry("600x700")
         self.resizable(True, True)
 
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("green")
+        # Mettre la fenêtre au premier plan sur Windows
+        self.attributes("-topmost", True)
+        self.lift()
+        self.focus()
+
+        # Rendre la fenêtre modale
+        self.grab_set()
+
+        # Centrer la fenêtre sur l'écran
+        self.update_idletasks()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = (screen_width // 2) - 300
+        y = (screen_height // 2) - 350
+        self.geometry(f"600x700+{x}+{y}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)

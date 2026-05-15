@@ -6,6 +6,7 @@ import src.controllers.main_controller as main_controller
 import src.data.food_data as food_data
 import src.models.menu as menu
 import src.views.food_quantity as food_quantity
+import src.views.message_box as message_box
 
 
 class NutritionController:
@@ -81,23 +82,40 @@ class NutritionController:
         ]
 
         if not selected_foods:
+            message_box.CTkMessageBox(
+                parent=self.view.winfo_toplevel(),
+                title="Aucun aliment sélectionné",
+                message="Veuillez sélectionner au moins un aliment avant d'ajouter un menu.",
+                button_text="OK",
+            )
             return  # Aucun aliment sélectionné, ne rien faire
 
         # Ouvrir la fenêtre de quantités
-        quantity_window = food_quantity.FoodQuantity(selected_foods)
+        quantity_window = food_quantity.FoodQuantity(
+            selected_foods, parent=self.view.winfo_toplevel()
+        )
         quantity_window.wait_window()  # Attendre que la fenêtre soit fermée
         quantities = quantity_window.quantities  # Récupérer les quantités saisies
+
+        # Si l'utilisateur a annulé, ne rien faire
+        if not quantities:
+            return
+
         a_menu = menu.Menu(
             datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )  # reformater la date pour le traitement des données avec .strptime lors de la désérialisation du JSON (pour la partie stat notamment)
 
         for food_name, quantity in quantities.items():
             food = self.food_by_name(food_name)
-            if food:
+            if food and quantity > 0:  # Vérifier que la quantité est > 0
                 a_menu.add_food_menu(
                     food=food,
                     quantity=quantity,
                 )
+
+        # Ne sauvegarder que si le menu contient au moins un aliment
+        if not a_menu.content:
+            return
 
         self.current_profile.eating_habits.append(a_menu)
         self.main_controller.settings.serialize(
