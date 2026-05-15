@@ -13,13 +13,6 @@ class MainController:
         self.view = None
         self.pages = {}
         self.current_page = None
-        self.controllers = {
-            "Home": home_controller.HomeController(self),
-            "Nutrition": nutrition_controller.NutritionController(
-                self
-            ),
-            "Stats": StatsController(self),
-        }  # Dico pour stocker les sous contrôlleur de chaque page
         self.settings = settings.Settings()
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
@@ -27,6 +20,11 @@ class MainController:
         self.current_profile = (
             self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
         )
+        self.controllers = {
+            "Home": home_controller.HomeController(self),
+            "Nutrition": nutrition_controller.NutritionController(self),
+            "Stats": StatsController(self),
+        }  # Dico pour stocker les sous contrôlleur de chaque page
 
     def show_page(self, page_name):
         page = self.pages[page_name]
