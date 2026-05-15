@@ -4,9 +4,9 @@ import src.views.home_page as home_page
 import src.views.stats_page as stats_page
 
 
-
 class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
+
     COLOR_BG = "#121212"
     COLOR_SIDEBAR = "#1D1F21"
     COLOR_CONTENT = "#17191B"
@@ -54,11 +54,9 @@ class MainPage(ctk.CTk):
                 "Accueil": home_page.HomePage(
                     self.pages_container, main_controller=self.controller
                 ),
-
                 "Statistiques": stats_page.StatsPage(
-                    self.pages_container,
-                    main_controller=self.controller
-                )
+                    self.pages_container, main_controller=self.controller
+                ),
             }
         )
         self.controller.show_page("Accueil")
@@ -99,8 +97,7 @@ class MainPage(ctk.CTk):
             text_color=self.COLOR_TEXT_SECONDARY,
         )
         nav_label.grid(row=2, column=0, sticky="w", padx=20, pady=(0, 10))
-        self.nav_container = ctk.CTkFrame(
-            self.sidebar, fg_color=self.COLOR_SIDEBAR)
+        self.nav_container = ctk.CTkFrame(self.sidebar, fg_color=self.COLOR_SIDEBAR)
         self.nav_container.grid(row=3, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
@@ -143,13 +140,14 @@ class MainPage(ctk.CTk):
             fg_color=self.COLOR_CONTENT,
             corner_radius=0,
         )
-        self.pages_container.grid(
-            row=0, column=1, sticky="nsew", padx=0, pady=0)
+        self.pages_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)
 
-    def show_page(self, page_name):  # Permet de changer de page et d'afficher la page d'accueil par défaut
+    def show_page(
+        self, page_name
+    ):  # Permet de changer de page et d'afficher la page d'accueil par défaut
         self.controller.show_page(page_name)

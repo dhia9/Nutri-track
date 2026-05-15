@@ -5,7 +5,6 @@ import src.models.settings as settings
 from src.controllers.stats_controller import StatsController
 
 
-
 class MainController:
     def __init__(self):
         # La vue principale (MainPage) sera assignée après sa création pour éviter les problèmes de dépendances circulaires
@@ -21,9 +20,9 @@ class MainController:
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
         self.current_profile = (
-            self.settings.profiles[0] if len(
-                self.settings.profiles) > 0 else None
+            self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
         )
+
     def show_page(self, page_name):
         page = self.pages[page_name]
         page.grid(row=0, column=0, sticky="nsew")
