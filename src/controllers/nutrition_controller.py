@@ -10,7 +10,7 @@ import src.views.message_box as message_box
 
 
 class NutritionController:
-    def __init__(self, main_controller: main_controller.MainController):
+    def __init__(self, main_controller: main_controller):
         self.main_controller = main_controller
         self.view = None  # La view sera assignée par la view elle-même
         self.current_profile = self.main_controller.current_profile
