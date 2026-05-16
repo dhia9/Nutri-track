@@ -1,0 +1,724 @@
+{
+  "content": [
+    {
+      "name": "Poulet cru",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 22,
+          "calorie": 120,
+          "fat": 2,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Blanc de poulet",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 24,
+          "calorie": 110,
+          "fat": 1.2,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Dinde",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 29,
+          "calorie": 135,
+          "fat": 1,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Boeuf maigre",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 21,
+          "calorie": 137,
+          "fat": 5,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Steak haché 5%",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 21,
+          "calorie": 135,
+          "fat": 5.3,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Porc",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 27,
+          "calorie": 242,
+          "fat": 14,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Agneau",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 25,
+          "calorie": 218,
+          "fat": 13,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Saumon",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 20,
+          "calorie": 208,
+          "fat": 13,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Thon",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 26,
+          "calorie": 116,
+          "fat": 1,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Cabillaud",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 18,
+          "calorie": 82,
+          "fat": 0.7,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Maquereau",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 19,
+          "calorie": 239,
+          "fat": 17,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Sardines",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 25,
+          "calorie": 208,
+          "fat": 11,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Crevettes",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 21,
+          "calorie": 99,
+          "fat": 1.1,
+          "carbohydrate": 0.9
+        }
+      ]
+    },
+    {
+      "name": "Oeuf entier",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 13,
+          "calorie": 147,
+          "fat": 10,
+          "carbohydrate": 0.6
+        }
+      ]
+    },
+    {
+      "name": "Blanc d'oeuf",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 11,
+          "calorie": 52,
+          "fat": 0.2,
+          "carbohydrate": 0.7
+        }
+      ]
+    },
+    {
+      "name": "Lait demi-écrémé",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 3.2,
+          "calorie": 46,
+          "fat": 1.5,
+          "carbohydrate": 4.8
+        }
+      ]
+    },
+    {
+      "name": "Yaourt nature",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 3.5,
+          "calorie": 61,
+          "fat": 3.3,
+          "carbohydrate": 4.7
+        }
+      ]
+    },
+    {
+      "name": "Yaourt grec 0%",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 10,
+          "calorie": 59,
+          "fat": 0.4,
+          "carbohydrate": 3.6
+        }
+      ]
+    },
+    {
+      "name": "Skyr",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 11,
+          "calorie": 63,
+          "fat": 0.2,
+          "carbohydrate": 4
+        }
+      ]
+    },
+    {
+      "name": "Fromage blanc",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 8,
+          "calorie": 98,
+          "fat": 4,
+          "carbohydrate": 3.5
+        }
+      ]
+    },
+    {
+      "name": "Emmental",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 28,
+          "calorie": 380,
+          "fat": 29,
+          "carbohydrate": 1
+        }
+      ]
+    },
+    {
+      "name": "Parmesan",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 38,
+          "calorie": 431,
+          "fat": 29,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Riz blanc cru",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 7,
+          "calorie": 360,
+          "fat": 0.6,
+          "carbohydrate": 78
+        }
+      ]
+    },
+    {
+      "name": "Riz complet cru",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 7.5,
+          "calorie": 365,
+          "fat": 2.7,
+          "carbohydrate": 77
+        }
+      ]
+    },
+    {
+      "name": "Pâtes crues",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 13,
+          "calorie": 371,
+          "fat": 1.5,
+          "carbohydrate": 75
+        }
+      ]
+    },
+    {
+      "name": "Quinoa cru",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 14,
+          "calorie": 368,
+          "fat": 6,
+          "carbohydrate": 64
+        }
+      ]
+    },
+    {
+      "name": "Semoule",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 12,
+          "calorie": 376,
+          "fat": 1,
+          "carbohydrate": 77
+        }
+      ]
+    },
+    {
+      "name": "Pain blanc",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 9,
+          "calorie": 265,
+          "fat": 3.2,
+          "carbohydrate": 49
+        }
+      ]
+    },
+    {
+      "name": "Pain complet",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 9,
+          "calorie": 247,
+          "fat": 3.5,
+          "carbohydrate": 45
+        }
+      ]
+    },
+    {
+      "name": "Flocons d'avoine",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 13,
+          "calorie": 370,
+          "fat": 7,
+          "carbohydrate": 60
+        }
+      ]
+    },
+    {
+      "name": "Pomme de terre",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 2,
+          "calorie": 77,
+          "fat": 0.1,
+          "carbohydrate": 17
+        }
+      ]
+    },
+    {
+      "name": "Patate douce",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 1.6,
+          "calorie": 86,
+          "fat": 0.1,
+          "carbohydrate": 20
+        }
+      ]
+    },
+    {
+      "name": "Lentilles crues",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 25,
+          "calorie": 353,
+          "fat": 1.1,
+          "carbohydrate": 60
+        }
+      ]
+    },
+    {
+      "name": "Pois chiches crus",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 19,
+          "calorie": 364,
+          "fat": 6,
+          "carbohydrate": 61
+        }
+      ]
+    },
+    {
+      "name": "Haricots rouges",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 24,
+          "calorie": 333,
+          "fat": 1,
+          "carbohydrate": 60
+        }
+      ]
+    },
+    {
+      "name": "Brocoli",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 2.8,
+          "calorie": 34,
+          "fat": 0.4,
+          "carbohydrate": 7
+        }
+      ]
+    },
+    {
+      "name": "Carotte",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.9,
+          "calorie": 41,
+          "fat": 0.2,
+          "carbohydrate": 10
+        }
+      ]
+    },
+    {
+      "name": "Courgette",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 1.2,
+          "calorie": 17,
+          "fat": 0.3,
+          "carbohydrate": 3
+        }
+      ]
+    },
+    {
+      "name": "Tomate",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.9,
+          "calorie": 18,
+          "fat": 0.2,
+          "carbohydrate": 3.5
+        }
+      ]
+    },
+    {
+      "name": "Poivron",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 1,
+          "calorie": 31,
+          "fat": 0.3,
+          "carbohydrate": 6
+        }
+      ]
+    },
+    {
+      "name": "Champignons",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 3.1,
+          "calorie": 22,
+          "fat": 0.3,
+          "carbohydrate": 2.3
+        }
+      ]
+    },
+    {
+      "name": "Épinards",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 2.9,
+          "calorie": 23,
+          "fat": 0.4,
+          "carbohydrate": 2.4
+        }
+      ]
+    },
+    {
+      "name": "Concombre",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.7,
+          "calorie": 15,
+          "fat": 0.1,
+          "carbohydrate": 3.6
+        }
+      ]
+    },
+    {
+      "name": "Banane",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 1.1,
+          "calorie": 89,
+          "fat": 0.3,
+          "carbohydrate": 23
+        }
+      ]
+    },
+    {
+      "name": "Pomme",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.3,
+          "calorie": 52,
+          "fat": 0.2,
+          "carbohydrate": 14
+        }
+      ]
+    },
+    {
+      "name": "Orange",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.9,
+          "calorie": 47,
+          "fat": 0.1,
+          "carbohydrate": 12
+        }
+      ]
+    },
+    {
+      "name": "Mangue",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.8,
+          "calorie": 60,
+          "fat": 0.4,
+          "carbohydrate": 15
+        }
+      ]
+    },
+    {
+      "name": "Fraises",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.7,
+          "calorie": 32,
+          "fat": 0.3,
+          "carbohydrate": 7.7
+        }
+      ]
+    },
+    {
+      "name": "Myrtilles",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.7,
+          "calorie": 57,
+          "fat": 0.3,
+          "carbohydrate": 14
+        }
+      ]
+    },
+    {
+      "name": "Avocat",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 2,
+          "calorie": 160,
+          "fat": 15,
+          "carbohydrate": 9
+        }
+      ]
+    },
+    {
+      "name": "Amandes",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 21,
+          "calorie": 579,
+          "fat": 50,
+          "carbohydrate": 22
+        }
+      ]
+    },
+    {
+      "name": "Noix",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 15,
+          "calorie": 654,
+          "fat": 65,
+          "carbohydrate": 14
+        }
+      ]
+    },
+    {
+      "name": "Noisettes",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 15,
+          "calorie": 628,
+          "fat": 61,
+          "carbohydrate": 17
+        }
+      ]
+    },
+    {
+      "name": "Cacahuètes",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 26,
+          "calorie": 585,
+          "fat": 49,
+          "carbohydrate": 21
+        }
+      ]
+    },
+    {
+      "name": "Huile d'olive",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0,
+          "calorie": 884,
+          "fat": 100,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Beurre",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.6,
+          "calorie": 717,
+          "fat": 81,
+          "carbohydrate": 0.6
+        }
+      ]
+    },
+    {
+      "name": "Huile de coco",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0,
+          "calorie": 862,
+          "fat": 100,
+          "carbohydrate": 0
+        }
+      ]
+    },
+    {
+      "name": "Sucre blanc",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0,
+          "calorie": 387,
+          "fat": 0,
+          "carbohydrate": 100
+        }
+      ]
+    },
+    {
+      "name": "Miel",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 0.3,
+          "calorie": 304,
+          "fat": 0,
+          "carbohydrate": 82
+        }
+      ]
+    },
+    {
+      "name": "Chocolat noir 70%",
+      "macros": [
+        {
+          "masse": 100,
+          "proteine": 7.8,
+          "calorie": 600,
+          "fat": 43,
+          "carbohydrate": 46
+        }
+      ]
+    }
+  ]
+}
