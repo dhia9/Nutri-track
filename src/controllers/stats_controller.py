@@ -27,3 +27,9 @@ class StatsController:
                 }
             )
         return history
+
+    def mesure_avg(self, data, macro_type):
+        total = 0
+        for item in data:
+            total += item[macro_type]
+        return total / len(data) if data else 0

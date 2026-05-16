@@ -1,7 +1,12 @@
+import os
+import tkinter as tk
+
 import customtkinter as ctk
+from PIL import Image
 import src.controllers.main_controller as main_controller
 import src.views.home_page as home_page
-import src.views.stats_page as stats_page
+from src.views.nutrition_page import NutritionPage
+from src.views.stats_page import StatsPage
 
 
 class MainPage(ctk.CTk):
@@ -23,6 +28,24 @@ class MainPage(ctk.CTk):
         self.controller.view = self
 
         self.title("Nutritrack")
+        logo_path = os.path.normpath(
+            os.path.join(os.getcwd(), "src", "assets", "images", "Logo_sans_txt.png")
+        )
+        self._sidebar_logo = None
+        if os.path.exists(logo_path):
+            self._icon_image = tk.PhotoImage(file=logo_path)
+            self.iconphoto(True, self._icon_image)
+            logo_image = Image.open(logo_path)
+            orig_width, orig_height = logo_image.size
+            base_size = 48
+            scale_factor = 4
+            target_width = base_size * scale_factor
+            target_height = max(1, int(target_width * orig_height / orig_width))
+            self._sidebar_logo = ctk.CTkImage(
+                light_image=logo_image,
+                dark_image=logo_image,
+                size=(target_width, target_height),
+            )
         self.geometry("1280x760")
         self.minsize(960, 560)
 
@@ -46,22 +69,31 @@ class MainPage(ctk.CTk):
 
         self.nav_buttons = {}
 
-        self._create_sidebar()
-        self._create_page_container()
-        # Déléguer la gestion des pages au contrôleur
-        self.controller.set_existing_pages(
-            {
-                "Accueil": home_page.HomePage(
-                    self.pages_container, main_controller=self.controller
-                ),
-                "Statistiques": stats_page.StatsPage(
-                    self.pages_container, main_controller=self.controller
-                ),
-            }
+        self.create_sidebar()
+        self.create_page_container()
+        self.home_page = home_page.HomePage(
+            self.pages_container, main_controller=self.controller
         )
-        self.controller.show_page("Accueil")
+        self.nutrition_page = None
+        self.stats_page = None
 
-    def _create_sidebar(self):
+        pages = {"Accueil": self.home_page}
+        if self.controller.current_profile is not None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Nutrition"] = self.nutrition_page
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Statistiques"] = self.stats_page
+
+        # Déléguer la gestion des pages au contrôleur
+        self.controller.set_existing_pages(pages)
+        self.controller.show_page("Accueil")
+        self.controller.update_nav_buttons()
+
+    def create_sidebar(self):
         """Crée la barre de navigation en colonne à gauche."""
         self.sidebar = ctk.CTkFrame(
             self,
@@ -74,21 +106,20 @@ class MainPage(ctk.CTk):
         self.sidebar.grid_rowconfigure(4, weight=1)
         self.sidebar.grid_columnconfigure(0, weight=1)
 
-        title_label = ctk.CTkLabel(
-            self.sidebar,
-            text="NUTRITRACK",
-            font=ctk.CTkFont(size=26, weight="bold"),
-            text_color=self.COLOR_TEXT,
-        )
-        title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(24, 2))
-
-        subtitle_label = ctk.CTkLabel(
-            self.sidebar,
-            text="Suivi nutritionnel",
-            font=ctk.CTkFont(size=12),
-            text_color=self.COLOR_TEXT_SECONDARY,
-        )
-        subtitle_label.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 24))
+        if self._sidebar_logo is not None:
+            ctk.CTkLabel(
+                self.sidebar,
+                text="",
+                image=self._sidebar_logo,
+            ).grid(row=0, column=0, sticky="w", padx=20, pady=(20, 2))
+        else:
+            title_label = ctk.CTkLabel(
+                self.sidebar,
+                text="NUTRITRACK",
+                font=ctk.CTkFont(size=26, weight="bold"),
+                text_color=self.COLOR_TEXT,
+            )
+            title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(24, 2))
 
         nav_label = ctk.CTkLabel(
             self.sidebar,
@@ -96,14 +127,15 @@ class MainPage(ctk.CTk):
             font=ctk.CTkFont(size=11, weight="bold"),
             text_color=self.COLOR_TEXT_SECONDARY,
         )
-        nav_label.grid(row=2, column=0, sticky="w", padx=20, pady=(0, 10))
+        nav_label.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
+
         self.nav_container = ctk.CTkFrame(self.sidebar, fg_color=self.COLOR_SIDEBAR)
-        self.nav_container.grid(row=3, column=0, sticky="ew", padx=14)
+        self.nav_container.grid(row=2, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
         pages_config = ["Accueil", "Nutrition", "Statistiques"]
         for index, page_name in enumerate(pages_config):
-            btn = self._create_nav_button(self.nav_container, page_name)
+            btn = self.create_nav_button(self.nav_container, page_name)
             btn.grid(row=index, column=0, sticky="ew", padx=6, pady=6)
             self.nav_buttons[page_name] = btn
 
@@ -115,7 +147,7 @@ class MainPage(ctk.CTk):
         )
         footer_label.grid(row=5, column=0, sticky="sw", padx=20, pady=(0, 20))
 
-    def _create_nav_button(self, parent, page_name):
+    def create_nav_button(self, parent, page_name):
         """Crée un bouton de navigation stylisé."""
         btn = ctk.CTkButton(
             parent,
@@ -133,7 +165,7 @@ class MainPage(ctk.CTk):
         )
         return btn
 
-    def _create_page_container(self):
+    def create_page_container(self):
         """Crée la zone de droite qui affichera les autres pages."""
         self.pages_container = ctk.CTkFrame(
             self,
@@ -143,6 +175,48 @@ class MainPage(ctk.CTk):
         self.pages_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
         self.pages_container.grid_columnconfigure(0, weight=1)
         self.pages_container.grid_rowconfigure(0, weight=1)
+
+    def build_profile_pages(self):
+        if self.nutrition_page is None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+        if self.stats_page is None:
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+        return {
+            "Accueil": self.home_page,
+            "Nutrition": self.nutrition_page,
+            "Statistiques": self.stats_page,
+        }
+
+    def reload_profile_pages(self):
+        if self.nutrition_page is not None and self.nutrition_page.winfo_exists():
+            self.nutrition_page.destroy()
+        if self.stats_page is not None and self.stats_page.winfo_exists():
+            self.stats_page.destroy()
+
+        self.nutrition_page = None
+        self.stats_page = None
+
+        pages = {"Accueil": self.home_page}
+        if self.controller.current_profile is not None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Nutrition"] = self.nutrition_page
+            pages["Statistiques"] = self.stats_page
+
+        self.controller.set_existing_pages(pages)
+        target_page = self.controller.current_page
+        if target_page not in pages:
+            target_page = "Accueil"
+        self.controller.show_page(target_page)
+        self.controller.update_nav_buttons()
 
     def set_existing_pages(self, pages):
         self.controller.set_existing_pages(pages)

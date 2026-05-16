@@ -1,6 +1,8 @@
 import os
+
 import appdirs
 import src.controllers.home_controller as home_controller
+import src.controllers.nutrition_controller as nutrition_controller
 import src.models.settings as settings
 from src.controllers.stats_controller import StatsController
 
@@ -11,10 +13,6 @@ class MainController:
         self.view = None
         self.pages = {}
         self.current_page = None
-        self.controllers = {
-            "Home": home_controller.HomeController(self),
-            "Stats": StatsController(self),
-        }  # Dico pour stocker les sous contrôlleur de chaque page
         self.settings = settings.Settings()
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
@@ -22,6 +20,11 @@ class MainController:
         self.current_profile = (
             self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
         )
+        self.controllers = {
+            "Home": home_controller.HomeController(self),
+            "Nutrition": nutrition_controller.NutritionController(self),
+            "Stats": StatsController(self),
+        }  # Dico pour stocker les sous contrôlleur de chaque page
 
     def show_page(self, page_name):
         page = self.pages[page_name]
@@ -47,8 +50,46 @@ class MainController:
             # Enregistrer la page dans le dictionnaire
             self.pages[name] = page_widget
 
+    def set_current_profile(self, profile):
+        self.current_profile = profile
+        nutrition = self.controllers.get("Nutrition")
+        if nutrition and hasattr(nutrition, "set_current_profile"):
+            nutrition.set_current_profile(profile)
+        if self.view is not None and hasattr(self.view, "reload_profile_pages"):
+            self.view.reload_profile_pages()
+        else:
+            self.enable_profile_pages()
+
+    def update_nav_buttons(self):
+        if self.view is None:
+            return
+        profile_selected = self.current_profile is not None
+        for name, btn in self.view.nav_buttons.items():
+            if name == "Accueil":
+                continue
+            enabled = profile_selected and name in self.pages
+            btn.configure(
+                state="normal" if enabled else "disabled",
+                text_color=(
+                    self.view.COLOR_TEXT if enabled else self.view.COLOR_TEXT_SECONDARY
+                ),
+            )
+
+    def enable_profile_pages(self):
+        if self.view is None:
+            return
+        if "Nutrition" not in self.pages and hasattr(self.view, "build_profile_pages"):
+            pages = self.view.build_profile_pages()
+            self.set_existing_pages(pages)
+
+        current = self.current_page or "Accueil"
+        self.show_page(current)
+        self.update_nav_buttons()
+
     def show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
+        if self.current_profile is None and page_name != "Accueil":
+            return
         if page_name not in self.pages:
             return
 

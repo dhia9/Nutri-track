@@ -57,7 +57,7 @@ class HomePage(ctk.CTkFrame):
             pady=(0, 10),
         )
         self.profiles_container.grid_columnconfigure((0, 1, 2), weight=1)
-        self._render_profiles()
+        self.render_profiles()
 
         self.label4 = ctk.CTkLabel(
             self,
@@ -76,9 +76,9 @@ class HomePage(ctk.CTkFrame):
         self.nom_entry.grid(row=1, column=0, sticky="ew", padx=20)
 
         # Créer les validateurs
-        int_vcmd = (self.register(self._validate_int), "%S")
+        int_vcmd = (self.register(self.controlleur.validate_int), "%S")
         float_vcmd = (
-            self.register(self._validate_float),
+            self.register(self.controlleur.validate_float),
             "%S",
         )
 
@@ -152,7 +152,7 @@ class HomePage(ctk.CTkFrame):
         self.boutton_valider.grid(row=5, column=2, sticky="e", padx=20, pady=(0, 20))
         self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
 
-    def _render_profiles(self):
+    def render_profiles(self):
         for child in self.profiles_container.winfo_children():
             child.destroy()
         self.profile_buttons.clear()
@@ -237,18 +237,6 @@ class HomePage(ctk.CTkFrame):
                 ),
             )
 
-    def _validate_int(self, char):
-        """Accepte uniquement les chiffres entiers"""
-        if char == "":
-            return True
-        return char.isdigit()
-
-    def _validate_float(self, char):
-        """Accepte uniquement les chiffres et virgule/point à la saisie"""
-        if char == "":
-            return True
-        return char.isdigit() or char == "."
-
     def create_profile(self):
         self.controlleur.create_profile()
-        self._render_profiles()
+        self.render_profiles()

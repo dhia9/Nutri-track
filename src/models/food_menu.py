@@ -4,5 +4,6 @@ from src.models.model import Model
 
 class FoodMenu(Food, Model):
     def __init__(self, quantity, name, macros=None):
-        super().__init__(name, macros or [])
+        macros_list = list(macros) if macros is not None else []
+        super().__init__(name, macros_list)
         self.quantity = quantity

@@ -14,6 +14,18 @@ class HomeController:
                 return True
         return False
 
+    def validate_int(self, char):
+        """Accepte uniquement les chiffres entiers"""
+        if char == "":
+            return True
+        return char.isdigit()
+
+    def validate_float(self, char):
+        """Accepte uniquement les chiffres et virgule/point à la saisie"""
+        if char == "":
+            return True
+        return char.isdigit() or char == "."
+
     def create_profile(self):
         # Récupérer les données du formulaire
         nom = self.view.nom_entry.get()
@@ -70,6 +82,6 @@ class HomeController:
         )
 
     def select_profile(self, profile: Profile):
-        self.main_controller.current_profile = profile
+        self.main_controller.set_current_profile(profile)
         if self.view is not None:
             self.view.set_selected_profile(profile)
