@@ -2,6 +2,7 @@ import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import datetime 
+import matplotlib.dates as mdates
 plt.rcParams.update(
     {
         "figure.facecolor": "#1D1F21",
@@ -88,7 +89,9 @@ class StatsPage(ctk.CTkFrame):
     def _chart_calories(self, data):
         card = self._create_card(self.scroll, "Évolution calories")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = list(data.keys())
+        dates = [
+        datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
+        for d in data.keys()]
         calories = list(data.values())
         ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
         ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
@@ -98,6 +101,10 @@ class StatsPage(ctk.CTkFrame):
         ax.grid(True, linestyle="--", alpha=0.25)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
+        ax.xaxis.set_major_formatter(
+            mdates.DateFormatter("%d/%m %H:%M")
+        )
+        fig.autofmt_xdate()
         self._embed(fig, card)
 
     def _chart_macros_pie(self, parent):
@@ -136,7 +143,9 @@ class StatsPage(ctk.CTkFrame):
     def _caracteristicsChart(self):
         card = self._create_card(self.scroll, "Évolution macros")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = list(self.macrosDated["proteins"].keys())
+        dates = [
+        datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
+        for d in self.macrosDated["proteins"].keys()]
         carbohydrate = list(self.macrosDated["proteins"].values())
         proteins = list(self.macrosDated["proteins"].values())
         fats = list(self.macrosDated["fats"].values())
@@ -150,4 +159,8 @@ class StatsPage(ctk.CTkFrame):
         ax.grid(True, linestyle="--", alpha=0.25)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
+        ax.xaxis.set_major_formatter(
+            mdates.DateFormatter("%d/%m %H:%M")
+        )
+        fig.autofmt_xdate()
         self._embed(fig, card)
