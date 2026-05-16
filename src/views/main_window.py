@@ -3,7 +3,7 @@ import tkinter as tk
 
 import customtkinter as ctk
 from PIL import Image
-import src.controllers.main_controller as main_controller
+
 import src.views.home_page as home_page
 from src.views.nutrition_page import NutritionPage
 from src.views.stats_page import StatsPage

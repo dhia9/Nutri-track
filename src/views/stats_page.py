@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from datetime import datetime
+import datetime
 
 plt.rcParams.update(
     {
@@ -36,6 +36,8 @@ class StatsPage(ctk.CTkFrame):
         self.profile = self.controller.get_current_profile()
         self.history = self.controller.generate_history(30)
         self.period = 7
+        self.macrosDated = self.controller.macros_by_date()
+        self.macrosToday = self.controller.macros_today(datetime.date.today())
         self._build()
 
     def _create_card(self, parent, title):
@@ -75,19 +77,21 @@ class StatsPage(ctk.CTkFrame):
         self._render_all_charts()
 
     def _render_all_charts(self):
-        data = self.history[-self.period :]
-        self._chart_calories(data)
+        data = self.macrosDated
+        calories = data["calories"]
+        self._chart_calories(calories)
+        self._caracteristicsChart()
+        # self._chart_salt_sugar(data)
         row = ctk.CTkFrame(self.scroll, fg_color="transparent")
         row.pack(fill="x", pady=10)
-        self._chart_macros_pie(data, row)
-        self._chart_macros_bar(data, row)
-        self._chart_salt_sugar(data)
+        self._chart_macros_pie(row)
+        self._chart_macros_bar(row)
 
     def _chart_calories(self, data):
         card = self._create_card(self.scroll, "Évolution calories")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = [datetime.strptime(d["date"], "%Y-%m-%d") for d in data]
-        calories = [d["calories"] for d in data]
+        dates = list(data.keys())
+        calories = list(data.values())
         ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
         ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
         ax.set_xlabel("Date", labelpad=12)
@@ -98,11 +102,11 @@ class StatsPage(ctk.CTkFrame):
         ax.spines["right"].set_visible(False)
         self._embed(fig, card)
 
-    def _chart_macros_pie(self, data, parent):
-        card = self._create_card(parent, "Macros")
-        avg_p = self.controller.mesure_avg(data, "proteins")
-        avg_c = self.controller.mesure_avg(data, "carbs")
-        avg_f = self.controller.mesure_avg(data, "fats")
+    def _chart_macros_pie(self, parent):
+        card = self._create_card(parent, "Macros du dernier repas")
+        avg_p = self.macrosToday["proteins"]
+        avg_c = self.macrosToday["carbohydrate"]
+        avg_f = self.macrosToday["fats"]
         fig, ax = plt.subplots(figsize=(4, 4))
         ax.pie(
             [avg_p, avg_c, avg_f],
@@ -119,11 +123,11 @@ class StatsPage(ctk.CTkFrame):
         )
         self._embed(fig, card)
 
-    def _chart_macros_bar(self, data, parent):
-        card = self._create_card(parent, "Comparaison")
-        avg_p = self.controller.mesure_avg(data, "proteins")
-        avg_c = self.controller.mesure_avg(data, "carbs")
-        avg_f = self.controller.mesure_avg(data, "fats")
+    def _chart_macros_bar(self, parent):
+        card = self._create_card(parent, "Comparaison pour le dernier repas")
+        avg_p = self.macrosToday["proteins"]
+        avg_c = self.macrosToday["carbohydrate"]
+        avg_f = self.macrosToday["fats"]
         fig, ax = plt.subplots(figsize=(4, 4))
         bars = ax.bar(
             [1, 2, 3], [avg_p, avg_c, avg_f], color=[C_PURPLE, C_BLUE, C_ORANGE]
@@ -137,18 +141,19 @@ class StatsPage(ctk.CTkFrame):
         ax.spines["right"].set_visible(False)
         self._embed(fig, card)
 
-    def _chart_salt_sugar(self, data):
-        card = self._create_card(self.scroll, "Sel & Sucre")
+    def _caracteristicsChart(self):
+        card = self._create_card(self.scroll, "Évolution macros")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = [datetime.strptime(d["date"], "%Y-%m-%d") for d in data]
-        salt = [d["salt"] for d in data]
-        sugar = [d["sugar"] for d in data]
-        ax.plot(dates, salt, color=C_RED, label="Sel", linewidth=2)
-        ax.plot(dates, sugar, color=C_ORANGE, label="Sucre", linewidth=2)
-        ax.fill_between(dates, salt, alpha=0.08, color=C_RED)
-        ax.fill_between(dates, sugar, alpha=0.08, color=C_ORANGE)
+        dates = list(self.macrosDated["proteins"].keys())
+        carbohydrate = list(self.macrosDated["proteins"].values())
+        proteins = list(self.macrosDated["proteins"].values())
+        fats = list(self.macrosDated["fats"].values())
+        ax.plot(dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate")
+        ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
+        ax.plot(dates, proteins, color="blue", linewidth=2.5, label="Protéines")
+        ax.plot(dates, fats, color="red", linewidth=2.5, label="Lipides")
         ax.set_xlabel("Date", labelpad=12)
-        ax.set_ylabel("Grammes", labelpad=10)
+        ax.set_ylabel("Valeurs", labelpad=10)
         ax.legend()
         ax.grid(True, linestyle="--", alpha=0.25)
         ax.spines["top"].set_visible(False)
