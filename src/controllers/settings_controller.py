@@ -45,9 +45,7 @@ class SettingsController:
         home_view = self.main_controller.controllers["Home"].view
         if home_view is not None:
             home_view._render_profiles()
-        
+
         settings_view = self.main_controller.controllers["Settings"].view
         if settings_view is not None:
             settings_view.update_profile_details(None)
-        
-        

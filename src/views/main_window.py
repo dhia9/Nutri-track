@@ -8,6 +8,8 @@ import src.views.home_page as home_page
 from src.views.nutrition_page import NutritionPage
 from src.views.stats_page import StatsPage
 from src.views.settings_page import SettingsPage
+
+
 class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
 

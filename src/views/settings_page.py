@@ -13,10 +13,8 @@ class SettingsPage(ctk.CTkFrame):
         self.main_controller.controllers["Settings"].view = self
         # ajout du controleur de la page
         self.controlleur = self.main_controller.controllers["Settings"]
-        self.profile = self.main_controller.current_profile 
-        
-        
-            
+        self.profile = self.main_controller.current_profile
+
         # Configuration des 5 colonnes
         for i in range(5):
             self.grid_columnconfigure(i, weight=1)
@@ -50,58 +48,85 @@ class SettingsPage(ctk.CTkFrame):
             row=2, rowspan=5, column=0, columnspan=2, padx=20, sticky="nsew"
         )
 
-        
-        if self.profile is not None :
+        if self.profile is not None:
             self.label_nom = ctk.CTkLabel(self.frame_carre_noir, text="Nom du profil")
             self.label_nom.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 10))
-            self.nom_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.name}")
+            self.nom_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"{self.profile.name}"
+            )
             self.nom_entry.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_age = ctk.CTkLabel(self.frame_carre_noir, text="Âge")
             self.label_age.grid(row=2, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.age_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.age}")
-            self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0,10))
+            self.age_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"{self.profile.age}"
+            )
+            self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_taille = ctk.CTkLabel(self.frame_carre_noir, text="Taille (cm)")
             self.label_taille.grid(row=4, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.taille_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.height}")
-            self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0,10))
+            self.taille_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"{self.profile.height}"
+            )
+            self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_poids = ctk.CTkLabel(self.frame_carre_noir, text="Poids (kg)")
             self.label_poids.grid(row=6, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.poids_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.weight}")
-            self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0,10))
+            self.poids_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"{self.profile.weight}"
+            )
+            self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0, 10))
 
-            self.label_objectif = ctk.CTkLabel(self.frame_carre_noir, text="Objectif (kg)")
-            self.label_objectif.grid(row=3, column=1, sticky="w", padx  =20, pady=(16, 10))
-            self.objectif_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"{self.profile.target_weight}")
-            self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0,10))
-        
-        else :
+            self.label_objectif = ctk.CTkLabel(
+                self.frame_carre_noir, text="Objectif (kg)"
+            )
+            self.label_objectif.grid(
+                row=3, column=1, sticky="w", padx=20, pady=(16, 10)
+            )
+            self.objectif_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"{self.profile.target_weight}"
+            )
+            self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0, 10))
+
+        else:
             self.label_nom = ctk.CTkLabel(self.frame_carre_noir, text="Nom du profil")
             self.label_nom.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 10))
-            self.nom_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné")
+            self.nom_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné"
+            )
             self.nom_entry.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_age = ctk.CTkLabel(self.frame_carre_noir, text="Âge")
             self.label_age.grid(row=2, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.age_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné")
-            self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0,10))
+            self.age_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné"
+            )
+            self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_taille = ctk.CTkLabel(self.frame_carre_noir, text="Taille (cm)")
             self.label_taille.grid(row=4, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.taille_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné")
-            self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0,10))
+            self.taille_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné"
+            )
+            self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_poids = ctk.CTkLabel(self.frame_carre_noir, text="Poids (kg)")
             self.label_poids.grid(row=6, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.poids_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné")
-            self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0,10))
+            self.poids_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné"
+            )
+            self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0, 10))
 
-            self.label_objectif = ctk.CTkLabel(self.frame_carre_noir, text="Objectif (kg)")
-            self.label_objectif.grid(row=3, column=1, sticky="w", padx  =20, pady=(16, 10))
-            self.objectif_entry = ctk.CTkEntry(self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné")
-            self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0,10))
+            self.label_objectif = ctk.CTkLabel(
+                self.frame_carre_noir, text="Objectif (kg)"
+            )
+            self.label_objectif.grid(
+                row=3, column=1, sticky="w", padx=20, pady=(16, 10)
+            )
+            self.objectif_entry = ctk.CTkEntry(
+                self.frame_carre_noir, placeholder_text=f"Aucun profil sélectionné"
+            )
+            self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0, 10))
 
         self.label_sexe = ctk.CTkLabel(self.frame_carre_noir, text="Sexe")
         self.label_sexe.grid(row=0, column=1, sticky="w", padx=20, pady=(16, 10))
@@ -237,18 +262,14 @@ class SettingsPage(ctk.CTkFrame):
         self.poids_entry.delete(0, "end")
         self.objectif_entry.delete(0, "end")
 
-        
-
     def delete_profile(self):
         self.controlleur.delete_profile()
         self.nom_entry.delete(0, "end")
         self.age_entry.delete(0, "end")
         self.taille_entry.delete(0, "end")
-        self.poids_entry.delete(0,"end")
-        self.objectif_entry.delete(0, "end")    
-        
+        self.poids_entry.delete(0, "end")
+        self.objectif_entry.delete(0, "end")
 
-    
     def update_profile_details(self, profile):
         self.profile = profile
 
@@ -263,7 +284,9 @@ class SettingsPage(ctk.CTkFrame):
             self.age_entry.configure(placeholder_text=f"{self.profile.age}")
             self.taille_entry.configure(placeholder_text=f"{self.profile.height}")
             self.poids_entry.configure(placeholder_text=f"{self.profile.weight}")
-            self.objectif_entry.configure(placeholder_text=f"{self.profile.target_weight}")
+            self.objectif_entry.configure(
+                placeholder_text=f"{self.profile.target_weight}"
+            )
             self.sexe_var.set(self.profile.sex)
         else:
             self.nom_entry.configure(placeholder_text="Aucun profil sélectionné")
@@ -272,11 +295,6 @@ class SettingsPage(ctk.CTkFrame):
             self.poids_entry.configure(placeholder_text="Aucun profil sélectionné")
             self.objectif_entry.configure(placeholder_text="Aucun profil sélectionné")
             self.sexe_var.set("Homme")
-    
-    
-
-
-    
 
     def change_mode(self):
         mode = self.mode_var.get()
@@ -284,4 +302,3 @@ class SettingsPage(ctk.CTkFrame):
 
     def change_theme(self):
         theme = self.theme_var.get()
-        
