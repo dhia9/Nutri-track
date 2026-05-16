@@ -30,7 +30,10 @@ class NutritionPage(ctk.CTkFrame):
 
         # Sous-titre Profil
         self.tiltle2 = ctk.CTkLabel(
-            self, text=f"Profil : {self.controller.current_profile.name}", font=ctk.CTkFont(size=13), text_color="#A8AFB6"
+            self,
+            text=f"Profil : {self.controller.current_profile.name}",
+            font=ctk.CTkFont(size=13),
+            text_color="#A8AFB6",
         )
         self.tiltle2.grid(
             row=1, column=0, columnspan=3, sticky="w", padx=20, pady=(5, 0)
@@ -327,4 +330,3 @@ class NutritionPage(ctk.CTkFrame):
         )
         value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_value_label", value_label)
-
