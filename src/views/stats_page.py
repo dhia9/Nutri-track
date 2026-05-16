@@ -36,7 +36,6 @@ class StatsPage(ctk.CTkFrame):
         self.period = 7
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
-        print(self.macrosDated)
         self._build()
 
     def _create_card(self, parent, title):
