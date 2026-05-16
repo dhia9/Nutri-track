@@ -7,13 +7,9 @@ class StatsController:
         self.main_controller = main_controller
         self.view = None
         self.current_profile = self.main_controller.current_profile
+
     def macros_by_date(self):
-        result = {
-            "calories": {},
-            "carbohydrate": {},
-            "proteins": {},
-            "fats": {}
-        }
+        result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
         menus_endTo_end = self.menus_all_dates()
         for menu in menus_endTo_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
@@ -33,11 +29,13 @@ class StatsController:
                     result["carbohydrate"][date] += macro.carbohydrate * ratio
                     result["fats"][date] += macro.fat * ratio
         return result
+
     def menus_all_dates(self):
         profile_menus = {}
         for menu in self.current_profile.eating_habits:
             profile_menus[menu.date] = menu
         return profile_menus
+
     def menus_today(self, date: datetime.date):
         profile_menus = {}
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
@@ -47,6 +45,7 @@ class StatsController:
             ):  # Vérifier si le menu correspond à la date donnée
                 profile_menus[menu.date] = menu
         return profile_menus
+
     def macros_today(self, date: datetime.date):
         """Retourne les macros consommés par l'utilisateur à un jour donné"""
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
@@ -61,9 +60,10 @@ class StatsController:
                     total_macros["carbohydrate"] += macro.carbohydrate * ratio
                     total_macros["fats"] += macro.fat * ratio
         return total_macros
-    
+
     def get_current_profile(self):
         return self.main_controller.current_profile
+
     def generate_history(self, days=30):
         history = []
         today = datetime.today()
@@ -81,6 +81,7 @@ class StatsController:
                 }
             )
         return history
+
     def mesure_avg(self, data, macro_type):
         total = 0
         for item in data:

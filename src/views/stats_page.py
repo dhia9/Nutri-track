@@ -1,8 +1,9 @@
 import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import datetime 
+import datetime
 import matplotlib.dates as mdates
+
 plt.rcParams.update(
     {
         "figure.facecolor": "#1D1F21",
@@ -25,6 +26,7 @@ C_RED = "#EF4444"
 C_BLUE = "#3B82F6"
 C_PURPLE = "#8B5CF6"
 C_GRAY = "#A8AFB6"
+
 
 class StatsPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller):
@@ -90,8 +92,8 @@ class StatsPage(ctk.CTkFrame):
         card = self._create_card(self.scroll, "Évolution calories")
         fig, ax = plt.subplots(figsize=(8, 3))
         dates = [
-        datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
-        for d in data.keys()]
+            datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S") for d in data.keys()
+        ]
         calories = list(data.values())
         ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
         ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
@@ -101,9 +103,7 @@ class StatsPage(ctk.CTkFrame):
         ax.grid(True, linestyle="--", alpha=0.25)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-        ax.xaxis.set_major_formatter(
-            mdates.DateFormatter("%d/%m %H:%M")
-        )
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
         fig.autofmt_xdate()
         self._embed(fig, card)
 
@@ -113,15 +113,19 @@ class StatsPage(ctk.CTkFrame):
         avg_c = self.macrosToday["carbohydrate"]
         avg_f = self.macrosToday["fats"]
         fig, ax = plt.subplots(figsize=(4, 4))
-        ax.pie([avg_p, avg_c, avg_f],
+        ax.pie(
+            [avg_p, avg_c, avg_f],
             colors=[C_PURPLE, C_BLUE, C_ORANGE],
             startangle=90,
-            wedgeprops={"edgecolor": "#1D1F21"},)
+            wedgeprops={"edgecolor": "#1D1F21"},
+        )
         ax.set_position([0.20, 0.1, 0.6, 0.8])
         fig.tight_layout()
-        ax.legend(["Protéines", "Glucides", "Lipides"],
+        ax.legend(
+            ["Protéines", "Glucides", "Lipides"],
             loc="center left",
-            bbox_to_anchor=(1, 0.5))
+            bbox_to_anchor=(1, 0.5),
+        )
         self._embed(fig, card)
 
     def _chart_macros_bar(self, parent):
@@ -130,7 +134,9 @@ class StatsPage(ctk.CTkFrame):
         avg_c = self.macrosToday["carbohydrate"]
         avg_f = self.macrosToday["fats"]
         fig, ax = plt.subplots(figsize=(4, 4))
-        bars = ax.bar([1, 2, 3], [avg_p, avg_c, avg_f], color=[C_PURPLE, C_BLUE, C_ORANGE])
+        bars = ax.bar(
+            [1, 2, 3], [avg_p, avg_c, avg_f], color=[C_PURPLE, C_BLUE, C_ORANGE]
+        )
         ax.set_xticks([])
         ax.set_xlabel("Macronutriments", labelpad=12)
         ax.set_ylabel("Quantité moyenne", labelpad=10)
@@ -144,8 +150,9 @@ class StatsPage(ctk.CTkFrame):
         card = self._create_card(self.scroll, "Évolution macros")
         fig, ax = plt.subplots(figsize=(8, 3))
         dates = [
-        datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
-        for d in self.macrosDated["proteins"].keys()]
+            datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
+            for d in self.macrosDated["proteins"].keys()
+        ]
         carbohydrate = list(self.macrosDated["proteins"].values())
         proteins = list(self.macrosDated["proteins"].values())
         fats = list(self.macrosDated["fats"].values())
@@ -159,8 +166,6 @@ class StatsPage(ctk.CTkFrame):
         ax.grid(True, linestyle="--", alpha=0.25)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-        ax.xaxis.set_major_formatter(
-            mdates.DateFormatter("%d/%m %H:%M")
-        )
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
         fig.autofmt_xdate()
         self._embed(fig, card)
