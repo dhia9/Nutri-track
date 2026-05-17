@@ -2,6 +2,7 @@ import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import datetime
+import math
 import matplotlib.dates as mdates
 
 plt.rcParams.update(
@@ -26,6 +27,10 @@ C_RED = "#EF4444"
 C_BLUE = "#3B82F6"
 C_PURPLE = "#8B5CF6"
 C_GRAY = "#A8AFB6"
+MACRO_PROTEIN_LABEL = "Protéines"
+MACRO_CARB_LABEL = "Glucides"
+MACRO_FAT_LABEL = "Lipides"
+MACRO_LABELS = (MACRO_PROTEIN_LABEL, MACRO_CARB_LABEL, MACRO_FAT_LABEL)
 
 
 class StatsPage(ctk.CTkFrame):
@@ -37,6 +42,16 @@ class StatsPage(ctk.CTkFrame):
         self.profile = self.controller.get_current_profile()
         self.history = self.controller.generate_history(30)
         self.period = 7
+        self.macrosDated = self.controller.macros_by_date()
+        self.macrosToday = self.controller.macros_today(datetime.date.today())
+        self._build()
+
+    def refresh(self):
+        for child in self.winfo_children():
+            child.destroy()
+
+        self.profile = self.controller.get_current_profile()
+        self.history = self.controller.generate_history(30)
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
         self._build()
@@ -112,20 +127,34 @@ class StatsPage(ctk.CTkFrame):
         avg_p = self.macrosToday["proteins"]
         avg_c = self.macrosToday["carbohydrate"]
         avg_f = self.macrosToday["fats"]
+        values = [
+            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
+            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
+            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
+        ]
         fig, ax = plt.subplots(figsize=(4, 4))
-        ax.pie(
-            [avg_p, avg_c, avg_f],
-            colors=[C_PURPLE, C_BLUE, C_ORANGE],
-            startangle=90,
-            wedgeprops={"edgecolor": "#1D1F21"},
-        )
-        ax.set_position([0.20, 0.1, 0.6, 0.8])
+        total = sum(values)
+        if total > 0:
+            ax.pie(
+                values,
+                colors=[C_PURPLE, C_BLUE, C_ORANGE],
+                startangle=90,
+                wedgeprops={"edgecolor": "#1D1F21"},
+            )
+        else:
+            ax.text(
+                0.5,
+                0.5,
+                "Aucune donnée pour le dernier repas",
+                ha="center",
+                va="center",
+                wrap=True,
+            )
+            ax.set_axis_off()
+        ax.set_position((0.20, 0.1, 0.6, 0.8))
         fig.tight_layout()
-        ax.legend(
-            ["Protéines", "Glucides", "Lipides"],
-            loc="center left",
-            bbox_to_anchor=(1, 0.5),
-        )
+        if total > 0:
+            ax.legend(MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5))
         self._embed(fig, card)
 
     def _chart_macros_bar(self, parent):
@@ -140,7 +169,7 @@ class StatsPage(ctk.CTkFrame):
         ax.set_xticks([])
         ax.set_xlabel("Macronutriments", labelpad=12)
         ax.set_ylabel("Quantité moyenne", labelpad=10)
-        ax.legend(bars, ["Protéines", "Glucides", "Lipides"])
+        ax.legend(bars, MACRO_LABELS)
         ax.grid(True, axis="y", alpha=0.2)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
@@ -158,8 +187,8 @@ class StatsPage(ctk.CTkFrame):
         fats = list(self.macrosDated["fats"].values())
         ax.plot(dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate")
         ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
-        ax.plot(dates, proteins, color="blue", linewidth=2.5, label="Protéines")
-        ax.plot(dates, fats, color="red", linewidth=2.5, label="Lipides")
+        ax.plot(dates, proteins, color="blue", linewidth=2.5, label=MACRO_PROTEIN_LABEL)
+        ax.plot(dates, fats, color="red", linewidth=2.5, label=MACRO_FAT_LABEL)
         ax.set_xlabel("Date", labelpad=12)
         ax.set_ylabel("Valeurs", labelpad=10)
         ax.legend()
