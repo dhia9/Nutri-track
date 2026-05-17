@@ -106,20 +106,31 @@ class StatsPage(ctk.CTkFrame):
     def _chart_calories(self, data):
         card = self._create_card(self.scroll, "Évolution calories")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = [
-            datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S") for d in data.keys()
-        ]
-        calories = list(data.values())
-        ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
-        ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
-        ax.set_xlabel("Date", labelpad=12)
-        ax.set_ylabel("Calories", labelpad=10)
-        ax.legend()
-        ax.grid(True, linestyle="--", alpha=0.25)
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
-        fig.autofmt_xdate()
+        if not data:
+            ax.text(
+                0.5,
+                0.5,
+                "Aucune donnée pour les calories",
+                ha="center",
+                va="center",
+                wrap=True,
+            )
+            ax.set_axis_off()
+        else:
+            dates = [
+                datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S") for d in data.keys()
+            ]
+            calories = list(data.values())
+            ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
+            ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
+            ax.set_xlabel("Date", labelpad=12)
+            ax.set_ylabel("Calories", labelpad=10)
+            ax.legend()
+            ax.grid(True, linestyle="--", alpha=0.25)
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
+            fig.autofmt_xdate()
         self._embed(fig, card)
 
     def _chart_macros_pie(self, parent):
@@ -162,39 +173,69 @@ class StatsPage(ctk.CTkFrame):
         avg_p = self.macrosToday["proteins"]
         avg_c = self.macrosToday["carbohydrate"]
         avg_f = self.macrosToday["fats"]
+        values = [
+            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
+            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
+            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
+        ]
         fig, ax = plt.subplots(figsize=(4, 4))
-        bars = ax.bar(
-            [1, 2, 3], [avg_p, avg_c, avg_f], color=[C_PURPLE, C_BLUE, C_ORANGE]
-        )
-        ax.set_xticks([])
-        ax.set_xlabel("Macronutriments", labelpad=12)
-        ax.set_ylabel("Quantité moyenne", labelpad=10)
-        ax.legend(bars, MACRO_LABELS)
-        ax.grid(True, axis="y", alpha=0.2)
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
+        total = sum(values)
+        if total > 0:
+            bars = ax.bar([1, 2, 3], values, color=[C_PURPLE, C_BLUE, C_ORANGE])
+            ax.set_xticks([])
+            ax.set_xlabel("Macronutriments", labelpad=12)
+            ax.set_ylabel("Quantité moyenne", labelpad=10)
+            ax.legend(bars, MACRO_LABELS)
+            ax.grid(True, axis="y", alpha=0.2)
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+        else:
+            ax.text(
+                0.5,
+                0.5,
+                "Aucune donnée pour le dernier repas",
+                ha="center",
+                va="center",
+                wrap=True,
+            )
+            ax.set_axis_off()
         self._embed(fig, card)
 
     def _caracteristicsChart(self):
         card = self._create_card(self.scroll, "Évolution macros")
         fig, ax = plt.subplots(figsize=(8, 3))
-        dates = [
-            datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
-            for d in self.macrosDated["proteins"].keys()
-        ]
-        carbohydrate = list(self.macrosDated["proteins"].values())
-        proteins = list(self.macrosDated["proteins"].values())
-        fats = list(self.macrosDated["fats"].values())
-        ax.plot(dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate")
-        ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
-        ax.plot(dates, proteins, color="blue", linewidth=2.5, label=MACRO_PROTEIN_LABEL)
-        ax.plot(dates, fats, color="red", linewidth=2.5, label=MACRO_FAT_LABEL)
-        ax.set_xlabel("Date", labelpad=12)
-        ax.set_ylabel("Valeurs", labelpad=10)
-        ax.legend()
-        ax.grid(True, linestyle="--", alpha=0.25)
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
-        fig.autofmt_xdate()
+        if not self.macrosDated["proteins"]:
+            ax.text(
+                0.5,
+                0.5,
+                "Aucune donnée pour les macros",
+                ha="center",
+                va="center",
+                wrap=True,
+            )
+            ax.set_axis_off()
+        else:
+            dates = [
+                datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
+                for d in self.macrosDated["proteins"].keys()
+            ]
+            carbohydrate = list(self.macrosDated["proteins"].values())
+            proteins = list(self.macrosDated["proteins"].values())
+            fats = list(self.macrosDated["fats"].values())
+            ax.plot(
+                dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate"
+            )
+            ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
+            ax.plot(
+                dates, proteins, color="blue", linewidth=2.5, label=MACRO_PROTEIN_LABEL
+            )
+            ax.plot(dates, fats, color="red", linewidth=2.5, label=MACRO_FAT_LABEL)
+            ax.set_xlabel("Date", labelpad=12)
+            ax.set_ylabel("Valeurs", labelpad=10)
+            ax.legend()
+            ax.grid(True, linestyle="--", alpha=0.25)
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
+            fig.autofmt_xdate()
         self._embed(fig, card)
