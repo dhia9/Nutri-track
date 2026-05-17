@@ -330,3 +330,15 @@ class NutritionPage(ctk.CTkFrame):
         )
         value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_value_label", value_label)
+        
+
+        #Bouton pour choisir le menu proposé
+        self_bouton_menu = ctk.CTkButton(
+            frame,
+            text="Choisir ce menu",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
+            fg_color="#4CAF50",
+            hover_color="#45a049"
+        )
+        self_bouton_menu.grid(row=3, column=0, sticky="w", padx=15, pady=(10, 0))
