@@ -29,7 +29,7 @@ class Profile(Model):
 
     def get_imc(self):
         if self.height > 0:
-            return self.weight / (self.height ** 2)
+            return self.weight / (self.height**2)
         else:
             return 0
 
@@ -81,88 +81,159 @@ class Profile(Model):
             "glucides_g": (calories * ratios["glucides"]) / 4,
         }
 
+    def get_consumed_today(self, today: str) -> tuple[float, float, float, float]:
+        """Calcule les macros déjà consommées aujourd'hui."""
+        menus_today = [m for m in self.eating_habits if m.date == today]
+        cal = sum(f.macros[0].calorie for m in menus_today for f in m.content)
+        prot = sum(f.macros[0].proteine for m in menus_today for f in m.content)
+        fat = sum(f.macros[0].fat for m in menus_today for f in m.content)
+        carb = sum(f.macros[0].carbohydrate for m in menus_today for f in m.content)
+        return cal, prot, fat, carb
+
+    def get_meal_budget(
+        self, nap: float, meals_per_day: int, today: str
+    ) -> tuple[float, float, float, float]:
+        """
+        Calcule le budget macro pour le prochain repas.
+        = (besoins journaliers - déjà consommé) / repas restants
+        """
+        besoins = self.get_nutritional_needs(nap)
+
+        cal_consumed, prot_consumed, fat_consumed, carb_consumed = (
+            self.get_consumed_today(today)
+        )
+
+        # Repas déjà effectués aujourd'hui
+        meals_done = sum(1 for m in self.eating_habits if m.date == today)
+        meals_remaining = max(1, meals_per_day - meals_done)
+
+        return (
+            max(0.0, besoins["calories"] - cal_consumed) / meals_remaining,
+            max(0.0, besoins["proteines_g"] - prot_consumed) / meals_remaining,
+            max(0.0, besoins["lipides_g"] - fat_consumed) / meals_remaining,
+            max(0.0, besoins["glucides_g"] - carb_consumed) / meals_remaining,
+        )
+
+    def get_used_today(self, today: str) -> set[str]:
+        """Retourne les noms des aliments déjà consommés aujourd'hui (à éviter)."""
+        return {
+            f.name for m in self.eating_habits if m.date == today for f in m.content
+        }
+
+    def pick_best_food(
+        self,
+        food_data: FoodData,
+        cal_budget: float,
+        prot_budget: float,
+        fat_budget: float,
+        carb_budget: float,
+        used_in_meal: set[str],
+        used_today: set[str],
+        base_portion_g: float,
+    ) -> Food | None:
+        """
+        Sélectionne l'aliment le plus compatible avec le budget macro restant.
+        Ajoute un bruit aléatoire pour varier les menus générés.
+        """
+        candidates = [
+            (
+                food,
+                food.score(
+                    cal_budget, prot_budget, fat_budget, carb_budget, base_portion_g
+                )
+                + random.uniform(0, 0.05),
+            )
+            for food in food_data.content
+            if food.name not in used_in_meal
+            and food.name not in used_today
+            and food.macros  # guard: skip foods with no macro entry
+        ]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda x: x[1])[0]
+
+    def compute_portion(
+        self, food: Food, cal_budget: float, base_portion_g: float
+    ) -> tuple[float, Macro]:
+        """
+        Calcule la portion en grammes (clamped pour ne pas dépasser le budget calorique)
+        et retourne le Macro correspondant.
+        """
+        ref_macro = food.macros[0]
+
+        # Portion maximale avant de dépasser le budget calorique
+        cal_per_g = ref_macro.calorie / ref_macro.masse
+        max_g = (cal_budget / cal_per_g) if cal_per_g > 0 else base_portion_g
+        portion_g = round(max(30.0, min(base_portion_g, max_g)))
+
+        # Macro class gère le scaling masse → quantité en interne
+        scaled_macro = Macro(
+            portion_g,
+            ref_macro.proteine / (ref_macro.masse / 100),  # back to per-100g
+            ref_macro.calorie / (ref_macro.masse / 100),
+            ref_macro.fat / (ref_macro.masse / 100),
+            ref_macro.carbohydrate / (ref_macro.masse / 100),
+        )
+        return portion_g, scaled_macro
+
     def generate_menu(
-            self: Profile,
-            food_data: FoodData,
-            nap: float = 1.55,
-            meals_per_day: int = 3,
+        self,
+        food_data: FoodData,
+        nap: float = 1.55,
+        meals_per_day: int = 3,
     ) -> Menu:
         """
-        Generates a daily menu for a given profile.
+        Génère UN seul repas pour compléter la journée en cours.
 
-        Args:
-            self       : Profile instance
-            food_data     : FoodData instance (already deserialized)
-            nap           : activity factor (1.2 → 1.9)
-            meals_per_day : number of meals (1–6)
-
-        Returns:
-            A Menu instance populated with FoodMenu entries.
+        - Tient compte des repas déjà enregistrés aujourd'hui (eating_habits)
+        - Répartit équitablement les macros restantes sur les repas futurs
         """
-
-        meals_per_day = max(1, min(meals_per_day, 6))
-        besoins = self.get_nutritional_needs(nap)
-        splits = MEAL_SPLITS[meals_per_day]
-        menu = Menu(str(date.today()))
-        used_today: set[str] = set()
+        today = str(date.today())
 
         BASE_PORTION_G = 150
         MAX_ITEMS_PER_MEAL = 4
 
-        for ratio in splits:
-            # Macro budget for this meal
-            cal_left = besoins["calories"] * ratio
-            prot_left = besoins["proteines_g"] * ratio
-            fat_left = besoins["lipides_g"] * ratio
-            carb_left = besoins["glucides_g"] * ratio
-            used_in_meal: set[str] = set()
+        # Budget macro pour ce repas = restant / repas encore à faire
+        cal_budget, prot_budget, fat_budget, carb_budget = self.get_meal_budget(
+            nap, meals_per_day, today
+        )
 
-            for _ in range(MAX_ITEMS_PER_MEAL):
-                if cal_left <= 50:
-                    break
+        # Aliments déjà consommés aujourd'hui (à éviter pour varier)
+        used_today = self.get_used_today(today)
+        used_in_meal: set[str] = set()
+        menu = Menu(today)
 
-                # Score every unused food + small random noise to vary menus
-                candidates = [
-                    (
-                        food,
-                        food.score(
-                            cal_left, prot_left, fat_left, carb_left, BASE_PORTION_G
-                        )
-                        + random.uniform(0, 0.05),
-                    )
-                    for food in food_data.content
-                    if food.name not in used_in_meal
-                       and food.name not in used_today
-                       and food.macros  # guard: skip foods with no macro entry
-                ]
-                if not candidates:
-                    break
+        for _ in range(MAX_ITEMS_PER_MEAL):
+            if cal_budget <= 50:
+                break
 
-                best_food = max(candidates, key=lambda x: x[1])[0]
-                ref_macro = best_food.macros[0]
+            # Sélection de l'aliment le plus adapté au budget restant
+            best_food = self.pick_best_food(
+                food_data,
+                cal_budget,
+                prot_budget,
+                fat_budget,
+                carb_budget,
+                used_in_meal,
+                used_today,
+                BASE_PORTION_G,
+            )
+            if best_food is None:
+                break
 
-                # Clamp portion so we don't overshoot the calorie budget
-                cal_per_g = ref_macro.calorie / ref_macro.masse
-                max_g = (cal_left / cal_per_g) if cal_per_g > 0 else BASE_PORTION_G
-                portion_g = round(max(30.0, min(BASE_PORTION_G, max_g)))
+            # Calcul de la portion et du Macro associé
+            portion_g, scaled_macro = self.compute_portion(
+                best_food, cal_budget, BASE_PORTION_G
+            )
 
-                # Use your Macro class — it handles the masse→quantity scaling
-                scaled_macro = Macro(
-                    portion_g,
-                    ref_macro.proteine / (ref_macro.masse / 100),  # back to per-100g
-                    ref_macro.calorie / (ref_macro.masse / 100),
-                    ref_macro.fat / (ref_macro.masse / 100),
-                    ref_macro.carbohydrate / (ref_macro.masse / 100),
-                )
+            menu.add_food_menu(Food(best_food.name, [scaled_macro]), quantity=portion_g)
+            used_in_meal.add(best_food.name)
+            used_today.add(best_food.name)
 
-                menu.add_food_menu(Food(best_food.name, [scaled_macro]), quantity=portion_g)
-
-                used_in_meal.add(best_food.name)
-                used_today.add(best_food.name)
-
-                cal_left -= scaled_macro.calorie
-                prot_left -= scaled_macro.proteine
-                fat_left -= scaled_macro.fat
-                carb_left -= scaled_macro.carbohydrate
+            # Mise à jour du budget restant pour les prochains aliments du repas
+            cal_budget -= scaled_macro.calorie
+            prot_budget -= scaled_macro.proteine
+            fat_budget -= scaled_macro.fat
+            carb_budget -= scaled_macro.carbohydrate
 
         return menu
