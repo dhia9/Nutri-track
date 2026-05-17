@@ -146,7 +146,7 @@ class Profile(Model):
             for food in food_data.content
             if food.name not in used_in_meal
             and food.name not in used_today
-            and food.macros  # guard: skip foods with no macro entry
+            and food.macros
         ]
         if not candidates:
             return None
@@ -158,21 +158,27 @@ class Profile(Model):
         """
         Calcule la portion en grammes (clamped pour ne pas dépasser le budget calorique)
         et retourne le Macro correspondant.
+        Les valeurs nutritionnelles sont moyennées sur toutes les entrées de macros (masse = 100g).
         """
-        ref_macro = food.macros[0]
+        # Moyenne des valeurs nutritionnelles sur toutes les entrées (toutes pour 100g)
+        n = len(food.macros)
+        avg_calorie = sum(m.calorie for m in food.macros) / n
+        avg_proteine = sum(m.proteine for m in food.macros) / n
+        avg_fat = sum(m.fat for m in food.macros) / n
+        avg_carbohydrate = sum(m.carbohydrate for m in food.macros) / n
 
         # Portion maximale avant de dépasser le budget calorique
-        cal_per_g = ref_macro.calorie / ref_macro.masse
+        cal_per_g = avg_calorie / 100
         max_g = (cal_budget / cal_per_g) if cal_per_g > 0 else base_portion_g
         portion_g = round(max(30.0, min(base_portion_g, max_g)))
 
-        # Macro class gère le scaling masse → quantité en interne
+        # Macro gère le scaling en interne (masse / 100)
         scaled_macro = Macro(
             portion_g,
-            ref_macro.proteine / (ref_macro.masse / 100),  # back to per-100g
-            ref_macro.calorie / (ref_macro.masse / 100),
-            ref_macro.fat / (ref_macro.masse / 100),
-            ref_macro.carbohydrate / (ref_macro.masse / 100),
+            avg_proteine,
+            avg_calorie,
+            avg_fat,
+            avg_carbohydrate,
         )
         return portion_g, scaled_macro
 

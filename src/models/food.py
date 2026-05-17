@@ -15,12 +15,18 @@ class Food(Model):
         carb_left: float,
         portion_g: float,
     ) -> float:
-        """Compatibility score between a food and remaining macro targets."""
-        macro = self.macros[0]
-        if macro.calorie == 0:
+        """Score de compatibilité entre cet aliment et les macros restantes.
+        Moyenne sur toutes les entrées de macros (référence 100g chacune)."""
+        n = len(self.macros)
+        avg_calorie = sum(m.calorie for m in self.macros) / n
+        avg_proteine = sum(m.proteine for m in self.macros) / n
+        avg_fat = sum(m.fat for m in self.macros) / n
+        avg_carbohydrate = sum(m.carbohydrate for m in self.macros) / n
+
+        if avg_calorie == 0:
             return 0.0
 
-        ratio = portion_g / macro.masse  # scale to desired portion
+        ratio = portion_g / 100
 
         def rel_gap(provided: float, target: float) -> float:
             if target <= 0:
@@ -30,8 +36,8 @@ class Food(Model):
 
         return max(
             0.0,
-            0.35 * rel_gap(macro.calorie, cal_left)
-            + 0.35 * rel_gap(macro.proteine, prot_left)
-            + 0.15 * rel_gap(macro.fat, fat_left)
-            + 0.15 * rel_gap(macro.carbohydrate, carb_left),
+            0.35 * rel_gap(avg_calorie, cal_left)
+            + 0.35 * rel_gap(avg_proteine, prot_left)
+            + 0.15 * rel_gap(avg_fat, fat_left)
+            + 0.15 * rel_gap(avg_carbohydrate, carb_left),
         )
