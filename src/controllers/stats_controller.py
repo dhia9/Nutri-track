@@ -1,17 +1,18 @@
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
 
 
 class StatsController:
     def __init__(self, main_controller):
         self.main_controller = main_controller
         self.view = None
-        self.current_profile = self.main_controller.current_profile
 
     def macros_by_date(self):
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
-        menus_endTo_end = self.menus_all_dates()
-        for menu in menus_endTo_end.values():
+        if self.main_controller.current_profile is None:
+            return result
+        menus_end_to_end = self.menus_all_dates()
+        for menu in menus_end_to_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
                 continue
             date = menu.date
@@ -32,14 +33,18 @@ class StatsController:
 
     def menus_all_dates(self):
         profile_menus = {}
-        for menu in self.current_profile.eating_habits:
+        if self.main_controller.current_profile is None:
+            return profile_menus
+        for menu in self.main_controller.current_profile.eating_habits:
             profile_menus[menu.date] = menu
         return profile_menus
 
     def menus_today(self, date: datetime.date):
         profile_menus = {}
+        if self.main_controller.current_profile is None:
+            return profile_menus
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
-        for menu in self.current_profile.eating_habits:
+        for menu in self.main_controller.current_profile.eating_habits:
             if menu.date.startswith(
                 date_str
             ):  # Vérifier si le menu correspond à la date donnée
@@ -49,6 +54,8 @@ class StatsController:
     def macros_today(self, date: datetime.date):
         """Retourne les macros consommés par l'utilisateur à un jour donné"""
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
+        if self.main_controller.current_profile is None:
+            return total_macros
         menus = self.menus_today(date)
         for menu in menus.values():
             for food_menu in menu.content:

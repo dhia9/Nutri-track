@@ -32,11 +32,6 @@ class MainController:
             "Settings": settings_controller.SettingsController(self),
         }  # Dico pour stocker les sous contrôlleur de chaque page
 
-    def show_page(self, page_name):
-        page = self.pages[page_name]
-        page.grid(row=0, column=0, sticky="nsew")
-        page.tkraise()
-
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.
 
@@ -89,15 +84,20 @@ class MainController:
             self.set_existing_pages(pages)
 
         current = self.current_page or "Accueil"
-        self.show_page(current)
+        self._show_page(current)
         self.update_nav_buttons()
 
-    def show_page(self, page_name):
+    def _show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
         if self.current_profile is None and page_name != "Accueil":
             return
         if page_name not in self.pages:
             return
+
+        if page_name == "Statistiques":
+            stats_page = self.pages[page_name]
+            if hasattr(stats_page, "refresh"):
+                stats_page.refresh()
 
         # Masquer la page actuellement affichée
         if self.current_page and self.current_page in self.pages:
@@ -121,3 +121,5 @@ class MainController:
         # Afficher la nouvelle page
         self.pages[page_name].grid()
         self.current_page = page_name
+
+    show_page = _show_page
