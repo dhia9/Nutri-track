@@ -8,8 +8,4 @@ venv/
 *.pyc
 __pycache__/
 
-# Fichier Personnel de l'utilisateur
-
-# Fichiers de test
-tests/
-
+/tests
