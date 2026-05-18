@@ -102,7 +102,7 @@ class NutritionController:
             return
 
         a_menu = menu.Menu(
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.current_date.strftime("%Y-%m-%d %H:%M:%S")
         )  # reformater la date pour le traitement des données avec .strptime lors de la désérialisation du JSON (pour la partie stat notamment)
 
         for food_name, quantity in quantities.items():
