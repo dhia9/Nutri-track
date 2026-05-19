@@ -228,6 +228,17 @@ class NutritionController:
             )
             delete_button.pack(side="right")
 
+            #Bouton pour ajouter aux favoris le menu
+            self_bouton_menu = ctk.CTkButton(
+            header_frame,
+            text="Ajouter aux favoris",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            corner_radius=10,
+            fg_color="#4CAF50",
+            hover_color="#45a049"
+            )
+            self_bouton_menu.pack(side="bottom")
+
             # Afficher les aliments du menu
             for food_menu in menu_obj.content:
                 food_label = ctk.CTkLabel(
