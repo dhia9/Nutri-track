@@ -97,7 +97,7 @@ class NutritionPage(ctk.CTkFrame):
         self.bouton_aliment = ctk.CTkButton(
             self.frame_ajout,
             text="✚ Ajouter un menu",
-            font=ctk.CTkFont(size=18, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color="#A8AFB6",
             command=self.controller.add_menu,
         )
@@ -280,6 +280,27 @@ class NutritionPage(ctk.CTkFrame):
         self.lipides_value_label.grid(
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
         )
+        #Bouton pour choisir le menu proposé
+        self_bouton_menu = ctk.CTkButton(
+            self.frame_ajout,
+            text="Choisir ce menu",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            corner_radius=10,
+            fg_color="#4CAF50",
+            hover_color="#45a049"
+        )
+        self_bouton_menu.grid(row=0, column=1, sticky="w", padx=15, pady=(10, 0))
+
+        #Bouton pour suggérer un menu
+        self_bouton_menu = ctk.CTkButton(
+            self.frame_aliment,
+            text="Suggérer un menu",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            corner_radius=10,
+            fg_color="#4CAF50",
+            hover_color="#45a049"
+        )
+        self_bouton_menu.grid(row=0, column=10, sticky="w", padx=15, pady=(10, 0))
 
         # Afficher les menus initialement après la création de tous les labels
         self.controller.display_menus()
@@ -332,13 +353,4 @@ class NutritionPage(ctk.CTkFrame):
         setattr(self, f"{macro_name.lower()}_value_label", value_label)
         
 
-        #Bouton pour choisir le menu proposé
-        self_bouton_menu = ctk.CTkButton(
-            frame,
-            text="Choisir ce menu",
-            font=ctk.CTkFont(size=12, weight="bold"),
-            corner_radius=10,
-            fg_color="#4CAF50",
-            hover_color="#45a049"
-        )
-        self_bouton_menu.grid(row=3, column=0, sticky="w", padx=15, pady=(10, 0))
+        
