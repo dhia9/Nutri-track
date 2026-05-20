@@ -7,7 +7,7 @@ import src.data.food_data as food_data
 import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
-from src.views.win_menu_fav import DisplayMenuClass
+from src.views.fav_win import FavorieMenu
 
 
 
@@ -23,7 +23,7 @@ class NutritionController:
         self.food_data.deserialize(
             "src/data/data.json"
         )  # Charger les données depuis le fichier JSON
-        self.favorite_menus = set()  # Stockage des menus favoris (date format: YYYY-MM-DD HH:MM:SS)
+        self.favorite_menus = self.main_controller.settings.favorites_menus  # Récupérer les menus favoris depuis les paramètres
 
     def set_current_profile(self, profile):
         self.current_profile = profile
@@ -181,6 +181,10 @@ class NutritionController:
             self.favorite_menus.add(menu)
         # Mettre à jour l'affichage
         self.display_menus()
+        # Sauvegarder les favoris dans les paramètres
+        self.main_controller.settings.serialize(
+            appdirs.user_data_dir("Nutritrack") + "/settings.json"
+        )
 
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
@@ -294,6 +298,5 @@ class NutritionController:
     
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris"""
-        fav_win = DisplayMenuClass(titre = "Menus favoris", menus = self.favorite_menus, parent=self.view.winfo_toplevel())
-
+        fav_win = FavorieMenu(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée

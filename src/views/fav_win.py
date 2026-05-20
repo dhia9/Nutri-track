@@ -1,12 +1,13 @@
 import customtkinter as ctk
 
-class DisplayMenuClass(ctk.CTkToplevel):
-    def __init__(self, parent, titre, menus):
+class FavorieMenuWindow(ctk.CTkToplevel):
+    def __init__(self, parent, main_controller):
         super().__init__(parent)
-        self.list_menus_fav = menus
+        self.list_menus_fav = main_controller.settings.favorites_menus
+        self.main_controller = main_controller
 
         # titre et dimensions de la fenêtre
-        self.title(titre)
+        self.title("Menus favoris")
         self.geometry("700x500")
 
         # Configuration du grid principal
@@ -16,7 +17,7 @@ class DisplayMenuClass(ctk.CTkToplevel):
         # Titre
         title_label = ctk.CTkLabel(
             self,
-            text=f"📋 {titre}",
+            text=f"📋Menus favoris",
             font=ctk.CTkFont(size=24, weight="bold"),
         )
         title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(15, 10))
@@ -70,8 +71,22 @@ class DisplayMenuClass(ctk.CTkToplevel):
         # Header avec date/heure et bouton
         header_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
         header_frame.pack(fill="x", padx=15, pady=(10, 5))
-        header_frame.grid_columnconfigure(0, weight=1)
+        header_frame.grid_columnconfigure(1, weight=1)
 
+        # Bouton Supprimer
+        delete_button = ctk.CTkButton(
+            header_frame,
+            text="🗑 Supprimer",
+            width=100,
+            height=28,
+            corner_radius=6,
+            fg_color="#D9534F",
+            hover_color="#C9302C",
+            text_color="#FFFFFF",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            command=lambda m=menu: self._on_delete_menu(m),
+        )
+        delete_button.grid(row=0, column=0, sticky="w", padx=(0, 10))
 
         # Bouton Ajouter
         add_button = ctk.CTkButton(
@@ -86,7 +101,7 @@ class DisplayMenuClass(ctk.CTkToplevel):
             font=ctk.CTkFont(size=10, weight="bold"),
             command=lambda m=menu: self._on_add_menu(m),
         )
-        add_button.grid(row=0, column=1, sticky="e", padx=(10, 0))
+        add_button.grid(row=0, column=2, sticky="e", padx=(10, 0))
 
         # Liste des aliments
         foods_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
@@ -116,11 +131,11 @@ class DisplayMenuClass(ctk.CTkToplevel):
 
         # Macros de l'aliment
         if food_menu.macros:
-            # Additionner les macros (liste d'objets Macro)
-            total_cal = sum(m.calorie for m in food_menu.macros)
-            total_prot = sum(m.proteine for m in food_menu.macros)
-            total_carb = sum(m.carbohydrate for m in food_menu.macros)
-            total_fat = sum(m.fat for m in food_menu.macros)
+            # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
+            total_cal = sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
+            total_prot = sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
+            total_carb = sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
+            total_fat = sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
             
             macros_text = f"Cal: {int(total_cal)} | Prot: {int(total_prot)}g | Glucides: {int(total_carb)}g | Lipides: {int(total_fat)}g"
             macros_label = ctk.CTkLabel(
@@ -141,11 +156,11 @@ class DisplayMenuClass(ctk.CTkToplevel):
 
         for food_menu in menu.content:
             if food_menu.macros:
-                # Additionner les macros (liste d'objets Macro)
-                total_calories += sum(m.calorie for m in food_menu.macros)
-                total_proteins += sum(m.proteine for m in food_menu.macros)
-                total_carbs += sum(m.carbohydrate for m in food_menu.macros)
-                total_fats += sum(m.fat for m in food_menu.macros)
+                # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
+                total_calories += sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
+                total_proteins += sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
+                total_carbs += sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
+                total_fats += sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
 
         # Frame de résumé
         summary_frame = ctk.CTkFrame(parent_frame, fg_color="#1A1A2E", corner_radius=6)
@@ -164,3 +179,8 @@ class DisplayMenuClass(ctk.CTkToplevel):
         """Callback pour le bouton Ajouter"""
         # Le backend sera implémenté par l'utilisateur
         print(f"Ajout du menu du {menu.date}")
+
+    def _on_delete_menu(self, menu):
+        """Callback pour le bouton Supprimer"""
+        # Le backend sera implémenté par l'utilisateur
+        print(f"Suppression du menu du {menu.date}")
