@@ -77,8 +77,11 @@ class MainPage(ctk.CTk):
         )
         self.nutrition_page = None
         self.stats_page = None
+        self.settings_page = SettingsPage(
+            self.pages_container, main_controller=self.controller
+        )
 
-        pages = {"Accueil": self.home_page}
+        pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
         if self.controller.current_profile is not None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
@@ -88,10 +91,6 @@ class MainPage(ctk.CTk):
                 self.pages_container, main_controller=self.controller
             )
             pages["Statistiques"] = self.stats_page
-            self.settings_page = SettingsPage(
-                self.pages_container, main_controller=self.controller
-            )
-            pages["Paramètres"] = self.settings_page
 
         # Déléguer la gestion des pages au contrôleur
         self.controller.set_existing_pages(pages)
@@ -201,11 +200,14 @@ class MainPage(ctk.CTk):
             self.nutrition_page.destroy()
         if self.stats_page is not None and self.stats_page.winfo_exists():
             self.stats_page.destroy()
+        if self.settings_page is not None and self.settings_page.winfo_exists():
+            self.settings_page.destroy()
 
         self.nutrition_page = None
         self.stats_page = None
+        self.settings_page = SettingsPage(self.pages_container, main_controller=self.controller)
 
-        pages = {"Accueil": self.home_page}
+        pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
         if self.controller.current_profile is not None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
@@ -215,7 +217,6 @@ class MainPage(ctk.CTk):
             )
             pages["Nutrition"] = self.nutrition_page
             pages["Statistiques"] = self.stats_page
-
         self.controller.set_existing_pages(pages)
         target_page = self.controller.current_page
         if target_page not in pages:

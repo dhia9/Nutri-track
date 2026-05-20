@@ -27,7 +27,7 @@ class SettingsController:
 
         home_view = self.main_controller.controllers["Home"].view
         if home_view is not None:
-            home_view._render_profiles()
+            home_view.render_profiles()
 
     def delete_profile(self):
         profile = self.main_controller.current_profile
@@ -44,7 +44,7 @@ class SettingsController:
 
         home_view = self.main_controller.controllers["Home"].view
         if home_view is not None:
-            home_view._render_profiles()
+            home_view.render_profiles()
 
         settings_view = self.main_controller.controllers["Settings"].view
         if settings_view is not None:

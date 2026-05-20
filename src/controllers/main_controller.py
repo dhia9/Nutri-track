@@ -66,7 +66,7 @@ class MainController:
             return
         profile_selected = self.current_profile is not None
         for name, btn in self.view.nav_buttons.items():
-            if name == "Accueil":
+            if name == "Accueil" or name == "Paramètres":
                 continue
             enabled = profile_selected and name in self.pages
             btn.configure(
@@ -89,7 +89,7 @@ class MainController:
 
     def _show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
-        if self.current_profile is None and page_name != "Accueil":
+        if self.current_profile is None and page_name not in ["Accueil", "Paramètres"]:
             return
         if page_name not in self.pages:
             return
