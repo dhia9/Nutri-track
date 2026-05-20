@@ -5,6 +5,7 @@ class NutritionPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller: MainController):
         super().__init__(parent)
         self.parent = parent
+        self.main_win = parent.master
         self.main_controller = main_controller
         self.controller = self.main_controller.controllers["Nutrition"]
         self.controller.view = self  # Assigner la view au contrôleur
@@ -299,7 +300,7 @@ class NutritionPage(ctk.CTkFrame):
             fg_color="#4CAF50",
             hover_color="#45a049"
         )
-        self_bouton_menu.grid(row=0, column=10, sticky="w", padx=15, pady=(10, 0))
+        self_bouton_menu.grid(row=0, column=9, sticky="w", padx=15, pady=(10, 0))
         
 
         # Afficher les menus initialement après la création de tous les labels

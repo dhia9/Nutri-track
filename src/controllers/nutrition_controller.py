@@ -21,6 +21,7 @@ class NutritionController:
         self.food_data.deserialize(
             "src/data/data.json"
         )  # Charger les données depuis le fichier JSON
+        self.favorite_menus = set()  # Stockage des menus favoris (date format: YYYY-MM-DD HH:MM:SS)
 
     def set_current_profile(self, profile):
         self.current_profile = profile
@@ -170,6 +171,15 @@ class NutritionController:
         )
         self.display_menus()
 
+    def toggle_favorite(self, menu_date: str):
+        """Ajoute ou retire un menu des favoris et met à jour l'affichage."""
+        if menu_date in self.favorite_menus:
+            self.favorite_menus.remove(menu_date)
+        else:
+            self.favorite_menus.add(menu_date)
+        # Mettre à jour l'affichage
+        self.display_menus()
+
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
         # Nettoyer la scrollable frame
@@ -215,29 +225,44 @@ class NutritionController:
             )
             time_label.pack(side="left")
 
+            # Frame pour les boutons à droite (étoile au-dessus, supprimer en bas)
+            right_buttons_frame = ctk.CTkFrame(header_frame, fg_color="#2A2A4A")
+            right_buttons_frame.pack(side="right", padx=5)
+
+            # Étoile pour les favoris (cliquable)
+            is_favorite = menu_time in self.favorite_menus
+            star_text = "★" if is_favorite else "☆"
+            star_button = ctk.CTkButton(
+                right_buttons_frame,
+                text=star_text,
+                width=30,
+                height=24,
+                corner_radius=6,
+                fg_color="#2A2A4A",
+                hover_color="#3A3A4A",
+                text_color="#FFD700",
+                font=ctk.CTkFont(size=16),
+                command=lambda : self.toggle_favorite(menu_time),
+            )
+            star_button.pack(pady=(0, 5))
+            # Stocker la référence pour mise à jour ultérieure
+            setattr(star_button, "menu_time", menu_time)
+            setattr(star_button, "is_favorite", is_favorite)
+
+            # Bouton supprimer
             delete_button = ctk.CTkButton(
-                header_frame,
+                right_buttons_frame,
                 text="Supprimer",
-                width=90,
+                width=80,
                 height=24,
                 corner_radius=6,
                 fg_color="#D9534F",
                 hover_color="#C9302C",
                 text_color="#FFFFFF",
+                font=ctk.CTkFont(size=9),
                 command=lambda mt=menu_time: self.delete_menu(mt),
             )
-            delete_button.pack(side="right")
-
-            #Bouton pour ajouter aux favoris le menu
-            self_bouton_menu = ctk.CTkButton(
-            header_frame,
-            text="Ajouter aux favoris",
-            font=ctk.CTkFont(size=10, weight="bold"),
-            corner_radius=10,
-            fg_color="#4CAF50",
-            hover_color="#45a049"
-            )
-            self_bouton_menu.pack(side="bottom")
+            delete_button.pack()
 
             # Afficher les aliments du menu
             for food_menu in menu_obj.content:
