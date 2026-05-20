@@ -17,17 +17,49 @@ class SettingsController:
                 message="Aucun profil sélectionné.",
             )
             return
-        else:
-            profile.name = name
-            profile.age = age
-            profile.height = height
-            profile.weight = weight
-            profile.target_weight = target_weight
-            profile.sex = sex
+        if not name or not str(age).isdigit() or sex not in ["Homme", "Femme"]:
+            message_box.CTkMessageBox(
+                self.main_controller.view,
+                title="Erreur",
+                message="Veuillez remplir tous les champs correctement.",
+            )
+            return
+
+        try:
+            height = float(height)
+            weight = float(weight)
+            target_weight = float(target_weight)
+        except (TypeError, ValueError):
+            message_box.CTkMessageBox(
+                self.main_controller.view,
+                title="Erreur",
+                message="Veuillez remplir tous les champs correctement.",
+            )
+            return
+
+        self.main_controller.settings.update_profile(
+            profile=profile,
+            name=name,
+            age=int(age),
+            height=height,
+            weight=weight,
+            target_weight=target_weight,
+            sex=sex,
+        )
 
         home_view = self.main_controller.controllers["Home"].view
         if home_view is not None:
             home_view.render_profiles()
+
+        settings_view = self.main_controller.controllers["Settings"].view
+        if settings_view is not None:
+            settings_view.update_profile_details(profile)
+
+        message_box.CTkMessageBox(
+            self.main_controller.view,
+            title="Succès",
+            message="Le profil a été modifié avec succès !",
+        )
 
 
         

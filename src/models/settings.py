@@ -29,6 +29,16 @@ class Settings(JsonSerializable):
 
         self.serialize(SETTINGS_PATH)  # Sauvegarder le profil après sa création
 
+    def update_profile(self, profile, name, age, height, weight, sex, target_weight):
+        profile.name = name
+        profile.age = age
+        profile.height = height
+        profile.weight = weight
+        profile.sex = sex
+        profile.target_weight = target_weight
+
+        self.serialize(SETTINGS_PATH)
+
     def delete_profile(self, name):
         for profile in self.profiles:
             if profile.name == name:

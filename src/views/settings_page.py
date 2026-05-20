@@ -233,6 +233,9 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0, 10))
 
     def edit_profile(self):
+        if self.profile is None:
+            self.controlleur.edit_profile(None, None, None, None, None, None)
+            return
 
         name = self.nom_entry.get()
         if name == "":
