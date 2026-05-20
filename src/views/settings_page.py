@@ -257,11 +257,8 @@ class SettingsPage(ctk.CTkFrame):
 
         self.controlleur.edit_profile(name, age, height, weight, target_weight, sex)
 
-        self.nom_entry.delete(0, "end")
-        self.age_entry.delete(0, "end")
-        self.taille_entry.delete(0, "end")
-        self.poids_entry.delete(0, "end")
-        self.objectif_entry.delete(0, "end")
+        
+        
 
     def delete_profile(self):
         self.controlleur.delete_profile()

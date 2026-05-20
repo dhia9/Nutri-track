@@ -29,6 +29,8 @@ class SettingsController:
         if home_view is not None:
             home_view.render_profiles()
 
+
+        
     def delete_profile(self):
         profile = self.main_controller.current_profile
         if not profile:
