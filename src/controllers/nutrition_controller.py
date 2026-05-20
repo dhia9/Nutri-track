@@ -4,9 +4,11 @@ import appdirs
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.data.food_data as food_data
-import src.models.menu as menu
+import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
+from src.views.win_menu_fav import DisplayMenuClass
+
 
 
 class NutritionController:
@@ -102,7 +104,7 @@ class NutritionController:
         if not quantities:
             return
 
-        a_menu = menu.Menu(
+        a_menu = Menu.Menu(
             self.current_date.strftime("%Y-%m-%d %H:%M:%S")
         )  # reformater la date pour le traitement des données avec .strptime lors de la désérialisation du JSON (pour la partie stat notamment)
 
@@ -171,12 +173,12 @@ class NutritionController:
         )
         self.display_menus()
 
-    def toggle_favorite(self, menu_date: str):
+    def toggle_favorite(self, menu:Menu.Menu):
         """Ajoute ou retire un menu des favoris et met à jour l'affichage."""
-        if menu_date in self.favorite_menus:
-            self.favorite_menus.remove(menu_date)
+        if menu in self.favorite_menus:
+            self.favorite_menus.remove(menu)
         else:
-            self.favorite_menus.add(menu_date)
+            self.favorite_menus.add(menu)
         # Mettre à jour l'affichage
         self.display_menus()
 
@@ -230,7 +232,7 @@ class NutritionController:
             right_buttons_frame.pack(side="right", padx=5)
 
             # Étoile pour les favoris (cliquable)
-            is_favorite = menu_time in self.favorite_menus
+            is_favorite = menu_obj in self.favorite_menus
             star_text = "★" if is_favorite else "☆"
             star_button = ctk.CTkButton(
                 right_buttons_frame,
@@ -242,11 +244,11 @@ class NutritionController:
                 hover_color="#3A3A4A",
                 text_color="#FFD700",
                 font=ctk.CTkFont(size=16),
-                command=lambda : self.toggle_favorite(menu_time),
+                command=lambda : self.toggle_favorite(menu_obj),
             )
             star_button.pack(pady=(0, 5))
             # Stocker la référence pour mise à jour ultérieure
-            setattr(star_button, "menu_time", menu_time)
+            setattr(star_button, "menu_obj", menu_obj)
             setattr(star_button, "is_favorite", is_favorite)
 
             # Bouton supprimer
@@ -289,3 +291,9 @@ class NutritionController:
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
         self.display_menus()
+    
+    def show_favorite_menus(self, event):
+        """Affiche la fenêtre des menus favoris"""
+        fav_win = DisplayMenuClass(titre = "Menus favoris", menus = self.favorite_menus, parent=self.view.winfo_toplevel())
+
+        fav_win.wait_window()  # Attendre que la fenêtre soit fermée
