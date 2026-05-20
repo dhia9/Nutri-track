@@ -283,7 +283,7 @@ class NutritionPage(ctk.CTkFrame):
         #Bouton pour choisir le menu proposé
         self_bouton_menu = ctk.CTkButton(
             self.frame_ajout,
-            text="Choisir ce menu",
+            text="Menu Favories",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
             fg_color="#4CAF50",
