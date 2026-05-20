@@ -281,13 +281,11 @@ class SettingsPage(ctk.CTkFrame):
         self.objectif_entry.delete(0, "end")
 
         if self.profile is not None:
-            self.nom_entry.configure(placeholder_text=f"{self.profile.name}")
-            self.age_entry.configure(placeholder_text=f"{self.profile.age}")
-            self.taille_entry.configure(placeholder_text=f"{self.profile.height}")
-            self.poids_entry.configure(placeholder_text=f"{self.profile.weight}")
-            self.objectif_entry.configure(
-                placeholder_text=f"{self.profile.target_weight}"
-            )
+            self.nom_entry.insert(0, f"{self.profile.name}")
+            self.age_entry.insert(0, f"{self.profile.age}")
+            self.taille_entry.insert(0, f"{self.profile.height}")
+            self.poids_entry.insert(0, f"{self.profile.weight}")
+            self.objectif_entry.insert(0, f"{self.profile.target_weight}")
             self.sexe_var.set(self.profile.sex)
         else:
             self.nom_entry.configure(placeholder_text="Aucun profil sélectionné")
