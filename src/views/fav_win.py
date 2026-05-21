@@ -1,10 +1,13 @@
 import customtkinter as ctk
+import appdirs
+from src.models.menu import Menu
 
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         super().__init__(parent)
         self.list_menus_fav = main_controller.settings.favorites_menus
         self.main_controller = main_controller
+        self.nutrition_controller = main_controller.controllers.get("Nutrition")
 
         # titre et dimensions de la fenêtre
         self.title("Menus favoris")
@@ -39,9 +42,14 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def display_favorite_menus(self):
         """Affiche la liste des menus favoris avec leur composition"""
-        # Récupérer les menus favoris du profil actuel
+        # Récupérer les menus favoris du profil actuel (actualiser depuis les settings)
+        self.list_menus_fav = self.main_controller.settings.favorites_menus
         favorite_menus_data = list(self.list_menus_fav)  # Convertir en liste pour itérer facilement
 
+        # Supprimer les widgets existants dans le scrollable_frame avant de les recréer
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+        
         # Si pas de menus favoris
         if not favorite_menus_data:
             no_menu_label = ctk.CTkLabel(
@@ -84,7 +92,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             hover_color="#C9302C",
             text_color="#FFFFFF",
             font=ctk.CTkFont(size=10, weight="bold"),
-            command=lambda m=menu: self._on_delete_menu(m),
+            command=lambda m=menu: self.on_delete_menu(m),
         )
         delete_button.grid(row=0, column=0, sticky="w", padx=(0, 10))
 
@@ -99,7 +107,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             hover_color="#45a049",
             text_color="#FFFFFF",
             font=ctk.CTkFont(size=10, weight="bold"),
-            command=lambda m=menu: self._on_add_menu(m),
+            command=lambda m=menu: self.on_add_menu(m),
         )
         add_button.grid(row=0, column=2, sticky="e", padx=(10, 0))
 
@@ -175,12 +183,26 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         )
         summary_label.pack(padx=10, pady=8)
 
-    def _on_add_menu(self, menu):
+    def on_add_menu(self, menu):
         """Callback pour le bouton Ajouter"""
-        # Le backend sera implémenté par l'utilisateur
-        print(f"Ajout du menu du {menu.date}")
+        
+        # Ajouter le menu à la date courante dans les habitudes alimentaires du profil
+        current_datetime = self.nutrition_controller.current_date.strftime("%Y-%m-%d %H:%M:%S")
+        menu_to_add = Menu(current_datetime)
+        for food in menu.content:
+            menu_to_add.add_food_menu(food, food.quantity)
+        self.main_controller.current_profile.eating_habits.append(menu_to_add)
+        self.main_controller.settings.serialize(
+            appdirs.user_data_dir("Nutritrack") + "/settings.json"
+        )  # Sauvegarder après l'ajout
+        self.nutrition_controller.display_menus()  # Rafraîchir la page Nutrition si ouverte
+        
 
-    def _on_delete_menu(self, menu):
+    def on_delete_menu(self, menu):
         """Callback pour le bouton Supprimer"""
-        # Le backend sera implémenté par l'utilisateur
-        print(f"Suppression du menu du {menu.date}")
+        self.main_controller.settings.favorites_menus.discard(menu)  # Supprimer du set des favoris
+        self.display_favorite_menus()  # Rafraîchir l'affichage
+        self.nutrition_controller.display_menus()  # Rafraîchir la page Nutrition si ouverte
+        self.main_controller.settings.serialize(
+            appdirs.user_data_dir("Nutritrack") + "/settings.json"
+        )

@@ -7,7 +7,7 @@ import src.data.food_data as food_data
 import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
-from src.views.fav_win import FavorieMenu
+from src.views.fav_win import FavorieMenuWindow
 
 
 
@@ -248,7 +248,7 @@ class NutritionController:
                 hover_color="#3A3A4A",
                 text_color="#FFD700",
                 font=ctk.CTkFont(size=16),
-                command=lambda : self.toggle_favorite(menu_obj),
+                command=lambda m=menu_obj: self.toggle_favorite(m),
             )
             star_button.pack(pady=(0, 5))
             # Stocker la référence pour mise à jour ultérieure
@@ -298,5 +298,5 @@ class NutritionController:
     
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris"""
-        fav_win = FavorieMenu(self.view.winfo_toplevel(), self.main_controller)
+        fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
