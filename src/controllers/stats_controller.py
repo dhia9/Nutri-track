@@ -15,7 +15,7 @@ class StatsController:
         for menu in menus_end_to_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
                 continue
-            date = menu.date
+            date = menu.date[:10]
             for food_menu in menu.content:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
