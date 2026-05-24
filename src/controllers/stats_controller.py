@@ -7,6 +7,7 @@ class StatsController:
         self.main_controller = main_controller
         self.view = None
         self.current_date = datetime.now()
+        self.mesures_corporelles = []
 
     def macros_by_date(self):
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
@@ -112,3 +113,6 @@ class StatsController:
         # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
         self.current_date += timedelta(days=1)
         self.update_date()
+
+    def ajouter_mesure(self, mesure):
+        self.mesures_corporelles.append(mesure)
