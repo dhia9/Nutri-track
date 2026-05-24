@@ -44,6 +44,15 @@ class StatsPage(ctk.CTkFrame):
         self.period = 7
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        
+        
+
+        
+        
+        
+
+       
+
         self._build()
 
     def refresh(self):
@@ -95,6 +104,7 @@ class StatsPage(ctk.CTkFrame):
     def _render_all_charts(self):
         data = self.macrosDated
         calories = data["calories"]
+        self._bodyanalys()
         self._chart_calories(calories)
         self._caracteristicsChart()
         # self._chart_salt_sugar(data)
@@ -102,7 +112,7 @@ class StatsPage(ctk.CTkFrame):
         row.pack(fill="x", pady=10)
         self._chart_macros_pie(row)
         self._chart_macros_bar(row)
-        self._bodyanalys()
+        
         
 
     def _chart_calories(self, data):
@@ -244,4 +254,97 @@ class StatsPage(ctk.CTkFrame):
 
        
     def _bodyanalys(self):
+        
+        # création de la card 
         card = self._create_card(self.scroll, "Mesures corporelles")
+
+        # Ajout d'une frame sur la meme ligne 
+        top_row = ctk.CTkFrame(card, fg_color="transparent")
+        top_row.pack(fill="x", padx=15, pady=10)
+
+        # Ajout de la date
+        date_frame = ctk.CTkFrame(top_row, fg_color="#000000", corner_radius=10)
+        date_frame.pack(side="right")
+
+        self.button_previous = ctk.CTkButton(
+            date_frame,
+            text="◀",
+            width=30,
+            fg_color="#000000",
+            font=ctk.CTkFont(size=14),
+            hover_color="#F1F1F1",
+            corner_radius=10,
+        )
+        self.button_previous.pack(side="left", padx=6, pady=4)
+
+        
+
+        self.date_label = ctk.CTkLabel(
+            date_frame,
+            text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),
+            font=ctk.CTkFont(size=13, weight="bold"),
+            corner_radius=10,
+        )
+        self.date_label.pack(side="left", padx=18, pady = 4)
+
+        self.button_next = ctk.CTkButton(
+            date_frame,
+            text="▶",
+            width=30,
+            fg_color="#0F0A0A",
+            font=ctk.CTkFont(size=14),
+            hover_color="#F1F1F1",
+            corner_radius=10,
+        )
+        self.button_next.pack(side="left", padx=6, pady=4)
+
+
+        
+        #Boutton ajouter
+        boutton_ajouter = ctk.CTkButton(top_row, text="Ajouter une mesure corporelle")
+        boutton_ajouter.pack(side="left")
+
+
+
+
+        
+        #Frame pour les labels 
+        labels_frame = ctk.CTkFrame(card, fg_color="transparent")
+        labels_frame.pack(fill="x", padx=15, pady=(10,0))
+
+        poids_label = ctk.CTkLabel(labels_frame, text="Poids en kg")
+        poids_label.pack(side="left", expand=True)
+
+        taille_label = ctk.CTkLabel(labels_frame, text="Tour de taille en cm")
+        taille_label.pack(side="left", expand=True)
+
+        bras_label = ctk.CTkLabel(labels_frame, text="Tour de bras en cm")
+        bras_label.pack(side="left", expand=True)
+
+        graisse_label = ctk.CTkLabel(labels_frame, text="Masse grasse en %")
+        graisse_label.pack(side="left", expand=True)
+
+
+
+
+        # Frame pour les entries 
+        entries_frame = ctk.CTkFrame(card, fg_color="transparent")
+        entries_frame = ctk.CTkFrame(card, fg_color="transparent")
+        entries_frame.pack(fill="x", padx=15, pady=(5,15))
+
+        poids_entry = ctk.CTkEntry(entries_frame, placeholder_text="Poids en kg")
+        poids_entry.pack(side="left", expand=True, padx=5)
+
+        taille_entry = ctk.CTkEntry(entries_frame, placeholder_text="Tour de taille en cm")
+        taille_entry.pack(side="left", expand=True, padx=5)
+
+        bras_entry = ctk.CTkEntry(entries_frame, placeholder_text="Tour de bras en cm")
+        bras_entry.pack(side="left", expand=True, padx=5)
+
+        graisse_entry = ctk.CTkEntry(entries_frame, placeholder_text="Masse grasse en %")
+        graisse_entry.pack(side="left", expand=True, padx=5)
+
+        
+
+        
+        

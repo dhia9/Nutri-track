@@ -6,6 +6,7 @@ class StatsController:
     def __init__(self, main_controller):
         self.main_controller = main_controller
         self.view = None
+        self.current_date = datetime.now()
 
     def macros_by_date(self):
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
@@ -94,3 +95,20 @@ class StatsController:
         for item in data:
             total += item[macro_type]
         return total / len(data) if data else 0
+
+    def update_date(self):
+        # Mettre a jour sur la vue la date affiché dans le label
+        self.view.date_label.configure(
+            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
+        )
+        self.display_menus()
+
+    def previous_day(self, event):
+        # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+        self.current_date -= timedelta(days=1)
+        self.update_date()
+
+    def next_day(self, event):
+        # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+        self.current_date += timedelta(days=1)
+        self.update_date()
