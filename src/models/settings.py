@@ -93,6 +93,10 @@ class Settings(JsonSerializable):
                     # Ajouter le menu à la liste des habitudes alimentaires du profil
                     profile.eating_habits.append(menu)
 
+                # Charger les mesures corporelles si elles existent
+                if "mesures_corporelles" in data_profile:
+                    profile.mesures_corporelles = data_profile["mesures_corporelles"]
+
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)
 

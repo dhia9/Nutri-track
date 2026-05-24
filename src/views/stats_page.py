@@ -64,6 +64,7 @@ class StatsPage(ctk.CTkFrame):
         self.history = self.controller.generate_history(30)
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        self.table_rows = []
         self._build()
 
     def _create_card(self, parent, title):
@@ -350,6 +351,11 @@ class StatsPage(ctk.CTkFrame):
             label = ctk.CTkLabel(self.tableau_frame, text= header, font=ctk.CTkFont(weight="bold"))
             label.grid(row=0, column=col, padx=35, pady=5)
         
+        # Charger et afficher les mesures existantes depuis le profil
+        mesures_existantes = self.controller.get_mesures_corporelles()
+        # Afficher les mesures en ordre inverse (plus récentes en haut)
+        for mesure in reversed(mesures_existantes):
+            self.ajouter_ligne_mesure(mesure)
         
 
        

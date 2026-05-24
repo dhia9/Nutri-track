@@ -26,6 +26,7 @@ class Profile(Model):
         self.sex = sex
         self.target_weight = target_weight
         self.eating_habits = []
+        self.mesures_corporelles = []
 
     def get_imc(self):
         if self.height > 0:

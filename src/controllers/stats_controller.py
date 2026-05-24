@@ -1,4 +1,6 @@
 import random
+import os
+import appdirs
 from datetime import datetime, timedelta
 
 
@@ -115,5 +117,18 @@ class StatsController:
         self.update_date()
 
     def ajouter_mesure(self, mesure):
+        # Ajouter la mesure au profil courant
+        if self.main_controller.current_profile is not None:
+            self.main_controller.current_profile.mesures_corporelles.append(mesure)
+            # Sauvegarder les modifications dans le fichier JSON
+            settings_path = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
+            self.main_controller.settings.serialize(settings_path)
+        # Garder aussi en mémoire dans le contrôleur pour la vue actuelle
         self.mesures_corporelles.append(mesure)
         return self.mesures_corporelles
+
+    def get_mesures_corporelles(self):
+        """Retourne les mesures corporelles du profil courant"""
+        if self.main_controller.current_profile is not None:
+            return self.main_controller.current_profile.mesures_corporelles
+        return []
