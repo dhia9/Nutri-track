@@ -116,3 +116,4 @@ class StatsController:
 
     def ajouter_mesure(self, mesure):
         self.mesures_corporelles.append(mesure)
+        return self.mesures_corporelles

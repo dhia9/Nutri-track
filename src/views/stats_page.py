@@ -44,6 +44,7 @@ class StatsPage(ctk.CTkFrame):
         self.period = 7
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        self.table_rows = []
         
         
 
@@ -351,9 +352,7 @@ class StatsPage(ctk.CTkFrame):
         
         
 
-        # Entrée des valeurs 
-        date = self.controller.current_date.strftime("%Y-%m-%d")
-        values =[date, self.poids_entry.get(), self.taille_entry.get(), self.bras_entry.get(), self.graisse_entry.get()]
+       
 
     
     def ajouter_mesure(self,event):
@@ -365,13 +364,28 @@ class StatsPage(ctk.CTkFrame):
             "graisse": self.graisse_entry.get()
         }
 
+
         self.controller.ajouter_mesure(mesure)
         self.ajouter_ligne_mesure(mesure)
 
 
     def ajouter_ligne_mesure(self,mesure):
         values = [mesure["date"], mesure["poids"], mesure["taille"], mesure["bras"], mesure["graisse"]]
+        # Descendre toutes les anciennes lignes
+        for row in self.table_rows:
+            for widget in row:
+                current_info = widget.grid_info()
+                widget.grid_configure(row=current_info["row"] + 1)
+
+        # Nouvelle ligne en haut
+        row_widget = []
         for col, value in enumerate(values):
-            label = ctk.CTkLabel(self.tableau_frame, text=value)
-            label.grid(row=self.ligne_tableau, column=col, padx=35, pady=5)
-        self.ligne_tableau +=1
+            label = ctk.CTkLabel(self.tableau_frame,text=value)
+            label.grid(row=1,column=col,padx=35,pady=5)
+            row_widget.append(label)
+        self.table_rows.insert(0, row_widget)
+
+        if len(self.table_rows) >10 :
+            for widget in self.table_rows[-1]:
+                widget.destroy()
+            self.table_rows.pop()
