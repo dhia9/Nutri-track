@@ -279,13 +279,13 @@ class StatsPage(ctk.CTkFrame):
         )
         self.button_previous.pack(side="left", padx=6, pady=4)
         self.button_previous.bind("<Button-1>", self.controller.previous_day)
-        
 
         self.date_label = ctk.CTkLabel(date_frame,text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),font=ctk.CTkFont(size=13, weight="bold"),corner_radius=10,)
         self.date_label.pack(side="left", padx=18, pady = 4)
 
         self.button_next = ctk.CTkButton(date_frame,text="▶",width=30,fg_color="#0F0A0A",font=ctk.CTkFont(size=14),hover_color="#F1F1F1",corner_radius=10,)
         self.button_next.pack(side="left", padx=6, pady=4)
+        self.button_next.bind("<Button-1>", self.controller.next_day)
 
 
         
@@ -375,23 +375,40 @@ class StatsPage(ctk.CTkFrame):
         self.ajouter_ligne_mesure(mesure)
 
 
-    def ajouter_ligne_mesure(self,mesure):
+    def ajouter_ligne_mesure(self, mesure):
         values = [mesure["date"], mesure["poids"], mesure["taille"], mesure["bras"], mesure["graisse"]]
-        # Descendre toutes les anciennes lignes
-        for row in self.table_rows:
+        mesure_date = mesure["date"]
+        
+        # Trouver la bonne position pour insérer la mesure (ordre décroissant par date)
+        insert_position = 0
+        for i, row in enumerate(self.table_rows):
+            # Récupérer la date de la ligne existante (première cellule)
+            row_date_label = row[0]
+            row_date = row_date_label.cget("text")
+            
+            # Si la nouvelle date est plus récente, insérer avant cette ligne
+            if mesure_date > row_date:
+                insert_position = i
+                break
+            insert_position = i + 1
+        
+        # Décaler les lignes après la position d'insertion
+        for row in self.table_rows[insert_position:]:
             for widget in row:
                 current_info = widget.grid_info()
                 widget.grid_configure(row=current_info["row"] + 1)
 
-        # Nouvelle ligne en haut
+        # Créer la nouvelle ligne à la bonne position
         row_widget = []
         for col, value in enumerate(values):
-            label = ctk.CTkLabel(self.tableau_frame,text=value)
-            label.grid(row=1,column=col,padx=35,pady=5)
+            label = ctk.CTkLabel(self.tableau_frame, text=value)
+            label.grid(row=insert_position + 1, column=col, padx=35, pady=5)
             row_widget.append(label)
-        self.table_rows.insert(0, row_widget)
+        
+        self.table_rows.insert(insert_position, row_widget)
 
-        if len(self.table_rows) >10 :
+        # Supprimer la ligne la plus ancienne si on dépasse 10 lignes
+        if len(self.table_rows) > 10:
             for widget in self.table_rows[-1]:
                 widget.destroy()
             self.table_rows.pop()
