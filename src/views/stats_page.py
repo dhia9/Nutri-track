@@ -278,7 +278,7 @@ class StatsPage(ctk.CTkFrame):
             corner_radius=10,
         )
         self.button_previous.pack(side="left", padx=6, pady=4)
-
+        self.button_previous.bind("<Button-1>", self.controller.previous_day)
         
 
         self.date_label = ctk.CTkLabel(date_frame,text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),font=ctk.CTkFont(size=13, weight="bold"),corner_radius=10,)

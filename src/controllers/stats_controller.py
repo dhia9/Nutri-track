@@ -104,7 +104,7 @@ class StatsController:
         self.view.date_label.configure(
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
-        self.display_menus()
+        
 
     def previous_day(self, event):
         # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
