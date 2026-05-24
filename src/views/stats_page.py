@@ -344,7 +344,22 @@ class StatsPage(ctk.CTkFrame):
         graisse_entry = ctk.CTkEntry(entries_frame, placeholder_text="Masse grasse en %")
         graisse_entry.pack(side="left", expand=True, padx=5)
 
+        # Label historique 
+        ctk.CTkLabel(
+            card,
+            text="Historique des mesures corporelles",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#F1F1F1",
+        ).pack(anchor="w")
+
+        # Tableau de l'historique 
+        tableau_frame = ctk.CTkFrame(card, fg_color="#000000", corner_radius=10)
+        tableau_frame.pack(fill="x", padx=15, pady=10)
+        headers = ["Date", "Poids (kg)", "Tour de taille (cm)", "Tour de bras (cm)", "Masse grasse (%)"]
+        for col, header in enumerate(headers):
+            label = ctk.CTkLabel(tableau_frame, text= header, font=ctk.CTkFont(weight="bold"))
+            label.grid(row=0, column=col, padx=35, pady=5)
         
 
-        
+        # Entrée des valeurs 
         
