@@ -102,6 +102,8 @@ class StatsPage(ctk.CTkFrame):
         row.pack(fill="x", pady=10)
         self._chart_macros_pie(row)
         self._chart_macros_bar(row)
+        self._bodyanalys()
+        
 
     def _chart_calories(self, data):
         card = self._create_card(self.scroll, "Évolution calories")
@@ -239,3 +241,7 @@ class StatsPage(ctk.CTkFrame):
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
             fig.autofmt_xdate()
         self._embed(fig, card)
+
+       
+    def _bodyanalys(self):
+        card = self._create_card(self.scroll, "Mesures corporelles")
