@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from src.controllers.main_controller import MainController
 
+
 class NutritionPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller: MainController):
         super().__init__(parent)
@@ -281,33 +282,29 @@ class NutritionPage(ctk.CTkFrame):
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
         )
 
-
-        #Bouton pour choisir le menu proposé
+        # Bouton pour choisir le menu proposé
         self.bouton_menu = ctk.CTkButton(
             self.frame_ajout,
             text="Menu Favories",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
             fg_color="#4CAF50",
-            hover_color="#45a049"
+            hover_color="#45a049",
         )
         self.bouton_menu.grid(row=0, column=1, sticky="w", padx=15, pady=(10, 0))
 
         self.bouton_menu.bind("<Button-1>", self.controller.show_favorite_menus)
 
-
-
-        #Bouton pour suggérer un menu
+        # Bouton pour suggérer un menu
         self.bouton_suggestion = ctk.CTkButton(
             self.frame_aliment,
             text="Suggérer un menu",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
             fg_color="#4CAF50",
-            hover_color="#45a049"
+            hover_color="#45a049",
         )
         self.bouton_suggestion.grid(row=0, column=9, sticky="w", padx=15, pady=(10, 0))
-        
 
         # Afficher les menus initialement après la création de tous les labels
         self.controller.display_menus()
@@ -358,6 +355,3 @@ class NutritionPage(ctk.CTkFrame):
         )
         value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_value_label", value_label)
-        
-
-        

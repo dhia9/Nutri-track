@@ -10,7 +10,6 @@ import src.views.message_box as message_box
 from src.views.fav_win import FavorieMenuWindow
 
 
-
 class NutritionController:
     def __init__(self, main_controller: main_controller):
         self.main_controller = main_controller
@@ -23,7 +22,9 @@ class NutritionController:
         self.food_data.deserialize(
             "src/data/data.json"
         )  # Charger les données depuis le fichier JSON
-        self.favorite_menus = self.main_controller.settings.favorites_menus  # Récupérer les menus favoris depuis les paramètres
+        self.favorite_menus = (
+            self.main_controller.settings.favorites_menus
+        )  # Récupérer les menus favoris depuis les paramètres
 
     def set_current_profile(self, profile):
         self.current_profile = profile
@@ -173,7 +174,7 @@ class NutritionController:
         )
         self.display_menus()
 
-    def toggle_favorite(self, menu:Menu.Menu):
+    def toggle_favorite(self, menu: Menu.Menu):
         """Ajoute ou retire un menu des favoris basé sur la composition."""
         # Chercher un favori avec la même composition
         matching_favorite = None
@@ -181,14 +182,14 @@ class NutritionController:
             if menu.has_same_composition(fav):
                 matching_favorite = fav
                 break
-        
+
         if matching_favorite:
             # Enlever le favori avec la même composition
             self.favorite_menus.remove(matching_favorite)
         else:
             # Ajouter le menu actuel comme favori (avec son timestamp unique)
             self.favorite_menus.add(menu)
-        
+
         # Mettre à jour l'affichage
         self.display_menus()
         # Sauvegarder les favoris dans les paramètres
@@ -246,7 +247,9 @@ class NutritionController:
             right_buttons_frame.pack(side="right", padx=5)
 
             # Étoile pour les favoris (cliquable) - vérifie par composition
-            is_favorite = any(menu_obj.has_same_composition(fav) for fav in self.favorite_menus)
+            is_favorite = any(
+                menu_obj.has_same_composition(fav) for fav in self.favorite_menus
+            )
             star_text = "★" if is_favorite else "☆"
             star_button = ctk.CTkButton(
                 right_buttons_frame,
@@ -305,7 +308,7 @@ class NutritionController:
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
         self.display_menus()
-    
+
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris"""
         fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
