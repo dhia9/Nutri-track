@@ -300,8 +300,14 @@ class NutritionController:
         """Affiche la fenêtre des menus favoris"""
         fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
-    def show_Suggested_menus(self, event):
+    def show_Suggested_menus(self, event=None):
         """Affiche la fenêtre des menus proposés par l'algorithme"""
-        self.suggested_menus = self.current_profile.generate_menu(self.food_data)
+        nap=int(self.current_profile.suggestCaracteristics["nap"])
+        meals_per_day=int(self.current_profile.suggestCaracteristics["meals_per_day"])
+        self.suggested_menus = self.current_profile.generate_menu(self.food_data,nap,meals_per_day)
         Suggestion_win = SuggestedMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
+    def mealPerD_change(self, event=None):
+        self.current_profile.suggestCaracteristics["meals_per_day"] = self.view.input_mealPerD.get()
+    def nap_change(self, event=None):
+        self.current_profile.suggestCaracteristics["nap"] = self.view.input_nap.get()
