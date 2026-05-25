@@ -1,6 +1,4 @@
 import customtkinter as ctk
-import appdirs
-from src.models.menu import Menu
 
 class SuggestedMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
@@ -11,7 +9,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         self.controller = self.main_controller.controllers["Nutrition"]
         # titre et dimensions de la fenêtre
         self.title("Menus suggérés")
-        
+
         width = 700
         height = 500
         x = (self.winfo_screenwidth() // 2) - (width // 2)
@@ -88,6 +86,15 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
 
         # Totaux des macros
         self._create_macros_summary(menu_frame, menu)
+        add_button = ctk.CTkButton(
+        menu_frame,
+        text="Ajouter Menu",
+        fg_color="#4CAF50",
+        hover_color="#45A049",
+        command=lambda m=menu: self.controller.add_suggested_menu(m)
+    )
+
+        add_button.pack(pady=10)
 
     def create_food_item(self, parent_frame, food_menu):
         """Crée un item pour afficher un aliment avec ses macros"""
