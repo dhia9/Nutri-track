@@ -307,7 +307,7 @@ class NutritionPage(ctk.CTkFrame):
             hover_color="#45a049"
         )
         self.bouton_suggestion.grid(row=0, column=9, sticky="w", padx=15, pady=(10, 0))
-        
+        self.bouton_suggestion.bind("<Button-1>", self.controller.show_Suggested_menus)
 
         # Afficher les menus initialement après la création de tous les labels
         self.controller.display_menus()
