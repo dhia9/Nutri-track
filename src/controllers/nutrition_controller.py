@@ -24,7 +24,7 @@ class NutritionController:
             "src/data/data.json"
         )  # Charger les données depuis le fichier JSON
         self.favorite_menus = self.main_controller.settings.favorites_menus  # Récupérer les menus favoris depuis les paramètres
-        self.suggested_menus = self.current_profile.generate_menu(self.food_data)
+        self.suggested_menus = None
     def set_current_profile(self, profile):
         self.current_profile = profile
 
@@ -302,5 +302,6 @@ class NutritionController:
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
     def show_Suggested_menus(self, event):
         """Affiche la fenêtre des menus proposés par l'algorithme"""
+        self.suggested_menus = self.current_profile.generate_menu(self.food_data)
         Suggestion_win = SuggestedMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
