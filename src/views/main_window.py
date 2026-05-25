@@ -7,6 +7,7 @@ from PIL import Image
 import src.views.home_page as home_page
 from src.views.nutrition_page import NutritionPage
 from src.views.stats_page import StatsPage
+from src.views.settings_page import SettingsPage
 
 
 class MainPage(ctk.CTk):
@@ -76,8 +77,11 @@ class MainPage(ctk.CTk):
         )
         self.nutrition_page = None
         self.stats_page = None
+        self.settings_page = SettingsPage(
+            self.pages_container, main_controller=self.controller
+        )
 
-        pages = {"Accueil": self.home_page}
+        pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
         if self.controller.current_profile is not None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
@@ -133,7 +137,7 @@ class MainPage(ctk.CTk):
         self.nav_container.grid(row=2, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
-        pages_config = ["Accueil", "Nutrition", "Statistiques"]
+        pages_config = ["Accueil", "Nutrition", "Statistiques", "Paramètres"]
         for index, page_name in enumerate(pages_config):
             btn = self.create_nav_button(self.nav_container, page_name)
             btn.grid(row=index, column=0, sticky="ew", padx=6, pady=6)
@@ -196,11 +200,14 @@ class MainPage(ctk.CTk):
             self.nutrition_page.destroy()
         if self.stats_page is not None and self.stats_page.winfo_exists():
             self.stats_page.destroy()
+        if self.settings_page is not None and self.settings_page.winfo_exists():
+            self.settings_page.destroy()
 
         self.nutrition_page = None
         self.stats_page = None
+        self.settings_page = SettingsPage(self.pages_container, main_controller=self.controller)
 
-        pages = {"Accueil": self.home_page}
+        pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
         if self.controller.current_profile is not None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
@@ -210,7 +217,6 @@ class MainPage(ctk.CTk):
             )
             pages["Nutrition"] = self.nutrition_page
             pages["Statistiques"] = self.stats_page
-
         self.controller.set_existing_pages(pages)
         target_page = self.controller.current_page
         if target_page not in pages:

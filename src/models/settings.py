@@ -1,12 +1,14 @@
 import json
+import os
 
+import appdirs
 from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
 from src.models.profile import Profile
 from src.utils.json_serializable import JsonSerializable
-import os
-import appdirs
+
+SETTINGS_PATH = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
 
 
 class Settings(JsonSerializable):
@@ -14,12 +16,9 @@ class Settings(JsonSerializable):
         self.profiles = []
         os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
         # créer le fichier settings.json s'il n'existe pas déjà
-        settings_path = os.path.join(
-            appdirs.user_data_dir("Nutritrack"), "settings.json"
-        )
-        if not os.path.isfile(settings_path):
+        if not os.path.isfile(SETTINGS_PATH):
             self.serialize(
-                settings_path
+                SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
             
         self.favorites_menus:set[Menu] = set()  # Set pour stocker les menus favoris
@@ -29,9 +28,24 @@ class Settings(JsonSerializable):
         new_profile = Profile(name, age, height, weight, sex, target_weight)
         self.profiles.append(new_profile)
 
-        self.serialize(
-            os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
-        )  # Sauvegarder le profil après sa création
+        self.serialize(SETTINGS_PATH)  # Sauvegarder le profil après sa création
+
+    def update_profile(self, profile, name, age, height, weight, sex, target_weight):
+        profile.name = name
+        profile.age = age
+        profile.height = height
+        profile.weight = weight
+        profile.sex = sex
+        profile.target_weight = target_weight
+
+        self.serialize(SETTINGS_PATH)
+
+    def delete_profile(self, name):
+        for profile in self.profiles:
+            if profile.name == name:
+                self.profiles.remove(profile)
+
+        self.serialize(SETTINGS_PATH)
 
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
@@ -46,8 +60,8 @@ class Settings(JsonSerializable):
                 profile = Profile(
                     data_profile["name"],
                     data_profile["age"],
-                    data_profile["weight"],
                     data_profile["height"],
+                    data_profile["weight"],
                     data_profile["sex"],
                     data_profile["target_weight"],
                 )

@@ -3,6 +3,7 @@ import os
 import appdirs
 import src.controllers.home_controller as home_controller
 import src.controllers.nutrition_controller as nutrition_controller
+import src.controllers.settings_controller as settings_controller
 import src.models.settings as settings
 from src.controllers.stats_controller import StatsController
 
@@ -13,6 +14,10 @@ class MainController:
         self.view = None
         self.pages = {}
         self.current_page = None
+        self.controllers = {
+            "Home": home_controller.HomeController(self),
+            "Stats": StatsController(self),
+        }  # Dico pour stocker les sous contrôlleur de chaque page
         self.settings = settings.Settings()
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
@@ -24,6 +29,7 @@ class MainController:
             "Home": home_controller.HomeController(self),
             "Nutrition": nutrition_controller.NutritionController(self),
             "Stats": StatsController(self),
+            "Settings": settings_controller.SettingsController(self),
         }  # Dico pour stocker les sous contrôlleur de chaque page
 
     def set_existing_pages(self, pages):
@@ -60,7 +66,7 @@ class MainController:
             return
         profile_selected = self.current_profile is not None
         for name, btn in self.view.nav_buttons.items():
-            if name == "Accueil":
+            if name == "Accueil" or name == "Paramètres":
                 continue
             enabled = profile_selected and name in self.pages
             btn.configure(
@@ -83,7 +89,7 @@ class MainController:
 
     def _show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
-        if self.current_profile is None and page_name != "Accueil":
+        if self.current_profile is None and page_name not in ["Accueil", "Paramètres"]:
             return
         if page_name not in self.pages:
             return
