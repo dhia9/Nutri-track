@@ -189,7 +189,7 @@ class NutritionController:
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
         # Nettoyer la scrollable frame
-        for widget in self.view.menus_scrollable_frame.winfo_children():
+        for widget in self.view.menus_container.winfo_children():
             widget.destroy()
 
         # Récupérer les menus du jour
@@ -198,7 +198,7 @@ class NutritionController:
         # Afficher "Aucun menu consommé" s'il n'y a pas de menu
         if not menus:
             no_menu_label = ctk.CTkLabel(
-                self.view.menus_scrollable_frame,
+                self.view.menus_container,
                 text="Aucun menu consommé aujourd'hui",
                 font=ctk.CTkFont(size=13, weight="bold"),
                 text_color="#A8AFB6",
@@ -215,7 +215,7 @@ class NutritionController:
         for menu_time, menu_obj in menus.items():
             # Créer un frame pour chaque menu
             menu_frame = ctk.CTkFrame(
-                self.view.menus_scrollable_frame, fg_color="#2A2A4A", corner_radius=8
+                self.view.menus_container, fg_color="#2A2A4A", corner_radius=8
             )
             menu_frame.pack(fill="x", padx=5, pady=5)
 

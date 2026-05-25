@@ -190,6 +190,12 @@ class NutritionPage(ctk.CTkFrame):
         self.menus_scrollable_frame = ctk.CTkScrollableFrame(
             self.frame_aliment, fg_color="#35393D", corner_radius=10
         )
+        self.menus_container = ctk.CTkFrame(
+        self.menus_scrollable_frame,
+        fg_color="transparent"
+    )
+
+        self.menus_container.pack(fill="both", expand=True)
         self.menus_scrollable_frame.grid(
             row=1,
             column=0,
@@ -327,7 +333,7 @@ class NutritionPage(ctk.CTkFrame):
 
         self.label_nap = ctk.CTkLabel(
             self.suggestion_card,
-            text="nap (facteur d'activité physique)",
+            text="nap : facteur d'activité physique",
             font=ctk.CTkFont(size=11),
             text_color="#A8AFB6"
         )
