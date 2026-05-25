@@ -10,8 +10,13 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         self.nutrition_controller = main_controller.controllers.get("Nutrition")
         self.controller = self.main_controller.controllers["Nutrition"]
         # titre et dimensions de la fenêtre
-        self.title("Menus favoris")
-        self.geometry("700x500")
+        self.title("Menus suggérés")
+        
+        width = 700
+        height = 500
+        x = (self.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.winfo_screenheight() // 2) - (height // 2)
+        self.geometry(f"{width}x{height}+{x}+{y}")
 
         # Configuration du grid principal
         self.grid_columnconfigure(0, weight=1)

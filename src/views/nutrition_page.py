@@ -284,7 +284,7 @@ class NutritionPage(ctk.CTkFrame):
         # Bouton pour choisir le menu proposé
         self.bouton_menu = ctk.CTkButton(
             self.frame_ajout,
-            text="Menu Favories",
+            text="Menu Favoris",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
             fg_color="#4CAF50",
@@ -327,7 +327,7 @@ class NutritionPage(ctk.CTkFrame):
 
         self.label_nap = ctk.CTkLabel(
             self.suggestion_card,
-            text="nap",
+            text="nap (facteur d'activité physique)",
             font=ctk.CTkFont(size=11),
             text_color="#A8AFB6"
         )
@@ -362,7 +362,7 @@ class NutritionPage(ctk.CTkFrame):
 
         self.label_mealPerD = ctk.CTkLabel(
             self.suggestion_card,
-            text="Nombre de Repas par jour",
+            text="Nombre de repas par jour",
             font=ctk.CTkFont(size=11),
             text_color="#A8AFB6"
         )
