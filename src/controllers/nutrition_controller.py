@@ -174,11 +174,21 @@ class NutritionController:
         self.display_menus()
 
     def toggle_favorite(self, menu:Menu.Menu):
-        """Ajoute ou retire un menu des favoris et met à jour l'affichage."""
-        if menu in self.favorite_menus:
-            self.favorite_menus.remove(menu)
+        """Ajoute ou retire un menu des favoris basé sur la composition."""
+        # Chercher un favori avec la même composition
+        matching_favorite = None
+        for fav in self.favorite_menus:
+            if menu.has_same_composition(fav):
+                matching_favorite = fav
+                break
+        
+        if matching_favorite:
+            # Enlever le favori avec la même composition
+            self.favorite_menus.remove(matching_favorite)
         else:
+            # Ajouter le menu actuel comme favori (avec son timestamp unique)
             self.favorite_menus.add(menu)
+        
         # Mettre à jour l'affichage
         self.display_menus()
         # Sauvegarder les favoris dans les paramètres
@@ -235,8 +245,8 @@ class NutritionController:
             right_buttons_frame = ctk.CTkFrame(header_frame, fg_color="#2A2A4A")
             right_buttons_frame.pack(side="right", padx=5)
 
-            # Étoile pour les favoris (cliquable)
-            is_favorite = menu_obj in self.favorite_menus
+            # Étoile pour les favoris (cliquable) - vérifie par composition
+            is_favorite = any(menu_obj.has_same_composition(fav) for fav in self.favorite_menus)
             star_text = "★" if is_favorite else "☆"
             star_button = ctk.CTkButton(
                 right_buttons_frame,

@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import appdirs
+from datetime import datetime
 from src.models.menu import Menu
 
 class FavorieMenuWindow(ctk.CTkToplevel):
@@ -186,8 +187,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
     def on_add_menu(self, menu):
         """Callback pour le bouton Ajouter"""
         
-        # Ajouter le menu à la date courante dans les habitudes alimentaires du profil
-        current_datetime = self.nutrition_controller.current_date.strftime("%Y-%m-%d %H:%M:%S")
+        # Combiner la date sélectionnée (current_date) avec l'heure actuelle
+        selected_date = self.nutrition_controller.current_date.strftime("%Y-%m-%d")
+        current_time = datetime.now().strftime("%H:%M:%S")
+        current_datetime = f"{selected_date} {current_time}"
+        
         menu_to_add = Menu(current_datetime)
         for food in menu.content:
             menu_to_add.add_food_menu(food, food.quantity)
