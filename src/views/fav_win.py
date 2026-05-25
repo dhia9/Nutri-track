@@ -2,6 +2,7 @@ import customtkinter as ctk
 import appdirs
 from src.models.menu import Menu
 
+
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         super().__init__(parent)
@@ -44,12 +45,14 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         """Affiche la liste des menus favoris avec leur composition"""
         # Récupérer les menus favoris du profil actuel (actualiser depuis les settings)
         self.list_menus_fav = self.main_controller.settings.favorites_menus
-        favorite_menus_data = list(self.list_menus_fav)  # Convertir en liste pour itérer facilement
+        favorite_menus_data = list(
+            self.list_menus_fav
+        )  # Convertir en liste pour itérer facilement
 
         # Supprimer les widgets existants dans le scrollable_frame avant de les recréer
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
-        
+
         # Si pas de menus favoris
         if not favorite_menus_data:
             no_menu_label = ctk.CTkLabel(
@@ -59,7 +62,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
                 text_color="#A8AFB6",
             )
             no_menu_label.pack(padx=10, pady=20)
-            return 
+            return
 
         # Afficher chaque menu favori
         for menu in favorite_menus_data:
@@ -140,11 +143,20 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         # Macros de l'aliment
         if food_menu.macros:
             # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
-            total_cal = sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_prot = sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_carb = sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_fat = sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            
+            total_cal = sum(
+                m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+            total_prot = sum(
+                m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+            total_carb = sum(
+                m.carbohydrate * (food_menu.quantity / m.masse)
+                for m in food_menu.macros
+            )
+            total_fat = sum(
+                m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+
             macros_text = f"Cal: {int(total_cal)} | Prot: {int(total_prot)}g | Glucides: {int(total_carb)}g | Lipides: {int(total_fat)}g"
             macros_label = ctk.CTkLabel(
                 item_frame,
@@ -165,10 +177,20 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         for food_menu in menu.content:
             if food_menu.macros:
                 # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
-                total_calories += sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_proteins += sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_carbs += sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_fats += sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
+                total_calories += sum(
+                    m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros
+                )
+                total_proteins += sum(
+                    m.proteine * (food_menu.quantity / m.masse)
+                    for m in food_menu.macros
+                )
+                total_carbs += sum(
+                    m.carbohydrate * (food_menu.quantity / m.masse)
+                    for m in food_menu.macros
+                )
+                total_fats += sum(
+                    m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros
+                )
 
         # Frame de résumé
         summary_frame = ctk.CTkFrame(parent_frame, fg_color="#1A1A2E", corner_radius=6)
@@ -185,9 +207,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def on_add_menu(self, menu):
         """Callback pour le bouton Ajouter"""
-        
+
         # Ajouter le menu à la date courante dans les habitudes alimentaires du profil
-        current_datetime = self.nutrition_controller.current_date.strftime("%Y-%m-%d %H:%M:%S")
+        current_datetime = self.nutrition_controller.current_date.strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
         menu_to_add = Menu(current_datetime)
         for food in menu.content:
             menu_to_add.add_food_menu(food, food.quantity)
@@ -196,11 +220,12 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             appdirs.user_data_dir("Nutritrack") + "/settings.json"
         )  # Sauvegarder après l'ajout
         self.nutrition_controller.display_menus()  # Rafraîchir la page Nutrition si ouverte
-        
 
     def on_delete_menu(self, menu):
         """Callback pour le bouton Supprimer"""
-        self.main_controller.settings.favorites_menus.discard(menu)  # Supprimer du set des favoris
+        self.main_controller.settings.favorites_menus.discard(
+            menu
+        )  # Supprimer du set des favoris
         self.display_favorite_menus()  # Rafraîchir l'affichage
         self.nutrition_controller.display_menus()  # Rafraîchir la page Nutrition si ouverte
         self.main_controller.settings.serialize(

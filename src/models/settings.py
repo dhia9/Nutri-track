@@ -21,8 +21,8 @@ class Settings(JsonSerializable):
             self.serialize(
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
-            
-        self.favorites_menus:set[Menu] = set()  # Set pour stocker les menus favoris
+
+        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
     def create_profile(self, name, age, height, weight, sex, target_weight):
 

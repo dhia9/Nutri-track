@@ -23,8 +23,11 @@ class NutritionController:
         self.food_data.deserialize(
             "src/data/data.json"
         )  # Charger les données depuis le fichier JSON
-        self.favorite_menus = self.main_controller.settings.favorites_menus  # Récupérer les menus favoris depuis les paramètres
+        self.favorite_menus = (
+            self.main_controller.settings.favorites_menus
+        )  # Récupérer les menus favoris depuis les paramètres
         self.suggested_menus = None
+
     def set_current_profile(self, profile):
         self.current_profile = profile
 
@@ -105,10 +108,8 @@ class NutritionController:
             return
         now = datetime.now()
         menu_date = self.current_date.replace(
-        hour=now.hour,
-        minute=now.minute,
-        second=now.second
-)
+            hour=now.hour, minute=now.minute, second=now.second
+        )
         a_menu = Menu.Menu(
             menu_date.strftime("%Y-%m-%d %H:%M:%S")
         )  # reformater la date pour le traitement des données avec .strptime lors de la désérialisation du JSON (pour la partie stat notamment)
@@ -145,7 +146,7 @@ class NutritionController:
             if menu.date.startswith(
                 date_str
             ):  # Vérifier si le menu correspond à la date donnée
-                profile_menus.append(menu) 
+                profile_menus.append(menu)
         return profile_menus
 
     def macros_today(self, date: datetime.date):
@@ -178,7 +179,7 @@ class NutritionController:
         )
         self.display_menus()
 
-    def toggle_favorite(self, menu:Menu.Menu):
+    def toggle_favorite(self, menu: Menu.Menu):
         """Ajoute ou retire un menu des favoris et met à jour l'affichage."""
         if menu in self.favorite_menus:
             self.favorite_menus.remove(menu)
@@ -301,22 +302,32 @@ class NutritionController:
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
         self.display_menus()
-    
+
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris"""
         fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
+
     def show_Suggested_menus(self, event=None):
         """Affiche la fenêtre des menus proposés par l'algorithme"""
-        nap=int(self.current_profile.suggestCaracteristics["nap"])
-        meals_per_day=int(self.current_profile.suggestCaracteristics["meals_per_day"])
-        self.suggested_menus = self.current_profile.generate_menu(self.food_data,nap,meals_per_day)
-        Suggestion_win = SuggestedMenuWindow(self.view.winfo_toplevel(), self.main_controller)
+        nap = int(self.current_profile.suggestCaracteristics["nap"])
+        meals_per_day = int(self.current_profile.suggestCaracteristics["meals_per_day"])
+        self.suggested_menus = self.current_profile.generate_menu(
+            self.food_data, nap, meals_per_day
+        )
+        Suggestion_win = SuggestedMenuWindow(
+            self.view.winfo_toplevel(), self.main_controller
+        )
         Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
+
     def mealPerD_change(self, event=None):
-        self.current_profile.suggestCaracteristics["meals_per_day"] = self.view.input_mealPerD.get()
+        self.current_profile.suggestCaracteristics["meals_per_day"] = (
+            self.view.input_mealPerD.get()
+        )
+
     def nap_change(self, event=None):
         self.current_profile.suggestCaracteristics["nap"] = self.view.input_nap.get()
+
     def add_suggested_menu(self, menu):
         menu.date = self.current_date.strftime("%Y-%m-%d %H:%M:%S")
         self.current_profile.eating_habits.append(menu)

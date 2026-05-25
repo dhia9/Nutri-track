@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+
 class SuggestedMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         super().__init__(parent)
@@ -46,13 +47,13 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
     def display_suggested_menus(self):
         """Affiche la liste des menus favoris avec leur composition"""
         # Récupérer les menus  proposés (profil actuel)
-        suggest_menus_data = self.controller.suggested_menus 
+        suggest_menus_data = self.controller.suggested_menus
 
         # Supprimer les widgets existants dans le scrollable_frame avant de les recréer
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
-        
-        # Si pas de menus 
+
+        # Si pas de menus
         if not suggest_menus_data:
             no_menu_label = ctk.CTkLabel(
                 self.scrollable_frame,
@@ -61,7 +62,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
                 text_color="#A8AFB6",
             )
             no_menu_label.pack(padx=10, pady=20)
-            return 
+            return
         else:
             self.create_menu_frame(suggest_menus_data)
 
@@ -87,12 +88,12 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         # Totaux des macros
         self._create_macros_summary(menu_frame, menu)
         add_button = ctk.CTkButton(
-        menu_frame,
-        text="Ajouter Menu",
-        fg_color="#4CAF50",
-        hover_color="#45A049",
-        command=lambda m=menu: self.controller.add_suggested_menu(m)
-    )
+            menu_frame,
+            text="Ajouter Menu",
+            fg_color="#4CAF50",
+            hover_color="#45A049",
+            command=lambda m=menu: self.controller.add_suggested_menu(m),
+        )
 
         add_button.pack(pady=10)
 
@@ -114,11 +115,20 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         # Macros de l'aliment
         if food_menu.macros:
             # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
-            total_cal = sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_prot = sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_carb = sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            total_fat = sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
-            
+            total_cal = sum(
+                m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+            total_prot = sum(
+                m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+            total_carb = sum(
+                m.carbohydrate * (food_menu.quantity / m.masse)
+                for m in food_menu.macros
+            )
+            total_fat = sum(
+                m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros
+            )
+
             macros_text = f"Cal: {int(total_cal)} | Prot: {int(total_prot)}g | Glucides: {int(total_carb)}g | Lipides: {int(total_fat)}g"
             macros_label = ctk.CTkLabel(
                 item_frame,
@@ -139,10 +149,20 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         for food_menu in menu.content:
             if food_menu.macros:
                 # Additionner les macros (liste d'objets Macro) en tenant compte de la quantité
-                total_calories += sum(m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_proteins += sum(m.proteine * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_carbs += sum(m.carbohydrate * (food_menu.quantity / m.masse) for m in food_menu.macros)
-                total_fats += sum(m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros)
+                total_calories += sum(
+                    m.calorie * (food_menu.quantity / m.masse) for m in food_menu.macros
+                )
+                total_proteins += sum(
+                    m.proteine * (food_menu.quantity / m.masse)
+                    for m in food_menu.macros
+                )
+                total_carbs += sum(
+                    m.carbohydrate * (food_menu.quantity / m.masse)
+                    for m in food_menu.macros
+                )
+                total_fats += sum(
+                    m.fat * (food_menu.quantity / m.masse) for m in food_menu.macros
+                )
 
         # Frame de résumé
         summary_frame = ctk.CTkFrame(parent_frame, fg_color="#1A1A2E", corner_radius=6)

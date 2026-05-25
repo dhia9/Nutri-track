@@ -205,7 +205,9 @@ class MainPage(ctk.CTk):
 
         self.nutrition_page = None
         self.stats_page = None
-        self.settings_page = SettingsPage(self.pages_container, main_controller=self.controller)
+        self.settings_page = SettingsPage(
+            self.pages_container, main_controller=self.controller
+        )
 
         pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
         if self.controller.current_profile is not None:

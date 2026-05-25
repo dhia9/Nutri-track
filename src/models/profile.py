@@ -26,8 +26,7 @@ class Profile(Model):
         self.sex = sex
         self.target_weight = target_weight
         self.eating_habits = []
-        self.suggestCaracteristics = {"nap": 1.55,
-                                      "meals_per_day": 3}
+        self.suggestCaracteristics = {"nap": 1.55, "meals_per_day": 3}
 
     def get_imc(self):
         if self.height > 0:
