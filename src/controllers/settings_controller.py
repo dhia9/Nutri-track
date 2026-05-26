@@ -61,8 +61,6 @@ class SettingsController:
             message="Le profil a été modifié avec succès !",
         )
 
-
-        
     def delete_profile(self):
         profile = self.main_controller.current_profile
         if not profile:

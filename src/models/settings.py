@@ -22,6 +22,8 @@ class Settings(JsonSerializable):
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
 
+        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
+
     def create_profile(self, name, age, height, weight, sex, target_weight):
 
         new_profile = Profile(name, age, height, weight, sex, target_weight)
@@ -95,6 +97,35 @@ class Settings(JsonSerializable):
 
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)
+
+            # Charger les menus favoris s'ils existent dans le JSON
+            if "favorites_menus" in data:
+                for data_menu in data["favorites_menus"]:
+                    # Initialiser un objet Menu avec ses attributs
+                    menu = Menu(data_menu["date"])
+
+                    # Peupler le contenu du Menu par extraction des informations dans la liste content
+                    for data_food in data_menu["content"]:
+                        # Création d'un plat/aliment avec ses attributs
+                        food = FoodMenu(data_food["quantity"], data_food["name"])
+
+                        # Extraire les macros / propriétés du plat en parcourant la liste
+                        for data_macro in data_food["macros"]:
+                            # Ajouter le Macro à la liste des macros
+                            food.macros.append(
+                                Macro(
+                                    data_macro["masse"],
+                                    data_macro["proteine"],
+                                    data_macro["calorie"],
+                                    data_macro["fat"],
+                                    data_macro["carbohydrate"],
+                                )
+                            )
+                        # Ajouter le plat / aliment au menu
+                        menu.content.append(food)
+
+                    # Ajouter le menu au set des menus favoris
+                    self.favorites_menus.add(menu)
 
         except FileNotFoundError:
             # s'il n'y a pas de fichier, réinitialiser les profils à une liste vide

@@ -6,6 +6,7 @@ class NutritionPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller: MainController):
         super().__init__(parent)
         self.parent = parent
+        self.main_win = parent.master
         self.main_controller = main_controller
         self.controller = self.main_controller.controllers["Nutrition"]
         self.controller.view = self  # Assigner la view au contrôleur
@@ -97,7 +98,7 @@ class NutritionPage(ctk.CTkFrame):
         self.bouton_aliment = ctk.CTkButton(
             self.frame_ajout,
             text="✚ Ajouter un menu",
-            font=ctk.CTkFont(size=18, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color="#A8AFB6",
             command=self.controller.add_menu,
         )
@@ -190,6 +191,11 @@ class NutritionPage(ctk.CTkFrame):
         self.menus_scrollable_frame = ctk.CTkScrollableFrame(
             self.frame_aliment, fg_color="#35393D", corner_radius=10
         )
+        self.menus_container = ctk.CTkFrame(
+            self.menus_scrollable_frame, fg_color="transparent"
+        )
+
+        self.menus_container.pack(fill="both", expand=True)
         self.menus_scrollable_frame.grid(
             row=1,
             column=0,
@@ -281,8 +287,106 @@ class NutritionPage(ctk.CTkFrame):
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
         )
 
+        # Bouton pour choisir le menu proposé
+        self.bouton_menu = ctk.CTkButton(
+            self.frame_ajout,
+            text="Menu Favoris",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            corner_radius=10,
+            fg_color="#4CAF50",
+            hover_color="#45a049",
+        )
+        self.bouton_menu.grid(row=0, column=1, sticky="w", padx=15, pady=(10, 0))
+
+        self.bouton_menu.bind("<Button-1>", self.controller.show_favorite_menus)
+
         # Afficher les menus initialement après la création de tous les labels
         self.controller.display_menus()
+
+        self.suggestion_card = ctk.CTkFrame(
+            self.menus_scrollable_frame,
+            fg_color="#2A2A4A",
+            corner_radius=10,
+            height=120,
+        )
+        self.suggestion_card.pack(fill="x", padx=5, pady=(5, 10))
+        self.suggestion_card.pack_propagate(False)
+
+        self.suggestion_card.grid_columnconfigure(0, weight=1)
+        self.suggestion_card.grid_columnconfigure(1, weight=1)
+
+        self.suggestion_title = ctk.CTkLabel(
+            self.suggestion_card,
+            text="Suggérer un menu",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            text_color="#FFFFFF",
+        )
+        self.suggestion_title.grid(
+            row=0, column=0, columnspan=2, sticky="w", padx=10, pady=(8, 4)
+        )
+
+        self.label_nap = ctk.CTkLabel(
+            self.suggestion_card,
+            text="nap : facteur d'activité physique",
+            font=ctk.CTkFont(size=11),
+            text_color="#A8AFB6",
+        )
+        self.label_nap.grid(row=1, column=0, sticky="w", padx=(10, 5), pady=(0, 2))
+
+        self.input_nap = ctk.CTkEntry(
+            self.suggestion_card,
+            width=90,
+            height=28,
+            corner_radius=6,
+            fg_color="#35393D",
+            border_color="#4CAF50",
+            border_width=1,
+            text_color="#FFFFFF",
+            font=ctk.CTkFont(size=11),
+        )
+        self.input_nap.insert(
+            0, str(self.controller.current_profile.suggestCaracteristics["nap"])
+        )
+        self.input_nap.bind("<KeyRelease>", self.controller.mealPerD_change)
+        self.input_nap.grid(row=2, column=0, sticky="w", padx=(10, 5), pady=(0, 8))
+
+        self.label_mealPerD = ctk.CTkLabel(
+            self.suggestion_card,
+            text="Nombre de repas par jour",
+            font=ctk.CTkFont(size=11),
+            text_color="#A8AFB6",
+        )
+        self.label_mealPerD.grid(row=1, column=1, sticky="w", padx=(5, 10), pady=(0, 2))
+
+        self.input_mealPerD = ctk.CTkEntry(
+            self.suggestion_card,
+            width=90,
+            height=28,
+            corner_radius=6,
+            fg_color="#35393D",
+            border_color="#4CAF50",
+            border_width=1,
+            text_color="#FFFFFF",
+            font=ctk.CTkFont(size=11),
+        )
+        self.input_mealPerD.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=(0, 8))
+        self.input_mealPerD.insert(
+            0,
+            str(self.controller.current_profile.suggestCaracteristics["meals_per_day"]),
+        )
+        self.input_mealPerD.bind("<KeyRelease>", self.controller.mealPerD_change)
+        self.bouton_suggestion = ctk.CTkButton(
+            self.suggestion_card,
+            text="Suggérer",
+            height=30,
+            corner_radius=8,
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#4CAF50",
+            hover_color="#45A049",
+        )
+
+        self.bouton_suggestion.grid(row=2, column=2, columnspan=1, pady=(0, 10), padx=7)
+        self.bouton_suggestion.bind("<Button-1>", self.controller.show_Suggested_menus)
 
     def _configure_frame_grid(self, frame):
         """Factorisation : Configure la grille d'un frame avec poids égal"""

@@ -117,9 +117,7 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         else:
-            dates = [
-                d for d in data.keys()
-            ]
+            dates = [d for d in data.keys()]
             calories = list(data.values())
             ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
             ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
@@ -215,10 +213,7 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         else:
-            dates = [
-                d
-                for d in self.macrosDated["proteins"].keys()
-            ]
+            dates = [d for d in self.macrosDated["proteins"].keys()]
             carbohydrate = list(self.macrosDated["proteins"].values())
             proteins = list(self.macrosDated["proteins"].values())
             fats = list(self.macrosDated["fats"].values())

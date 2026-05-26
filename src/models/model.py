@@ -21,6 +21,12 @@ class Model:
                         item.to_dict() if isinstance(item, Model) else item
                         for item in value
                     ]
+                # si l'attribut est un set, le convertir en liste pour JSON
+                elif isinstance(value, set):
+                    result[key] = [
+                        item.to_dict() if isinstance(item, Model) else item
+                        for item in value
+                    ]
                 # sinon, si l'attribut est un type de base (int, str, etc.), on le stocke directement
                 else:
                     result[key] = value
