@@ -92,7 +92,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             text="Ajouter Menu",
             fg_color="#4CAF50",
             hover_color="#45A049",
-            command=lambda m=menu: self.controller.add_suggested_menu(m),
+            command=lambda m=menu: self.controller.add_suggested_menu(m,self),
         )
 
         add_button.pack(pady=10)

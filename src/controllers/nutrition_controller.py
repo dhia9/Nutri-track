@@ -328,7 +328,7 @@ class NutritionController:
     def nap_change(self, event=None):
         self.current_profile.suggestCaracteristics["nap"] = self.view.input_nap.get()
 
-    def add_suggested_menu(self, menu):
+    def add_suggested_menu(self, menu, window):
         menu.date = self.current_date.strftime("%Y-%m-%d %H:%M:%S")
         self.current_profile.eating_habits.append(menu)
         self.main_controller.settings.serialize(
@@ -336,3 +336,4 @@ class NutritionController:
         )
 
         self.display_menus()
+        window.destroy()
