@@ -21,8 +21,21 @@ class MainController:
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
         
-        # Charger le dictionnaire des couleurs depuis settings
-        self.theme_colors = self.settings.theme_colors
+        
+        self.theme_colors = {
+            'bg': '#121212',
+            'sidebar': '#1D1F21',
+            'content': '#17191B',
+            'button': '#2A2D30',
+            'button_hover': '#35393D',
+            'text': '#F1F1F1',
+            'text_secondary': '#A8AFB6',
+            'frame': '#35393D',
+            'frame_dark': '#2A2A4A',
+            'frame_darker': '#1A1A2E',
+            'error': '#D9534F',
+            'error_hover': '#C9302C',
+        }
         
         self.current_profile = (
             self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
@@ -110,9 +123,9 @@ class MainController:
         for name, btn in self.view.nav_buttons.items():
             if name == page_name:
                 btn.configure(
-                    fg_color=self.theme_colors['primary_accent'],
+                    fg_color=self.settings.theme,
                     text_color="#0D281C",
-                    border_color=self.theme_colors['primary_accent'],
+                    border_color=self.settings.theme,
                 )
             else:
                 btn.configure(
@@ -137,9 +150,9 @@ class MainController:
             for name, btn in self.view.nav_buttons.items():
                 if name == self.current_page:
                     btn.configure(
-                        fg_color=self.theme_colors['primary_accent'],
+                        fg_color=self.settings.theme,
                         text_color="#0D281C",
-                        border_color=self.theme_colors['primary_accent'],
+                        border_color=self.settings.theme,
                     )
                 else:
                     btn.configure(
@@ -152,3 +165,12 @@ class MainController:
         """Recréé toute l'UI (pages et sidebar) quand le thème change."""
         if self.view is not None and hasattr(self.view, 'recreate_all_pages_and_ui'):
             self.view.recreate_all_pages_and_ui()
+
+    def darken_color(self, hex_color: str, factor: float = 0.7) -> str:
+        """Assombrit une couleur hex en réduisant la valeur HSV."""
+        from colorsys import rgb_to_hsv, hsv_to_rgb
+        hex_color = hex_color.lstrip('#')
+        r, g, b = tuple(int(hex_color[i:i+2], 16)/255 for i in (0, 2, 4))
+        h, s, v = rgb_to_hsv(r, g, b)
+        r2, g2, b2 = hsv_to_rgb(h, s, v * factor)
+        return f"#{int(r2*255):02x}{int(g2*255):02x}{int(b2*255):02x}"

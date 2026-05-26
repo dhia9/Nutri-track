@@ -2,8 +2,9 @@ import customtkinter as ctk
 
 
 class CTkMessageBox(ctk.CTkToplevel):
-    def __init__(self, parent, title="", message="", button_text="OK"):
+    def __init__(self, parent, main_controller, title="", message="", button_text="OK"):
         super().__init__()
+        self.main_controller = main_controller
         self.title(title)
         self.geometry("300x150")
         self.resizable(False, False)
@@ -15,7 +16,9 @@ class CTkMessageBox(ctk.CTkToplevel):
         label = ctk.CTkLabel(self, text=message, wraplength=250)
         label.pack(pady=20, padx=20)
 
-        button = ctk.CTkButton(self, text=button_text, command=self.destroy)
+        button = ctk.CTkButton(self, text=button_text, command=self.destroy, 
+                               fg_color=self.main_controller.settings.theme,
+                               hover_color=self.main_controller.darken_color(self.main_controller.settings.theme))
         button.pack(pady=10)
 
         # Centrer la messagebox sur l'écran
@@ -32,5 +35,5 @@ class CTkMessageBox(ctk.CTkToplevel):
 
 
 # Utilisation
-if __name__ == "__main__":
-    CTkMessageBox(title="Info", message="Profil créé avec succès !")
+# if __name__ == "__main__":
+#     CTkMessageBox(parent=None, main_controller=None, title="Info", message="Profil créé avec succès !")

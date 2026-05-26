@@ -90,7 +90,8 @@ class FoodQuantity(ctk.CTkToplevel):
             button_frame,
             text="✓ Valider",
             command=self.on_submit,
-            fg_color=theme_colors.get('primary_accent', '#2DBA7F'),
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(self.main_controller.settings.theme),
             text_color=theme_colors.get('text', '#FFFFFF'),
             font=ctk.CTkFont(size=14, weight="bold"),
         )
@@ -102,6 +103,7 @@ class FoodQuantity(ctk.CTkToplevel):
             text="✗ Annuler",
             command=self.on_cancel,
             fg_color=theme_colors.get('frame', '#35393D'),
+            hover_color=self.main_controller.darken_color(theme_colors.get('frame', '#35393D')),
             text_color=theme_colors.get('text', '#FFFFFF'),
             font=ctk.CTkFont(size=14, weight="bold"),
         )

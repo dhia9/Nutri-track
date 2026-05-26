@@ -11,6 +11,12 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         self.main_controller = main_controller
         self.nutrition_controller = main_controller.controllers.get("Nutrition")
 
+        # Appliquer le mode d'apparence du main_controller
+        ctk.set_appearance_mode(self.main_controller.settings.appearance_mode)
+        
+        # Appliquer la couleur de fond cohérente avec le thème
+        self.configure(fg_color=self.main_controller.theme_colors['bg'])
+
         # titre et dimensions de la fenêtre
         self.title("Menus favoris")
         self.geometry("700x500")
@@ -127,8 +133,8 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             width=100,
             height=28,
             corner_radius=6,
-            fg_color=self.main_controller.theme_colors['primary_accent'],
-            hover_color="#45a049",
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(self.main_controller.settings.theme),
             text_color=self.main_controller.theme_colors['text'],
             font=ctk.CTkFont(size=10, weight="bold"),
             command=lambda m=menu: self.on_add_menu(m),
@@ -222,7 +228,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             summary_frame,
             text=summary_text,
             font=ctk.CTkFont(size=10, weight="bold"),
-            text_color=self.main_controller.theme_colors['primary_accent'],
+            text_color=self.main_controller.settings.theme,
         )
         summary_label.pack(padx=10, pady=8)
 

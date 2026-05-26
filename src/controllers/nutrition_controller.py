@@ -93,6 +93,7 @@ class NutritionController:
         if not selected_foods:
             message_box.CTkMessageBox(
                 parent=self.view.winfo_toplevel(),
+                main_controller=self.main_controller,
                 title="Aucun aliment sélectionné",
                 message="Veuillez sélectionner au moins un aliment avant d'ajouter un menu.",
                 button_text="OK",
@@ -243,7 +244,7 @@ class NutritionController:
                 header_frame,
                 text=menu_time.split(" ")[1],  # Extraire l'heure (HH:MM:SS)
                 font=ctk.CTkFont(size=11, weight="bold"),
-                text_color=self.main_controller.theme_colors['primary_accent'],
+                text_color=self.main_controller.settings.theme,
             )
             time_label.pack(side="left")
 

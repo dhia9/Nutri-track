@@ -20,6 +20,7 @@ class SettingsController:
         if not name or not str(age).isdigit() or sex not in ["Homme", "Femme"]:
             message_box.CTkMessageBox(
                 self.main_controller.view,
+                self.main_controller,
                 title="Erreur",
                 message="Veuillez remplir tous les champs correctement.",
             )
@@ -32,6 +33,7 @@ class SettingsController:
         except (TypeError, ValueError):
             message_box.CTkMessageBox(
                 self.main_controller.view,
+                self.main_controller,
                 title="Erreur",
                 message="Veuillez remplir tous les champs correctement.",
             )
@@ -57,6 +59,7 @@ class SettingsController:
 
         message_box.CTkMessageBox(
             self.main_controller.view,
+            self.main_controller,
             title="Succès",
             message="Le profil a été modifié avec succès !",
         )
@@ -66,6 +69,7 @@ class SettingsController:
         if not profile:
             message_box.CTkMessageBox(
                 self.main_controller.view,
+                self.main_controller,
                 title="Erreur",
                 message="Aucun profil sélectionné.",
             )
