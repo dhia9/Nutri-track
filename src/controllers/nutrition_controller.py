@@ -70,6 +70,11 @@ class NutritionController:
         self.current_date += timedelta(days=1)
         self.update_date()
 
+    def go_to_today(self, event=None):
+        # Mettre à jour la date à aujourd'hui
+        self.current_date = datetime.now()
+        self.update_date()
+
     def food_by_name(self, name):
         """Retourne un objet Food de la base de données selon son nom"""
         for food in self.food_data.content:
@@ -96,7 +101,7 @@ class NutritionController:
 
         # Ouvrir la fenêtre de quantités
         quantity_window = food_quantity.FoodQuantity(
-            selected_foods, parent=self.view.winfo_toplevel()
+            selected_foods, parent=self.view.winfo_toplevel(), main_controller=self.main_controller
         )
         quantity_window.wait_window()  # Attendre que la fenêtre soit fermée
         quantities = quantity_window.quantities  # Récupérer les quantités saisies
@@ -212,7 +217,7 @@ class NutritionController:
                 self.view.menus_scrollable_frame,
                 text="Aucun menu consommé aujourd'hui",
                 font=ctk.CTkFont(size=13, weight="bold"),
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors['text_secondary'],
             )
             no_menu_label.pack(padx=10, pady=20)
             # Mettre à jour les labels des macros à zéro
@@ -226,11 +231,11 @@ class NutritionController:
         for menu_time, menu_obj in menus.items():
             # Créer un frame pour chaque menu
             menu_frame = ctk.CTkFrame(
-                self.view.menus_scrollable_frame, fg_color="#2A2A4A", corner_radius=8
+                self.view.menus_scrollable_frame, fg_color=self.main_controller.theme_colors['frame_dark'], corner_radius=8
             )
             menu_frame.pack(fill="x", padx=5, pady=5)
 
-            header_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+            header_frame = ctk.CTkFrame(menu_frame, fg_color=self.main_controller.theme_colors['frame_dark'])
             header_frame.pack(fill="x", padx=10, pady=(8, 0))
 
             # Afficher l'heure du menu
@@ -238,12 +243,12 @@ class NutritionController:
                 header_frame,
                 text=menu_time.split(" ")[1],  # Extraire l'heure (HH:MM:SS)
                 font=ctk.CTkFont(size=11, weight="bold"),
-                text_color="#4CAF50",
+                text_color=self.main_controller.theme_colors['primary_accent'],
             )
             time_label.pack(side="left")
 
             # Frame pour les boutons à droite (étoile au-dessus, supprimer en bas)
-            right_buttons_frame = ctk.CTkFrame(header_frame, fg_color="#2A2A4A")
+            right_buttons_frame = ctk.CTkFrame(header_frame, fg_color=self.main_controller.theme_colors['frame_dark'])
             right_buttons_frame.pack(side="right", padx=5)
 
             # Étoile pour les favoris (cliquable) - vérifie par composition
@@ -257,8 +262,8 @@ class NutritionController:
                 width=30,
                 height=24,
                 corner_radius=6,
-                fg_color="#2A2A4A",
-                hover_color="#3A3A4A",
+                fg_color=self.main_controller.theme_colors['frame_dark'],
+                hover_color=self.main_controller.theme_colors['button_hover'],
                 text_color="#FFD700",
                 font=ctk.CTkFont(size=16),
                 command=lambda m=menu_obj: self.toggle_favorite(m),
@@ -275,9 +280,9 @@ class NutritionController:
                 width=80,
                 height=24,
                 corner_radius=6,
-                fg_color="#D9534F",
-                hover_color="#C9302C",
-                text_color="#FFFFFF",
+                fg_color=self.main_controller.theme_colors['error'],
+                hover_color=self.main_controller.theme_colors['error_hover'],
+                text_color=self.main_controller.theme_colors['text'],
                 font=ctk.CTkFont(size=9),
                 command=lambda mt=menu_time: self.delete_menu(mt),
             )
@@ -289,7 +294,7 @@ class NutritionController:
                     menu_frame,
                     text=f"• {food_menu.name} ({food_menu.quantity}g)",
                     font=ctk.CTkFont(size=11),
-                    text_color="#FFFFFF",
+                    text_color=self.main_controller.theme_colors['text'],
                 )
                 food_label.pack(anchor="w", padx=20, pady=2)
 

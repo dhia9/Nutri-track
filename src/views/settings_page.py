@@ -42,7 +42,7 @@ class SettingsPage(ctk.CTkFrame):
         self.label4.grid(row=1, column=0, columnspan=2, sticky="w", padx=20, pady=10)
 
         # ===== GRAND CADRE GAUCHE =====
-        self.frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame'])
 
         self.frame_carre_noir.grid(
             row=2, rowspan=5, column=0, columnspan=2, padx=20, sticky="nsew"
@@ -155,7 +155,7 @@ class SettingsPage(ctk.CTkFrame):
 
         # ===== GRAND CADRE DROIT =====
         self.frame_carre_noir2 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
+            self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame']
         )
 
         self.frame_carre_noir2.grid(
@@ -175,7 +175,7 @@ class SettingsPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
         )
         self.mode_app_label.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 10))
-        self.mode_var = ctk.StringVar(value="dark")
+        self.mode_var = ctk.StringVar(value=self.main_controller.settings.appearance_mode)
         self.boutton_mode = ctk.CTkRadioButton(
             self.frame_carre_noir2,
             text="Clair",
@@ -199,17 +199,17 @@ class SettingsPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
         )
         self.theme_label.grid(row=8, column=0, sticky="w", padx=20, pady=(16, 10))
-        self.theme_var = ctk.StringVar(value="green")
+        self.theme_var = ctk.StringVar(value=self.main_controller.settings.theme_name)
         self.boutton_theme1 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Bleu", variable=self.theme_var, value="blue"
+            self.frame_carre_noir2, text="Bleu", variable=self.theme_var, value="blue", command=self.change_theme
         )
         self.boutton_theme1.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme2 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Rouge", variable=self.theme_var, value="red"
+            self.frame_carre_noir2, text="Rouge", variable=self.theme_var, value="red", command=self.change_theme
         )
         self.boutton_theme2.grid(row=10, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme3 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Vert", variable=self.theme_var, value="green"
+            self.frame_carre_noir2, text="Vert", variable=self.theme_var, value="green", command=self.change_theme
         )
         self.boutton_theme3.grid(row=11, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme4 = ctk.CTkRadioButton(
@@ -217,10 +217,11 @@ class SettingsPage(ctk.CTkFrame):
             text="Jaune",
             variable=self.theme_var,
             value="yellow",
+            command=self.change_theme
         )
         self.boutton_theme4.grid(row=12, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme5 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Rose", variable=self.theme_var, value="pink"
+            self.frame_carre_noir2, text="Rose", variable=self.theme_var, value="pink", command=self.change_theme
         )
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0, 10))
 
@@ -287,6 +288,12 @@ class SettingsPage(ctk.CTkFrame):
     def change_mode(self):
         mode = self.mode_var.get()
         ctk.set_appearance_mode(mode)
+        self.main_controller.settings.set_appearance_mode(mode)
+        # Recréer l'UI pour appliquer les changements
+        self.main_controller.recreate_ui_for_theme_change()
 
     def change_theme(self):
         theme = self.theme_var.get()
+        self.main_controller.settings.set_theme_color(theme)
+        # Recréer l'UI pour appliquer les changements
+        self.main_controller.recreate_ui_for_theme_change()

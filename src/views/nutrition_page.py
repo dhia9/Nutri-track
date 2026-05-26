@@ -34,7 +34,7 @@ class NutritionPage(ctk.CTkFrame):
             self,
             text=f"Profil : {self.controller.current_profile.name}",
             font=ctk.CTkFont(size=13),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.tiltle2.grid(
             row=1, column=0, columnspan=3, sticky="w", padx=20, pady=(5, 0)
@@ -82,7 +82,19 @@ class NutritionPage(ctk.CTkFrame):
         self.button_next.grid(row=0, column=2, padx=4)
         self.button_next.bind("<Button-1>", self.controller.next_day)
 
-        self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.button_today = ctk.CTkButton(
+            self,
+            text="Aujourd'hui",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color=self.main_controller.theme_colors['primary_accent'],
+            hover_color="#45a049",
+            corner_radius=10,
+            width=100,
+        )
+        self.button_today.grid(row=0, column=7, sticky="e", padx=10, pady=5)
+        self.button_today.bind("<Button-1>", self.controller.go_to_today)
+
+        self.frame_ajout = ctk.CTkFrame(self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame'])
         self.frame_ajout.grid(
             row=5,
             column=0,
@@ -99,7 +111,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_ajout,
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
             command=self.controller.add_menu,
         )
         self.bouton_aliment.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
@@ -107,11 +119,11 @@ class NutritionPage(ctk.CTkFrame):
         # Barre de recherche
         self.search_entry = ctk.CTkEntry(
             self.frame_ajout,
-            placeholder_text="🔍 Rechercher un aliment...",
-            fg_color="#2A2A4A",
-            border_color="#4CAF50",
+            placeholder_text="Rechercher un aliment...",
+            fg_color=self.main_controller.theme_colors['frame_dark'],
+            border_color=self.main_controller.theme_colors['primary_accent'],
             border_width=2,
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors['text'],
         )
         self.search_entry.grid(
             row=1, column=0, columnspan=10, sticky="ew", padx=15, pady=(15, 10)
@@ -123,7 +135,7 @@ class NutritionPage(ctk.CTkFrame):
 
         # Frame scrollable pour la liste d'aliments
         self.items_frame = ctk.CTkScrollableFrame(
-            self.frame_ajout, fg_color="#35393D", corner_radius=10
+            self.frame_ajout, fg_color=self.main_controller.theme_colors['frame'], corner_radius=10
         )
         self.items_frame.grid(
             row=2,
@@ -141,7 +153,7 @@ class NutritionPage(ctk.CTkFrame):
 
         for food in list_food:
             item_frame = ctk.CTkFrame(
-                self.items_frame, fg_color="#2A2A4A", corner_radius=8
+                self.items_frame, fg_color=self.main_controller.theme_colors['frame_dark'], corner_radius=8
             )
             item_frame.pack(fill="x", padx=5, pady=5)
 
@@ -152,9 +164,9 @@ class NutritionPage(ctk.CTkFrame):
                 variable=var,
                 onvalue="on",
                 offvalue="off",
-                text_color="#FFFFFF",
-                fg_color="#4CAF50",
-                checkmark_color="#35393D",
+                text_color=self.main_controller.theme_colors['text'],
+                fg_color=self.main_controller.theme_colors['primary_accent'],
+                checkmark_color=self.main_controller.theme_colors['frame'],
             )
             checkbox.pack(side="left", padx=10, pady=10, fill="x", expand=True)
 
@@ -164,7 +176,7 @@ class NutritionPage(ctk.CTkFrame):
                 "frame": item_frame,
             }
 
-        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_aliment = ctk.CTkFrame(self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame'])
         self.frame_aliment.grid(
             row=5,
             column=3,
@@ -179,9 +191,9 @@ class NutritionPage(ctk.CTkFrame):
 
         self.frame_aliment_label = ctk.CTkLabel(
             self.frame_aliment,
-            text="📋 Menus du jour",
+            text="Menus du jour",
             font=ctk.CTkFont(size=18, weight="bold"),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.frame_aliment_label.grid(
             row=0, column=0, sticky="w", padx=15, pady=(10, 0)
@@ -189,7 +201,7 @@ class NutritionPage(ctk.CTkFrame):
 
         # Scrollable frame pour afficher les menus du jour
         self.menus_scrollable_frame = ctk.CTkScrollableFrame(
-            self.frame_aliment, fg_color="#35393D", corner_radius=10
+            self.frame_aliment, fg_color=self.main_controller.theme_colors['frame'], corner_radius=10
         )
         self.menus_scrollable_frame.grid(
             row=1,
@@ -206,8 +218,8 @@ class NutritionPage(ctk.CTkFrame):
             width=300,
             height=10,
             corner_radius=5,
-            progress_color="#2DBA7F",
-            fg_color="#2A2A4A",
+            progress_color=self.main_controller.theme_colors['primary_accent'],
+            fg_color=self.main_controller.theme_colors['frame_dark'],
         )
         self.progress_calories.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
@@ -216,8 +228,8 @@ class NutritionPage(ctk.CTkFrame):
             width=300,
             height=10,
             corner_radius=5,
-            progress_color="#2DBA7F",
-            fg_color="#2A2A4A",
+            progress_color=self.main_controller.theme_colors['primary_accent'],
+            fg_color=self.main_controller.theme_colors['frame_dark'],
         )
         self.progress_proteine.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
@@ -226,8 +238,8 @@ class NutritionPage(ctk.CTkFrame):
             width=300,
             height=10,
             corner_radius=5,
-            progress_color="#2DBA7F",
-            fg_color="#2A2A4A",
+            progress_color=self.main_controller.theme_colors['primary_accent'],
+            fg_color=self.main_controller.theme_colors['frame_dark'],
         )
         self.progress_glucides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
@@ -236,8 +248,8 @@ class NutritionPage(ctk.CTkFrame):
             width=300,
             height=10,
             corner_radius=5,
-            progress_color="#2DBA7F",
-            fg_color="#2A2A4A",
+            progress_color=self.main_controller.theme_colors['primary_accent'],
+            fg_color=self.main_controller.theme_colors['frame_dark'],
         )
         self.progress_lipides.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
 
@@ -246,7 +258,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_carre_noir1,
             text="0 kcal",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#4CAF50",
+            text_color=self.main_controller.theme_colors['primary_accent'],
         )
         self.calories_value_label.grid(
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
@@ -256,7 +268,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_carre_noir2,
             text="0 g",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#4CAF50",
+            text_color=self.main_controller.theme_colors['primary_accent'],
         )
         self.proteines_value_label.grid(
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
@@ -266,7 +278,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_carre_noir3,
             text="0 g",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#4CAF50",
+            text_color=self.main_controller.theme_colors['primary_accent'],
         )
         self.glucides_value_label.grid(
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
@@ -276,7 +288,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_carre_noir4,
             text="0 g",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#4CAF50",
+            text_color=self.main_controller.theme_colors['primary_accent'],
         )
         self.lipides_value_label.grid(
             row=2, column=0, sticky="w", padx=15, pady=(10, 0)
@@ -288,7 +300,7 @@ class NutritionPage(ctk.CTkFrame):
             text="Menu Favories",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
-            fg_color="#4CAF50",
+            fg_color=self.main_controller.theme_colors['primary_accent'],
             hover_color="#45a049",
         )
         self.bouton_menu.grid(row=0, column=1, sticky="w", padx=15, pady=(10, 0))
@@ -301,7 +313,7 @@ class NutritionPage(ctk.CTkFrame):
             text="Suggérer un menu",
             font=ctk.CTkFont(size=10, weight="bold"),
             corner_radius=10,
-            fg_color="#4CAF50",
+            fg_color=self.main_controller.theme_colors['primary_accent'],
             hover_color="#45a049",
         )
         self.bouton_suggestion.grid(row=0, column=9, sticky="w", padx=15, pady=(10, 0))
@@ -317,7 +329,7 @@ class NutritionPage(ctk.CTkFrame):
 
     def _create_macro_card(self, macro_name, frame_attr, row, col_start, col_span):
         """Factorisation : Crée une carte de macro (Calories, Protéines, etc.)"""
-        frame = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        frame = ctk.CTkFrame(self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame'])
         frame.grid(
             row=row,
             column=col_start,
@@ -340,8 +352,8 @@ class NutritionPage(ctk.CTkFrame):
             width=300,
             height=10,
             corner_radius=5,
-            progress_color="#2DBA7F",
-            fg_color="#2A2A4A",
+            progress_color=self.main_controller.theme_colors['primary_accent'],
+            fg_color=self.main_controller.theme_colors['frame_dark'],
         )
         progress.grid(row=1, column=0, sticky="ew", padx=15, pady=(10, 0))
         setattr(self, f"progress_{macro_name.lower()}", progress)
@@ -351,7 +363,7 @@ class NutritionPage(ctk.CTkFrame):
             frame,
             text="0",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#4CAF50",
+            text_color=self.main_controller.theme_colors['primary_accent'],
         )
         value_label.grid(row=2, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_value_label", value_label)

@@ -2,16 +2,18 @@ import customtkinter as ctk
 
 
 class HomePage(ctk.CTkFrame):
-    PROFILE_BTN_DEFAULT = "#2DBA7F"
-    PROFILE_BTN_DEFAULT_HOVER = "#249968"
-    PROFILE_BTN_SELECTED = "#1F2327"
-    PROFILE_BTN_SELECTED_HOVER = "#1F2327"
-
+    
     def __init__(self, parent, main_controller):
         super().__init__(parent)
         self.main_controller = main_controller
         self.main_controller.controllers["Home"].view = self
         self.controlleur = self.main_controller.controllers["Home"]
+        
+        # Couleurs de boutons profil basées sur le thème
+        self.PROFILE_BTN_DEFAULT = self.main_controller.theme_colors['primary_accent']
+        self.PROFILE_BTN_DEFAULT_HOVER = "#249968"
+        self.PROFILE_BTN_SELECTED = "#1F2327"
+        self.PROFILE_BTN_SELECTED_HOVER = "#1F2327"
 
         self.grid_columnconfigure((0, 1, 2), weight=1)
         self.profile_buttons = {}
@@ -29,7 +31,7 @@ class HomePage(ctk.CTkFrame):
             self,
             text="Sélectionnez un profil ou créez-en un nouveau pour commencer",
             font=ctk.CTkFont(size=13),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.profil.grid(row=1, column=0, columnspan=3, sticky="w", padx=20)
 
@@ -44,7 +46,7 @@ class HomePage(ctk.CTkFrame):
 
         self.profiles_container = ctk.CTkScrollableFrame(
             self,
-            fg_color="#17191B",
+            fg_color=self.main_controller.theme_colors['content'],
             corner_radius=12,
             height=170,
         )
@@ -66,7 +68,7 @@ class HomePage(ctk.CTkFrame):
         )
         self.label4.grid(row=4, column=0, columnspan=3, sticky="w", padx=20, pady=10)
 
-        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color=self.main_controller.theme_colors['frame'])
         frame_carre_noir.grid(row=5, column=0, columnspan=3, padx=20, sticky="ew")
         frame_carre_noir.grid_columnconfigure((0, 1, 2), weight=1)
 
@@ -162,7 +164,7 @@ class HomePage(ctk.CTkFrame):
             empty_label = ctk.CTkLabel(
                 self.profiles_container,
                 text="Aucun profil existant pour le moment.",
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors['text_secondary'],
             )
             empty_label.grid(row=0, column=0, sticky="w", padx=12, pady=12)
             return
@@ -172,7 +174,7 @@ class HomePage(ctk.CTkFrame):
             col = index % 3
 
             card = ctk.CTkFrame(
-                self.profiles_container, corner_radius=12, fg_color="#2A2D30"
+                self.profiles_container, corner_radius=12, fg_color=self.main_controller.theme_colors['button']
             )
             card.grid(row=row, column=col, sticky="nsew", padx=8, pady=8)
 
@@ -185,13 +187,13 @@ class HomePage(ctk.CTkFrame):
             ctk.CTkLabel(
                 card,
                 text=f"{profile.age} ans  •  {profile.sex}",
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors['text_secondary'],
             ).pack(anchor="w", padx=14)
 
             ctk.CTkLabel(
                 card,
                 text=f"{profile.weight} kg -> objectif {profile.target_weight} kg",
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors['text_secondary'],
             ).pack(anchor="w", padx=14, pady=(2, 10))
 
             is_selected = (

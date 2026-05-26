@@ -119,8 +119,8 @@ class StatsPage(ctk.CTkFrame):
         else:
             dates = [d for d in data.keys()]
             calories = list(data.values())
-            ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
-            ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
+            ax.plot(dates, calories, color=self.main_controller.theme_colors['primary_accent'], linewidth=2.5, label="Calories")
+            ax.fill_between(dates, calories, alpha=0.15, color=self.main_controller.theme_colors['primary_accent'])
             ax.set_xlabel("Date", labelpad=12)
             ax.set_ylabel("Calories", labelpad=10)
             ax.legend()

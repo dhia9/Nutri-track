@@ -14,14 +14,16 @@ class MainController:
         self.view = None
         self.pages = {}
         self.current_page = None
-        self.controllers = {
-            "Home": home_controller.HomeController(self),
-            "Stats": StatsController(self),
-        }  # Dico pour stocker les sous contrôlleur de chaque page
+        
+        # Initialiser settings en premier pour récupérer les couleurs
         self.settings = settings.Settings()
         self.settings.deserialize(
             os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
         )  # Charger les données depuis le fichier JSON
+        
+        # Charger le dictionnaire des couleurs depuis settings
+        self.theme_colors = self.settings.theme_colors
+        
         self.current_profile = (
             self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
         )
@@ -31,6 +33,7 @@ class MainController:
             "Stats": StatsController(self),
             "Settings": settings_controller.SettingsController(self),
         }  # Dico pour stocker les sous contrôlleur de chaque page
+
 
     def set_existing_pages(self, pages):
         """Enregistre des pages deja creees pour la navigation.
@@ -72,7 +75,7 @@ class MainController:
             btn.configure(
                 state="normal" if enabled else "disabled",
                 text_color=(
-                    self.view.COLOR_TEXT if enabled else self.view.COLOR_TEXT_SECONDARY
+                    self.theme_colors['text'] if enabled else self.theme_colors['text_secondary']
                 ),
             )
 
@@ -107,15 +110,15 @@ class MainController:
         for name, btn in self.view.nav_buttons.items():
             if name == page_name:
                 btn.configure(
-                    fg_color=self.view.COLOR_ACCENT,
+                    fg_color=self.theme_colors['primary_accent'],
                     text_color="#0D281C",
-                    border_color=self.view.COLOR_ACCENT,
+                    border_color=self.theme_colors['primary_accent'],
                 )
             else:
                 btn.configure(
-                    fg_color=self.view.COLOR_BUTTON,
-                    text_color=self.view.COLOR_TEXT,
-                    border_color=self.view.COLOR_BUTTON,
+                    fg_color=self.theme_colors['button'],
+                    text_color=self.theme_colors['text'],
+                    border_color=self.theme_colors['button'],
                 )
 
         # Afficher la nouvelle page
@@ -123,3 +126,29 @@ class MainController:
         self.current_page = page_name
 
     show_page = _show_page
+
+    def refresh_current_page(self):
+        """Recharge la page courante avec les couleurs du thème mis à jour."""
+        if self.current_page:
+            # Masquer et réafficher la page pour forcer une rafraîchissement
+            self.pages[self.current_page].grid_remove()
+            self.pages[self.current_page].grid()
+            # Mettre à jour les boutons de navigation avec les nouvelles couleurs
+            for name, btn in self.view.nav_buttons.items():
+                if name == self.current_page:
+                    btn.configure(
+                        fg_color=self.theme_colors['primary_accent'],
+                        text_color="#0D281C",
+                        border_color=self.theme_colors['primary_accent'],
+                    )
+                else:
+                    btn.configure(
+                        fg_color=self.theme_colors['button'],
+                        text_color=self.theme_colors['text'],
+                        border_color=self.theme_colors['button'],
+                    )
+
+    def recreate_ui_for_theme_change(self):
+        """Recréé toute l'UI (pages et sidebar) quand le thème change."""
+        if self.view is not None and hasattr(self.view, 'recreate_all_pages_and_ui'):
+            self.view.recreate_all_pages_and_ui()
