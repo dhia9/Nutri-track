@@ -4,6 +4,7 @@ from datetime import datetime
 from src.models.menu import Menu
 
 
+
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         super().__init__(parent)

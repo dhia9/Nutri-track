@@ -8,6 +8,7 @@ import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
 from src.views.fav_win import FavorieMenuWindow
+from src.views.suggestedMenus import SuggestedMenuWindow
 
 
 class NutritionController:
@@ -25,6 +26,7 @@ class NutritionController:
         self.favorite_menus = (
             self.main_controller.settings.favorites_menus
         )  # Récupérer les menus favoris depuis les paramètres
+        self.suggested_menus = None
 
     def set_current_profile(self, profile):
         self.current_profile = profile
@@ -110,9 +112,12 @@ class NutritionController:
         # Si l'utilisateur a annulé, ne rien faire
         if not quantities:
             return
-
+        now = datetime.now()
+        menu_date = self.current_date.replace(
+            hour=now.hour, minute=now.minute, second=now.second
+        )
         a_menu = Menu.Menu(
-            self.current_date.strftime("%Y-%m-%d %H:%M:%S")
+            menu_date.strftime("%Y-%m-%d %H:%M:%S")
         )  # reformater la date pour le traitement des données avec .strptime lors de la désérialisation du JSON (pour la partie stat notamment)
 
         for food_name, quantity in quantities.items():
@@ -140,14 +145,14 @@ class NutritionController:
 
     def menus_today(self, date: datetime.date):
         """Retourne les menus consommés par l'utilisateur à un jour donné"""
-        profile_menus = {}
+        profile_menus = []
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
 
         for menu in self.current_profile.eating_habits:
             if menu.date.startswith(
                 date_str
             ):  # Vérifier si le menu correspond à la date donnée
-                profile_menus[menu.date] = menu
+                profile_menus.append(menu)
         return profile_menus
 
     def macros_today(self, date: datetime.date):
@@ -155,7 +160,7 @@ class NutritionController:
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
         menus = self.menus_today(date)
 
-        for menu in menus.values():
+        for menu in menus:
             for food_menu in menu.content:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
@@ -206,7 +211,7 @@ class NutritionController:
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
         # Nettoyer la scrollable frame
-        for widget in self.view.menus_scrollable_frame.winfo_children():
+        for widget in self.view.menus_container.winfo_children():
             widget.destroy()
 
         # Récupérer les menus du jour
@@ -215,7 +220,7 @@ class NutritionController:
         # Afficher "Aucun menu consommé" s'il n'y a pas de menu
         if not menus:
             no_menu_label = ctk.CTkLabel(
-                self.view.menus_scrollable_frame,
+                self.view.menus_container,
                 text="Aucun menu consommé aujourd'hui",
                 font=ctk.CTkFont(size=13, weight="bold"),
                 text_color=self.main_controller.theme_colors['text_secondary'],
@@ -229,10 +234,11 @@ class NutritionController:
             return
 
         # Afficher chaque menu du jour
-        for menu_time, menu_obj in menus.items():
+        for menu_obj in menus:
+            menu_time = menu_obj.date
             # Créer un frame pour chaque menu
             menu_frame = ctk.CTkFrame(
-                self.view.menus_scrollable_frame, fg_color=self.main_controller.theme_colors['frame_dark'], corner_radius=8
+                self.view.menus_container, fg_color=self.main_controller.theme_colors['frame_dark'], corner_radius=8
             )
             menu_frame.pack(fill="x", padx=5, pady=5)
 
@@ -315,7 +321,38 @@ class NutritionController:
         )
         self.display_menus()
 
+
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris"""
         fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
+
+    def show_Suggested_menus(self, event=None):
+        """Affiche la fenêtre des menus proposés par l'algorithme"""
+        nap = int(self.current_profile.suggestCaracteristics["nap"])
+        meals_per_day = int(self.current_profile.suggestCaracteristics["meals_per_day"])
+        self.suggested_menus = self.current_profile.generate_menu(
+            self.food_data, nap, meals_per_day
+        )
+        Suggestion_win = SuggestedMenuWindow(
+            self.view.winfo_toplevel(), self.main_controller
+        )
+        Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
+
+    def mealPerD_change(self, event=None):
+        self.current_profile.suggestCaracteristics["meals_per_day"] = (
+            self.view.input_mealPerD.get()
+        )
+
+    def nap_change(self, event=None):
+        self.current_profile.suggestCaracteristics["nap"] = self.view.input_nap.get()
+
+    def add_suggested_menu(self, menu, window):
+        menu.date = self.current_date.strftime("%Y-%m-%d %H:%M:%S")
+        self.current_profile.eating_habits.append(menu)
+        self.main_controller.settings.serialize(
+            appdirs.user_data_dir("Nutritrack") + "/settings.json"
+        )
+
+        self.display_menus()
+        window.destroy()
