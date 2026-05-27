@@ -1,7 +1,6 @@
 import customtkinter as ctk
 
 
-
 class HomePage(ctk.CTkFrame):
     PROFILE_BTN_DEFAULT = "#2DBA7F"
     PROFILE_BTN_DEFAULT_HOVER = "#249968"
