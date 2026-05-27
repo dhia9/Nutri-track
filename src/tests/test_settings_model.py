@@ -191,3 +191,50 @@ def test_menu_set_hash_stability_risk():
     except Exception:
         print_test("menu_set_hash_stability_risk", False)
         return False
+    
+
+# RUNNER
+
+def run_all_tests():
+    tests = [
+        ("SETTINGS SIDE EFFECTS", [
+            test_profile_mutation_affects_settings,
+            test_delete_profile_removes_correctly,
+            test_deepcopy_isolation_settings,
+        ]),
+
+        ("SET MUTABILITY PROBLEMS", [
+            test_favorites_set_mutability_issue,
+            test_menu_set_hash_stability_risk,
+        ]),
+
+        ("MODEL INTEGRITY", [
+            test_shared_macro_reference_across_food,
+            test_deserialize_structure_integrity,
+        ]),
+    ]
+
+    total = 0
+    passed = 0
+
+    for section, funcs in tests:
+        print_section(section)
+
+        for f in funcs:
+            total += 1
+            if f():
+                passed += 1
+
+    print(f"\n{'=' * 60}")
+    print("  SUMMARY")
+    print(f"{'=' * 60}")
+    print(f"Total: {total}")
+    print(f"Passed: {passed}")
+    print(f"Failed: {total - passed}")
+    print(f"Rate: {passed / total * 100:.1f}%")
+
+    return passed == total
+
+
+if __name__ == "__main__":
+    run_all_tests()
