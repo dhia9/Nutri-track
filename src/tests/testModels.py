@@ -64,9 +64,53 @@ else:
     fail("Noms inattendus dans MacroType", f"trouvé : {noms_reels}")
 
 
-# ─────────────────────────────────────────────
+# SECTION 2 — Macro : scaling par masse
+
+section("2. Macro — scaling par masse")
+
+print("\n  Macro reçoit des valeurs nutritionnelles POUR 100g et les")
+print("  scale automatiquement selon la masse passée.\n")
+
+print("  Cas : 100g de poulet (25g prot, 165 kcal, 3.6g lip, 0g gluc)")
+m100 = Macro(masse=100, proteine=25, calorie=165, fat=3.6, carbohydrate=0)
+assert_approx(m100.proteine,      25.0, "Protéines à 100g = 25.0g (facteur 1)")
+assert_approx(m100.calorie,      165.0, "Calories à 100g = 165 kcal (facteur 1)")
+assert_approx(m100.fat,            3.6, "Lipides  à 100g = 3.6g  (facteur 1)")
+assert_approx(m100.carbohydrate,   0.0, "Glucides à 100g = 0.0g  (facteur 1)")
+
+print("\n  Cas : 150g (portion par défaut) — valeurs doivent être × 1.5")
+m150 = Macro(masse=150, proteine=25, calorie=165, fat=3.6, carbohydrate=0)
+assert_approx(m150.proteine,      37.5,   "Protéines à 150g = 37.5g  (×1.5)")
+assert_approx(m150.calorie,      247.5,   "Calories  à 150g = 247.5 kcal (×1.5)")
+assert_approx(m150.fat,            5.4,   "Lipides   à 150g = 5.4g   (×1.5)")
+
+print("\n  Cas : 30g (portion minimale) — valeurs doivent être × 0.3")
+m30 = Macro(masse=30, proteine=25, calorie=165, fat=3.6, carbohydrate=10)
+assert_approx(m30.proteine,        7.5,   "Protéines à 30g = 7.5g   (×0.3)")
+assert_approx(m30.calorie,        49.5,   "Calories  à 30g = 49.5 kcal (×0.3)")
+assert_approx(m30.carbohydrate,    3.0,   "Glucides  à 30g = 3.0g   (×0.3)")
+
+print("\n  Cas limite : masse = 0g → toutes les valeurs doivent être 0")
+m0 = Macro(masse=0, proteine=25, calorie=165, fat=3.6, carbohydrate=10)
+assert_approx(m0.calorie,    0.0, "Calories à 0g = 0.0 kcal")
+assert_approx(m0.proteine,   0.0, "Protéines à 0g = 0.0g")
+
+print("\n  Cas limite : masse négative → ValueError attendue")
+try:
+    m_neg = Macro(masse=-10, proteine=25, calorie=165, fat=3.6, carbohydrate=0)
+    fail("Masse négative : ValueError non levée")
+except ValueError:
+    ok("Masse négative lève bien ValueError")
+
+print("\n  Vérification du __str__ de Macro")
+s = str(m100)
+if "165" in s and "25" in s:
+    ok("__str__ contient les calories et protéines")
+else:
+    fail("__str__ ne contient pas les valeurs attendues", s)
+
 # Résumé final
-# ─────────────────────────────────────────────
+
 
 print(f"\n{'═'*55}")
 print(f"  Résultats : {passed} ✓ réussi(s)  |  {failed} ✗ échoué(s)")
