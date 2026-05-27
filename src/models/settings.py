@@ -53,7 +53,7 @@ class Settings(JsonSerializable):
             # Lire le fichier json
             with open(path, "r", encoding="utf-8") as file:
                 data = json.load(file)
-
+            print(data)
             # Pour chaque profil
             for data_profile in data["profiles"]:
                 # Extraire les propriétés du profil
@@ -95,14 +95,14 @@ class Settings(JsonSerializable):
                     profile.eating_habits.append(menu)
 
                 # Charger les mesures corporelles si elles existent
-                if "mesures_corporelles" in data_profile:
+                if "mesures_corporelles" in data_profile: 
                     for data_mesure in data_profile["mesures_corporelles"]:
                         mesure = MesuresCorporelles(
                             data_mesure["date"],
                             data_mesure["poids"],
-                            data_mesure["tour_taille"],
-                            data_mesure["tour_bras"],
-                            data_mesure["masse_grasse"]
+                            data_mesure["taille"],
+                            data_mesure["bras"],
+                            data_mesure["graisse"]
                         )
                         profile.mesures_corporelles.append(mesure)
 
