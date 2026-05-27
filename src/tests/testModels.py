@@ -109,3 +109,65 @@ def test_food_score_with_zero_calories_returns_zero():
         print_test("test_food_score_with_zero_calories_returns_zero", False)
         return False
 
+# FOODMENU TESTS
+
+def test_foodmenu_inherits_from_food():
+    try:
+        macros = [Macro(100, 25, 150, 10, 20)]
+        food_menu = FoodMenu(150, "Chicken", macros)
+
+        result = (
+            food_menu.name == "Chicken" and
+            food_menu.quantity == 150 and
+            isinstance(food_menu, Food)
+        )
+
+        print_test("test_foodmenu_inherits_from_food", result)
+        return result
+
+    except Exception:
+        print_test("test_foodmenu_inherits_from_food", False)
+        return False
+
+# MENU TESTS
+
+def test_menu_add_food_mutates_content():
+    try:
+        menu = Menu("2024-01-01")
+
+        macro = Macro(100, 25, 150, 10, 20)
+        food = Food("Chicken", [macro])
+
+        menu.add_food_menu(food, 150)
+
+        result = (
+            len(menu.content) == 1 and
+            menu.content[0].name == "Chicken" and
+            menu.content[0].quantity == 150
+        )
+
+        print_test("test_menu_add_food_mutates_content", result)
+        return result
+
+    except Exception:
+        print_test("test_menu_add_food_mutates_content", False)
+        return False
+
+
+def test_menu_hash_allows_use_in_set():
+    try:
+        menu1 = Menu("2024-01-01")
+        menu2 = Menu("2024-01-01")
+        menu3 = Menu("2024-01-02")
+
+        menu_set = {menu1, menu2, menu3}
+
+        result = len(menu_set) == 2
+
+        print_test("test_menu_hash_allows_use_in_set", result)
+        return result
+
+    except Exception:
+        print_test("test_menu_hash_allows_use_in_set", False)
+        return False
+
