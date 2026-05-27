@@ -155,6 +155,11 @@ class HomePage(ctk.CTkFrame):
         self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
 
     def render_profiles(self):
+        """Affiche les profils existants dans la liste des profils.
+        
+        Recrée les boutons de sélection des profils et met à jour l'interface
+        pour afficher le statut du profil actuellement sélectionné.
+        """
         for child in self.profiles_container.winfo_children():
             child.destroy()
         self.profile_buttons.clear()
@@ -248,5 +253,10 @@ class HomePage(ctk.CTkFrame):
             )
 
     def create_profile(self):
+        """Lance la création d'un nouveau profil et rafraîchit l'affichage.
+        
+        Appelle le contrôleur pour créer un nouveau profil, puis recharge
+        la liste des profils affichés.
+        """
         self.controlleur.create_profile()
         self.render_profiles()

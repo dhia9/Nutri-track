@@ -133,7 +133,7 @@ def run_scenario(
 
 
 def test_alice_perte_premier_repas(food_data):
-    """Femme en perte de poids — aucun repas enregistré, génére le petit-déjeuner.
+    """Fonction de test : Femme en perte de poids avec aucun repas enregistré, génére le petit-déjeuner.
     
     Args:
         food_data: Base de données des aliments.
@@ -149,7 +149,7 @@ def test_alice_perte_premier_repas(food_data):
 
 
 def test_bob_masse_apres_dejeuner(food_data):
-    """Homme en prise de masse — déjeuner déjà fait, génére le dîner.
+    """Fonction de test : Homme en prise de masse avec déjeuner déjà fait, génére le dîner.
     
     Args:
         food_data: Base de données des aliments.
@@ -172,7 +172,7 @@ def test_bob_masse_apres_dejeuner(food_data):
 
 
 def test_clara_maintien_collation(food_data):
-    """Femme en maintien — 3 repas sur 5 déjà faits, génére une collation.
+    """Fonction de test : Femme en maintien avec 3 repas sur 5 déjà faits, génére une collation.
     
     Args:
         food_data: Base de données des aliments.
@@ -207,7 +207,7 @@ def test_clara_maintien_collation(food_data):
 
 
 def test_david_perte_journee_complete(food_data):
-    """Homme en perte de poids — génére les 3 repas un par un.
+    """Fonction de test : Homme en perte de poids et génére les 3 repas un par un.
     
     Args:
         food_data: Base de données des aliments.
@@ -229,7 +229,7 @@ def test_david_perte_journee_complete(food_data):
 
 
 def test_emma_sedentaire_repas_unique(food_data):
-    """Femme sédentaire — 1 seul repas par jour.
+    """Fonction de test : Femme sédentaire avec 1 seul repas par jour.
     
     Args:
         food_data: Base de données des aliments.
