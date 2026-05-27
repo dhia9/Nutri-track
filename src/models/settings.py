@@ -134,9 +134,9 @@ class Settings(JsonSerializable):
                         mesure = MesuresCorporelles(
                             data_mesure["date"],
                             data_mesure["poids"],
-                            data_mesure["taille"],
-                            data_mesure["bras"],
-                            data_mesure["graisse"],
+                            data_mesure["tour_de_taille"],
+                            data_mesure["tour_de_bras"],
+                            data_mesure["masse_grasse"],
                         )
                         profile.mesures_corporelles.append(mesure)
 
