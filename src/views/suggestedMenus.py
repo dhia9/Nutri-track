@@ -3,6 +3,12 @@ import customtkinter as ctk
 
 class SuggestedMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
+        """Initialise la fenêtre des menus suggérés.
+        
+        Args:
+            parent: Widget parent (fenêtre principale).
+            main_controller: Le contrôleur principal de l'application.
+        """
         super().__init__(parent)
         self.list_menus_fav = main_controller.settings.favorites_menus
         self.main_controller = main_controller
@@ -45,7 +51,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         self.grab_set()  # Rendre la fenêtre modale
 
     def display_suggested_menus(self):
-        """Affiche la liste des menus favoris avec leur composition"""
+        """Affiche la liste des menus suggérés avec leur composition."""
         # Récupérer les menus  proposés (profil actuel)
         suggest_menus_data = self.controller.suggested_menus
 
@@ -67,7 +73,11 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             self.create_menu_frame(suggest_menus_data)
 
     def create_menu_frame(self, menu):
-        """Crée un frame pour afficher un menu avec sa composition"""
+        """Crée un frame pour afficher un menu avec sa composition.
+        
+        Args:
+            menu: Le menu à afficher.
+        """
         # Frame principal du menu
         menu_frame = ctk.CTkFrame(
             self.scrollable_frame,
@@ -98,7 +108,12 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         add_button.pack(pady=10)
 
     def create_food_item(self, parent_frame, food_menu):
-        """Crée un item pour afficher un aliment avec ses macros"""
+        """Crée un item pour afficher un aliment avec ses macros.
+        
+        Args:
+            parent_frame: Le frame parent où ajouter l'item.
+            food_menu: L'aliment à afficher.
+        """
         item_frame = ctk.CTkFrame(parent_frame, fg_color="#35393D", corner_radius=6)
         item_frame.pack(fill="x", pady=3)
         item_frame.grid_columnconfigure(0, weight=1)
@@ -139,7 +154,12 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             macros_label.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 5))
 
     def _create_macros_summary(self, parent_frame, menu):
-        """Affiche le résumé des macros totales du menu"""
+        """Affiche le résumé des macros totales du menu.
+        
+        Args:
+            parent_frame: Le frame parent où ajouter le résumé.
+            menu: Le menu dont afficher le résumé.
+        """
         # Calculer les totaux
         total_calories = 0
         total_proteins = 0

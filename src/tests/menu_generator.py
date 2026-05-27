@@ -10,9 +10,13 @@ from src.models.profile import Profile
 
 
 def make_menu(items: list[tuple[str, float, float, float, float, float]]) -> Menu:
-    """
-    Crée un Menu pré-rempli pour simuler un repas déjà enregistré.
-    items : liste de (nom, masse_g, proteine/100g, calorie/100g, fat/100g, carb/100g)
+    """Crée un Menu pré-rempli pour simuler un repas déjà enregistré.
+    
+    Args:
+        items: Liste de tuples (nom, masse_g, proteine/100g, calorie/100g, fat/100g, carb/100g).
+        
+    Returns:
+        Un Menu créé avec les aliments spécifiés.
     """
     menu = Menu(str(date.today()))
     for name, masse, prot, cal, fat, carb in items:
@@ -23,6 +27,12 @@ def make_menu(items: list[tuple[str, float, float, float, float, float]]) -> Men
 
 
 def print_menu(menu: Menu, label: str = ""):
+    """Affiche le contenu d'un menu avec ses macros.
+    
+    Args:
+        menu: Le menu à afficher.
+        label: Label optionnel pour identifier le menu.
+    """
     print(f"\n  {'─' * 20} {label} {'─' * 20}")
     for f in menu.content:
         m = f.macros[0]
@@ -47,6 +57,12 @@ def print_menu(menu: Menu, label: str = ""):
 
 
 def print_daily_summary(profile: Profile, nap: float):
+    """Affiche un résumé des macros consommés vs objectifs pour la journée.
+    
+    Args:
+        profile: Le profil pour lequel afficher le bilan.
+        nap: Le facteur d'activité physique.
+    """
     besoins = profile.get_nutritional_needs(nap)
     today = str(date.today())
     menus = [m for m in profile.eating_habits if m.date == today]
@@ -77,6 +93,19 @@ def run_scenario(
     existing_menus: list[Menu],
     description: str,
 ):
+    """Exécute un scénario de génération de menu.
+    
+    Génére un menu pour un profil donné avec les conditions spécifiées
+    et affiche les résultats.
+    
+    Args:
+        food_data: Base de données des aliments.
+        profile: Le profil pour lequel générer un menu.
+        nap: Facteur d'activité physique.
+        meals_per_day: Nombre de repas par jour.
+        existing_menus: Menus déjà enregistrés pour cette journée.
+        description: Description du scénario.
+    """
     print(f"\n{'═' * 60}")
     print(f" {profile.name} | {description}")
     print(
@@ -104,7 +133,11 @@ def run_scenario(
 
 
 def test_alice_perte_premier_repas(food_data):
-    """Femme en perte de poids — aucun repas enregistré, génère le petit-déjeuner."""
+    """Femme en perte de poids — aucun repas enregistré, génére le petit-déjeuner.
+    
+    Args:
+        food_data: Base de données des aliments.
+    """
     run_scenario(
         food_data,
         profile=Profile("Alice", 20, 165, 58, "Femme", 53),
@@ -116,7 +149,11 @@ def test_alice_perte_premier_repas(food_data):
 
 
 def test_bob_masse_apres_dejeuner(food_data):
-    """Homme en prise de masse — déjeuner déjà fait, génère le dîner."""
+    """Homme en prise de masse — déjeuner déjà fait, génére le dîner.
+    
+    Args:
+        food_data: Base de données des aliments.
+    """
     dejeuner = make_menu(
         [
             ("Riz blanc cuit", 150, 2.7, 130, 0.3, 28),
@@ -135,7 +172,11 @@ def test_bob_masse_apres_dejeuner(food_data):
 
 
 def test_clara_maintien_collation(food_data):
-    """Femme en maintien — 3 repas sur 5 déjà faits, génère une collation."""
+    """Femme en maintien — 3 repas sur 5 déjà faits, génére une collation.
+    
+    Args:
+        food_data: Base de données des aliments.
+    """
     petit_dej = make_menu(
         [
             ("Flocons d'avoine", 80, 13, 370, 7, 58),
@@ -166,7 +207,11 @@ def test_clara_maintien_collation(food_data):
 
 
 def test_david_perte_journee_complete(food_data):
-    """Homme en perte de poids — génère les 3 repas un par un."""
+    """Homme en perte de poids — génére les 3 repas un par un.
+    
+    Args:
+        food_data: Base de données des aliments.
+    """
     profile = Profile("David", 28, 178, 88, "Homme", 80)
     nap = 1.55
 
@@ -184,7 +229,11 @@ def test_david_perte_journee_complete(food_data):
 
 
 def test_emma_sedentaire_repas_unique(food_data):
-    """Femme sédentaire — 1 seul repas par jour."""
+    """Femme sédentaire — 1 seul repas par jour.
+    
+    Args:
+        food_data: Base de données des aliments.
+    """
     run_scenario(
         food_data,
         profile=Profile("Emma", 45, 162, 70, "Femme", 65),

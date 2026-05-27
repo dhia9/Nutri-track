@@ -9,6 +9,18 @@ class SettingsController:
         self.view: settings_page.SettingsPage = None
 
     def edit_profile(self, name, age, height, weight, target_weight, sex):
+        """Modifie les informations du profil actuellement sélectionné.
+        
+        Valide les données et met à jour le profil.
+        
+        Args:
+            name: Nouveau nom du profil.
+            age: Nouvel âge.
+            height: Nouvelle taille en cm.
+            weight: Nouveau poids en kg.
+            target_weight: Nouvel objectif de poids.
+            sex: Nouveau sexe (Homme/Femme).
+        """
         profile = self.main_controller.current_profile
         if not profile:
             message_box.CTkMessageBox(
@@ -62,6 +74,7 @@ class SettingsController:
         )
 
     def delete_profile(self):
+        """Supprime le profil actuellement sélectionné et met à jour l'interface."""
         profile = self.main_controller.current_profile
         if not profile:
             message_box.CTkMessageBox(

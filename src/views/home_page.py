@@ -1,5 +1,7 @@
 import customtkinter as ctk
 
+from models import profile
+
 
 class HomePage(ctk.CTkFrame):
     PROFILE_BTN_DEFAULT = "#2DBA7F"
@@ -220,7 +222,15 @@ class HomePage(ctk.CTkFrame):
             self.profile_buttons[profile.name] = select_button
 
     def set_selected_profile(self, profile):
+        """Met à jour l'interface pour montrer le profil sélectionné.
+        
+        Args:
+            profile: Le profil sélectionné (ou None si aucun).
+        """
+        
         selected_name = profile.name if profile else None
+        
+    
         for profile_name, button in self.profile_buttons.items():
             is_selected = profile_name == selected_name
             button.configure(
