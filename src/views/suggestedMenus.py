@@ -71,14 +71,14 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         # Frame principal du menu
         menu_frame = ctk.CTkFrame(
             self.scrollable_frame,
-            fg_color="#2A2A4A",
+            fg_color=self.main_controller.theme_colors.get('frame_dark', '#2A2A4A'),
             corner_radius=10,
         )
         menu_frame.pack(fill="x", padx=5, pady=5)
         menu_frame.grid_columnconfigure(0, weight=1)
 
         # Liste des aliments
-        foods_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+        foods_frame = ctk.CTkFrame(menu_frame, fg_color=self.main_controller.theme_colors.get('frame_dark', '#2A2A4A'))
         foods_frame.pack(fill="x", padx=5, pady=5)
 
         # Afficher chaque aliment du menu
@@ -99,7 +99,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
 
     def create_food_item(self, parent_frame, food_menu):
         """Crée un item pour afficher un aliment avec ses macros"""
-        item_frame = ctk.CTkFrame(parent_frame, fg_color="#35393D", corner_radius=6)
+        item_frame = ctk.CTkFrame(parent_frame, fg_color=self.main_controller.theme_colors.get('frame', '#35393D'), corner_radius=6)
         item_frame.pack(fill="x", pady=3)
         item_frame.grid_columnconfigure(0, weight=1)
 
@@ -165,7 +165,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
                 )
 
         # Frame de résumé
-        summary_frame = ctk.CTkFrame(parent_frame, fg_color="#1A1A2E", corner_radius=6)
+        summary_frame = ctk.CTkFrame(parent_frame, fg_color=self.main_controller.theme_colors.get('frame_darker', '#1A1A2E'), corner_radius=6)
         summary_frame.pack(fill="x", padx=15, pady=(5, 10))
 
         summary_text = f"Total: {int(total_calories)} kcal | Protéines: {int(total_proteins)}g | Glucides: {int(total_carbs)}g | Lipides: {int(total_fats)}g"

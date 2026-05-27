@@ -49,7 +49,8 @@ class MainPage(ctk.CTk):
         y = (screen_height // 2) - (760 // 2)
         self.geometry(f"+{x}+{y}")
 
-        ctk.set_appearance_mode("dark")
+        # Appliquer le mode d'apparence sauvegardé
+        ctk.set_appearance_mode(self.controller.settings.appearance_mode)
         ctk.set_default_color_theme("green")
 
         self.configure(fg_color=self.controller.theme_colors['bg'])
@@ -266,6 +267,13 @@ class MainPage(ctk.CTk):
 
         # Mettre à jour le sidebar et ses boutons
         self.sidebar.configure(fg_color=self.controller.theme_colors['sidebar'])
+        self.nav_container.configure(fg_color=self.controller.theme_colors['sidebar'])
+        
+        # Mettre à jour tous les labels et le nav_container
+        for widget in self.sidebar.winfo_children():
+            if isinstance(widget, ctk.CTkLabel):
+                widget.configure(text_color=self.controller.theme_colors['text_secondary'])
+        
         for name, btn in self.nav_buttons.items():
             btn.configure(
                 fg_color=self.controller.theme_colors['button'],

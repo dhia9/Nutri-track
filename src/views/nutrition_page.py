@@ -47,16 +47,16 @@ class NutritionPage(ctk.CTkFrame):
         self._create_macro_card("Glucides", "frame_carre_noir3", 2, 5, 3)
         self._create_macro_card("Lipides", "frame_carre_noir4", 2, 8, 2)
 
-        date_frame = ctk.CTkFrame(self, fg_color="#000000", corner_radius=10)
+        date_frame = ctk.CTkFrame(self, fg_color=self.main_controller.theme_colors['frame'], corner_radius=10)
         date_frame.grid(row=0, column=8, sticky="w", padx=10, pady=5)
 
         self.button_previous = ctk.CTkButton(
             date_frame,
             text="◀",
             width=30,
-            fg_color="#000000",
+            fg_color=self.main_controller.theme_colors['frame'],
             font=ctk.CTkFont(size=14, weight="bold"),
-            hover_color="#F1F1F1",
+            hover_color=self.main_controller.theme_colors['button_hover'],
             corner_radius=10,
         )
         self.button_previous.grid(row=0, column=0, padx=4)
@@ -75,9 +75,9 @@ class NutritionPage(ctk.CTkFrame):
             date_frame,
             text="▶",
             width=30,
-            fg_color="#0F0A0A",
+            fg_color=self.main_controller.theme_colors['frame'],
             font=ctk.CTkFont(size=14, weight="bold"),
-            hover_color="#F1F1F1",
+            hover_color=self.main_controller.theme_colors['button_hover'],
             corner_radius=10,
         )
         self.button_next.grid(row=0, column=2, padx=4)
@@ -210,7 +210,7 @@ class NutritionPage(ctk.CTkFrame):
         # Créer la suggestion_card EN PREMIER pour qu'elle soit toujours en haut
         self.suggestion_card = ctk.CTkFrame(
             self.menus_scrollable_frame,
-            fg_color="#2A2A4A",
+            fg_color=self.main_controller.theme_colors['frame_dark'],
             corner_radius=10,
             height=120,
         )
@@ -224,7 +224,7 @@ class NutritionPage(ctk.CTkFrame):
             self.suggestion_card,
             text="Suggérer un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors['text'],
         )
         self.suggestion_title.grid(
             row=0, column=0, columnspan=2, sticky="w", padx=10, pady=(8, 4)
@@ -234,7 +234,7 @@ class NutritionPage(ctk.CTkFrame):
             self.suggestion_card,
             text="nap : facteur d'activité physique",
             font=ctk.CTkFont(size=11),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.label_nap.grid(row=1, column=0, sticky="w", padx=(10, 5), pady=(0, 2))
 
@@ -243,10 +243,10 @@ class NutritionPage(ctk.CTkFrame):
             width=90,
             height=28,
             corner_radius=6,
-            fg_color="#35393D",
-            border_color="#4CAF50",
+            fg_color=self.main_controller.theme_colors['frame'],
+            border_color=self.main_controller.settings.theme,
             border_width=1,
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors['text'],
             font=ctk.CTkFont(size=11),
         )
         self.input_nap.insert(
@@ -259,7 +259,7 @@ class NutritionPage(ctk.CTkFrame):
             self.suggestion_card,
             text="Nombre de repas par jour",
             font=ctk.CTkFont(size=11),
-            text_color="#A8AFB6",
+            text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.label_mealPerD.grid(row=1, column=1, sticky="w", padx=(5, 10), pady=(0, 2))
 
@@ -268,10 +268,10 @@ class NutritionPage(ctk.CTkFrame):
             width=90,
             height=28,
             corner_radius=6,
-            fg_color="#35393D",
-            border_color="#4CAF50",
+            fg_color=self.main_controller.theme_colors['frame'],
+            border_color=self.main_controller.settings.theme,
             border_width=1,
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors['text'],
             font=ctk.CTkFont(size=11),
         )
         self.input_mealPerD.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=(0, 8))

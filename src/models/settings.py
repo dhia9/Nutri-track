@@ -153,3 +153,12 @@ class Settings(JsonSerializable):
             self.appearance_mode = mode
             self.serialize(SETTINGS_PATH)
 
+    def to_dict(self):
+        """Sérialise l'objet Settings en dictionnaire"""
+        return {
+            "appearance_mode": self.appearance_mode,
+            "theme": self.theme,
+            "profiles": [profile.to_dict() for profile in self.profiles],
+            "favorites_menus": [menu.to_dict() for menu in self.favorites_menus],
+        }
+
