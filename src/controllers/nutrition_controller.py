@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import unicodedata
 
 import appdirs
 import customtkinter as ctk
@@ -36,10 +37,21 @@ class NutritionController:
     ):  # Remplir la liste des aliments selon le fichier JSON
         for food in self.food_data.content:
             food_list.append(food.name)
+    
+    import unicodedata
+
+    def format_text(self, texte):
+        texte = unicodedata.normalize("NFD", texte)
+        resultat = ""
+        for c in texte:
+            if unicodedata.combining(c) == 0:
+                resultat += c
+        return resultat.strip().lower()  # Enlever les accents, les espaces en début et fin, et mettre en minuscules
+
 
     def search_foods(self, query: str):
         """Filtre les aliments selon la query de recherche (insensible à la casse)"""
-        query = query.strip().lower()
+        query = self.format_text(query)
 
         # Si la query est vide, afficher tous les aliments
         if not query:
@@ -52,7 +64,7 @@ class NutritionController:
 
         # Filtrer et afficher seulement les aliments qui correspondent
         for food_name, food_data in self.view.food_items.items():
-            if query in food_name.lower():
+            if query in self.format_text(food_name):
                 # Afficher l'aliment
                 food_data["checkbox"].pack(
                     side="left", padx=10, pady=10, fill="x", expand=True
