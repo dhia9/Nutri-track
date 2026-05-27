@@ -8,6 +8,7 @@ import tempfile
 
 # OUTILS
 
+
 def print_test(name, ok):
     symbol = "✓" if ok else "X"
     color = "\033[92m" if ok else "\033[91m"
@@ -22,6 +23,7 @@ def print_section(name):
 
 
 # 1. MUTATION DES PROFILS (SIDE EFFECT GLOBAL STATE)
+
 
 def test_profile_mutation_affects_settings():
     try:
@@ -44,6 +46,7 @@ def test_profile_mutation_affects_settings():
 
 # 2. DELETE PROFILE BUG (DOUBLE LOOP REMOVE RISK)
 
+
 def test_delete_profile_removes_correctly():
     try:
         s = Settings()
@@ -63,7 +66,9 @@ def test_delete_profile_removes_correctly():
         print_test("delete_profile_removes_correctly", False)
         return False
 
+
 # 3. SET FAVORITES: MUTABLE OBJECTS PROBLEM
+
 
 def test_favorites_set_mutability_issue():
     try:
@@ -73,9 +78,7 @@ def test_favorites_set_mutability_issue():
         s.favorites_menus.add(menu)
 
         # modifier le menu après insertion dans un set
-        menu.content.append(
-            FoodMenu(150, "Chicken", [Macro(100, 25, 150, 10, 20)])
-        )
+        menu.content.append(FoodMenu(150, "Chicken", [Macro(100, 25, 150, 10, 20)]))
 
         # danger: mutation après hash
         result = len(s.favorites_menus) == 1
@@ -87,7 +90,9 @@ def test_favorites_set_mutability_issue():
         print_test("favorites_set_mutability_issue", False)
         return False
 
+
 # 4. DOUBLE REFERENCE LIST (SHARED FOOD MACROS)
+
 
 def test_shared_macro_reference_across_food():
     try:
@@ -111,6 +116,7 @@ def test_shared_macro_reference_across_food():
 
 # 5. DEEPCOPY PROTECTION TEST
 
+
 def test_deepcopy_isolation_settings():
     try:
         s1 = Settings()
@@ -132,6 +138,7 @@ def test_deepcopy_isolation_settings():
 
 # 6. DESERIALIZE DATA CONSISTENCY RISK
 
+
 def test_deserialize_structure_integrity():
     try:
         s = Settings()
@@ -146,13 +153,11 @@ def test_deserialize_structure_integrity():
                     "weight": 70,
                     "sex": "M",
                     "target_weight": 65,
-                    "eating_habits": []
+                    "eating_habits": [],
                 }
             ],
-            "favorites_menus": []
+            "favorites_menus": [],
         }
-
-        
 
         with tempfile.NamedTemporaryFile(mode="w+", delete=False) as f:
             json.dump(fake_data, f)
@@ -171,6 +176,7 @@ def test_deserialize_structure_integrity():
 
 
 # 7. SET BEHAVIOR WITH MUTABLE OBJECTS
+
 
 def test_menu_set_hash_stability_risk():
     try:
@@ -191,27 +197,35 @@ def test_menu_set_hash_stability_risk():
     except Exception:
         print_test("menu_set_hash_stability_risk", False)
         return False
-    
+
 
 # RUNNER
 
+
 def run_all_tests():
     tests = [
-        ("SETTINGS SIDE EFFECTS", [
-            test_profile_mutation_affects_settings,
-            test_delete_profile_removes_correctly,
-            test_deepcopy_isolation_settings,
-        ]),
-
-        ("SET MUTABILITY PROBLEMS", [
-            test_favorites_set_mutability_issue,
-            test_menu_set_hash_stability_risk,
-        ]),
-
-        ("MODEL INTEGRITY", [
-            test_shared_macro_reference_across_food,
-            test_deserialize_structure_integrity,
-        ]),
+        (
+            "SETTINGS SIDE EFFECTS",
+            [
+                test_profile_mutation_affects_settings,
+                test_delete_profile_removes_correctly,
+                test_deepcopy_isolation_settings,
+            ],
+        ),
+        (
+            "SET MUTABILITY PROBLEMS",
+            [
+                test_favorites_set_mutability_issue,
+                test_menu_set_hash_stability_risk,
+            ],
+        ),
+        (
+            "MODEL INTEGRITY",
+            [
+                test_shared_macro_reference_across_food,
+                test_deserialize_structure_integrity,
+            ],
+        ),
     ]
 
     total = 0
