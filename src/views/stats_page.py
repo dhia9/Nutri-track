@@ -135,6 +135,7 @@ class StatsPage(ctk.CTkFrame):
         row.pack(fill="x", pady=10)
         self._chart_macros_pie(row)
         self._chart_macros_bar(row)
+        self._chart_mesure_corpo(row)
 
     def _chart_calories(self, data):
         """Crée un graphique d'évolution des calories.
@@ -332,7 +333,7 @@ class StatsPage(ctk.CTkFrame):
         # Boutton ajouter
         boutton_ajouter = ctk.CTkButton(top_row, text="Ajouter une mesure corporelle")
         boutton_ajouter.pack(side="left")
-        boutton_ajouter.bind("<Button-1>", self.ajouter_mesure)
+        boutton_ajouter.bind("<Button-1>", self._on_add_mesure)
 
         # Frame pour les labels
         labels_frame = ctk.CTkFrame(card, fg_color="transparent")
@@ -398,13 +399,12 @@ class StatsPage(ctk.CTkFrame):
             )
             label.grid(row=0, column=col, padx=35, pady=5)
 
-        # Charger et afficher les mesures existantes depuis le profil
-        mesures_existantes = self.controller.get_mesures_corporelles()
-        # Afficher les mesures en ordre inverse (plus récentes en haut)
+        self.table_rows = []
+        mesures_existantes = self.controller.get_mesures_corporelles() or []
         for mesure in reversed(mesures_existantes):
-            self.ajouter_ligne_mesure(mesure)
+            self.controller._create_ligne_mesure(mesure)
 
-    def ajouter_mesure(self, event):
+    def ajouter_mesure(self):
         mesure = MesuresCorporelles(
             self.controller.current_date.strftime("%Y-%m-%d"),
             self.poids_entry.get(),
@@ -459,3 +459,100 @@ class StatsPage(ctk.CTkFrame):
             for widget in self.table_rows[-1]:
                 widget.destroy()
             self.table_rows.pop()
+
+    def _chart_mesure_corpo(self, parent):
+        """
+        Génère un graphique multi-axes (4 sous-graphiques) représentant l'évolution
+        des mesures corporelles d'un profil.
+        Args:
+            parent (tkinter widget / CTkFrame):
+                Le conteneur dans lequel le graphique Matplotlib sera intégré.
+        Returns:
+            None
+        """
+        card = self._create_card(parent, "Évolution des mesures corporelles")
+
+        fig, axes = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
+        fig.subplots_adjust(hspace=0.5)
+
+        mesures = getattr(self.profile, "mesures_corporelles", [])
+        if not mesures:
+            for ax in axes:
+                ax.text(0.5, 0.5, "Aucune donnée disponible", ha="center", va="center")
+                ax.set_axis_off()
+            self._embed(fig, card)
+            return
+
+        dates = []
+        poids, taille, bras, masse_grasse = [], [], [], []
+
+        for m in mesures:
+            try:
+                dates.append(m.date)
+
+                poids.append(float(m.poids) if m.poids not in (None, "") else 0)
+                taille.append(
+                    float(m.tour_de_taille) if m.tour_de_taille not in (None, "") else 0
+                )
+                bras.append(
+                    float(m.tour_de_bras) if m.tour_de_bras not in (None, "") else 0
+                )
+                masse_grasse.append(
+                    float(m.masse_grasse) if m.masse_grasse not in (None, "") else 0
+                )
+
+            except Exception:
+                continue
+
+        if not dates:
+            for ax in axes:
+                ax.text(0.5, 0.5, "Données invalides", ha="center", va="center")
+                ax.set_axis_off()
+            self._embed(fig, card)
+            return
+
+        axes[0].plot(dates, poids, color=C_GREEN, label="Poids corporel")
+        axes[0].set_title("Évolution du poids")
+        axes[0].set_ylabel("Poids (kg)")
+        axes[0].legend()
+        axes[0].grid(True, linestyle="--", alpha=0.3)
+
+        axes[1].plot(dates, taille, color=C_BLUE, label="Tour de taille")
+        axes[1].set_title("Évolution du tour de taille")
+        axes[1].set_ylabel("Tour de taille (cm)")
+        axes[1].legend()
+        axes[1].grid(True, linestyle="--", alpha=0.3)
+
+        axes[2].plot(dates, bras, color=C_ORANGE, label="Tour de bras")
+        axes[2].set_title("Évolution du tour de bras")
+        axes[2].set_ylabel("Tour de bras (cm)")
+        axes[2].legend()
+        axes[2].grid(True, linestyle="--", alpha=0.3)
+
+        axes[3].plot(dates, masse_grasse, color=C_RED, label="Masse grasse")
+        axes[3].set_title("Évolution du taux de masse grasse")
+        axes[3].set_ylabel("Pourcentage (%)")
+        axes[3].legend()
+        axes[3].grid(True, linestyle="--", alpha=0.3)
+
+        # axe x commun
+        axes[3].set_xlabel("Date de mesure")
+        axes[3].xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
+        fig.autofmt_xdate()
+
+        self._embed(fig, card)
+
+    def _on_add_mesure(self, event):
+        """
+        Callback déclenché lors de l'ajout d'une nouvelle mesure corporelle.
+        Cette fonction sert à:
+        - ajouter une nouvelle mesure via le contrôleur
+        - déclencher le rafraîchissement des graphiques
+        Args:
+            event (tkinter.Event):
+                Événement de clic bouton (ignoré dans la logique métier)
+        Returns:
+            None
+        """
+        self.ajouter_mesure()
+        self.controller._update_charts_only()
