@@ -86,3 +86,108 @@ def test_favorites_set_mutability_issue():
     except Exception:
         print_test("favorites_set_mutability_issue", False)
         return False
+
+# 4. DOUBLE REFERENCE LIST (SHARED FOOD MACROS)
+
+def test_shared_macro_reference_across_food():
+    try:
+        s = Settings()
+
+        macros = [Macro(100, 20, 200, 10, 30)]
+        food1 = FoodMenu(100, "Rice", macros)
+        food2 = FoodMenu(200, "Rice", macros)
+
+        macros.append(Macro(150, 30, 250, 12, 40))
+
+        result = len(food1.macros) == len(food2.macros)
+
+        print_test("shared_macro_reference_across_food", result)
+        return result
+
+    except Exception:
+        print_test("shared_macro_reference_across_food", False)
+        return False
+
+
+# 5. DEEPCOPY PROTECTION TEST
+
+def test_deepcopy_isolation_settings():
+    try:
+        s1 = Settings()
+        s1.create_profile("X", 20, 180, 70, "M", 65)
+
+        s2 = deepcopy(s1)
+
+        s2.profiles[0].name = "CHANGED"
+
+        result = s1.profiles[0].name != s2.profiles[0].name
+
+        print_test("deepcopy_isolation_settings", result)
+        return result
+
+    except Exception:
+        print_test("deepcopy_isolation_settings", False)
+        return False
+
+
+# 6. DESERIALIZE DATA CONSISTENCY RISK
+
+def test_deserialize_structure_integrity():
+    try:
+        s = Settings()
+
+        # simulation JSON minimal valide
+        fake_data = {
+            "profiles": [
+                {
+                    "name": "A",
+                    "age": 20,
+                    "height": 180,
+                    "weight": 70,
+                    "sex": "M",
+                    "target_weight": 65,
+                    "eating_habits": []
+                }
+            ],
+            "favorites_menus": []
+        }
+
+        
+
+        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as f:
+            json.dump(fake_data, f)
+            path = f.name
+
+        s.deserialize(path)
+
+        result = len(s.profiles) == 1 and s.profiles[0].name == "A"
+
+        print_test("deserialize_structure_integrity", result)
+        return result
+
+    except Exception:
+        print_test("deserialize_structure_integrity", False)
+        return False
+
+
+# 7. SET BEHAVIOR WITH MUTABLE OBJECTS
+
+def test_menu_set_hash_stability_risk():
+    try:
+        m = Menu("2024-01-01")
+        s = Settings()
+
+        s.favorites_menus.add(m)
+
+        # mutation après insertion dans set
+        m.content.append(FoodMenu(100, "Chicken"))
+
+        # l'objet reste dans le set mais son état a changé
+        result = m in s.favorites_menus
+
+        print_test("menu_set_hash_stability_risk", result)
+        return result
+
+    except Exception:
+        print_test("menu_set_hash_stability_risk", False)
+        return False
