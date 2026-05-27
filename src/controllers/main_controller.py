@@ -52,6 +52,11 @@ class MainController:
             self.pages[name] = page_widget
 
     def set_current_profile(self, profile):
+        """Définit le profil actuel et met à jour l'interface.
+
+        Args:
+            profile: Le profil Profile à définir.
+        """
         self.current_profile = profile
         nutrition = self.controllers.get("Nutrition")
         if nutrition and hasattr(nutrition, "set_current_profile"):
@@ -62,6 +67,10 @@ class MainController:
             self.enable_profile_pages()
 
     def update_nav_buttons(self):
+        """Met à jour l'état des boutons de navigation en fonction du profil sélectionné.
+
+        Active/désactive les boutons pour les pages nécessitant un profil.
+        """
         if self.view is None:
             return
         profile_selected = self.current_profile is not None
@@ -77,6 +86,10 @@ class MainController:
             )
 
     def enable_profile_pages(self):
+        """Active et affiche les pages de profil.
+
+        Construit les pages si nécessaire et affiche la page courante.
+        """
         if self.view is None:
             return
         if "Nutrition" not in self.pages and hasattr(self.view, "build_profile_pages"):

@@ -23,14 +23,36 @@ class Settings(JsonSerializable):
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
 
-    def create_profile(self, name, age, height, weight, sex, target_weight):
+        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
+    def create_profile(self, name, age, height, weight, sex, target_weight):
+        """Crée un nouveau profil et le sauvegarde.
+
+        Args:
+            name: Nom du profil.
+            age: Âge du profil.
+            height: Taille en cm.
+            weight: Poids en kg.
+            sex: Sexe (Homme/Femme).
+            target_weight: Objectif de poids en kg.
+        """
         new_profile = Profile(name, age, height, weight, sex, target_weight)
         self.profiles.append(new_profile)
 
         self.serialize(SETTINGS_PATH)  # Sauvegarder le profil après sa création
 
     def update_profile(self, profile, name, age, height, weight, sex, target_weight):
+        """Met à jour les données d'un profil et les sauvegarde.
+
+        Args:
+            profile: Le profil à mettre à jour.
+            name: Nouveau nom.
+            age: Nouvel âge.
+            height: Nouvelle taille en cm.
+            weight: Nouveau poids en kg.
+            sex: Nouveau sexe.
+            target_weight: Nouvel objectif de poids.
+        """
         profile.name = name
         profile.age = age
         profile.height = height
@@ -41,6 +63,11 @@ class Settings(JsonSerializable):
         self.serialize(SETTINGS_PATH)
 
     def delete_profile(self, name):
+        """Supprime un profil par son nom et sauvegarde.
+
+        Args:
+            name: Nom du profil à supprimer.
+        """
         for profile in self.profiles:
             if profile.name == name:
                 self.profiles.remove(profile)
@@ -49,6 +76,13 @@ class Settings(JsonSerializable):
 
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
+        """Désérialise les données depuis un fichier JSON.
+
+        Charge tous les profils, leurs menus et les menus favoris.
+
+        Args:
+            path: Chemin du fichier JSON.
+        """
         try:
             # Lire le fichier json
             with open(path, "r", encoding="utf-8") as file:
@@ -108,6 +142,35 @@ class Settings(JsonSerializable):
 
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)
+
+            # Charger les menus favoris s'ils existent dans le JSON
+            if "favorites_menus" in data:
+                for data_menu in data["favorites_menus"]:
+                    # Initialiser un objet Menu avec ses attributs
+                    menu = Menu(data_menu["date"])
+
+                    # Peupler le contenu du Menu par extraction des informations dans la liste content
+                    for data_food in data_menu["content"]:
+                        # Création d'un plat/aliment avec ses attributs
+                        food = FoodMenu(data_food["quantity"], data_food["name"])
+
+                        # Extraire les macros / propriétés du plat en parcourant la liste
+                        for data_macro in data_food["macros"]:
+                            # Ajouter le Macro à la liste des macros
+                            food.macros.append(
+                                Macro(
+                                    data_macro["masse"],
+                                    data_macro["proteine"],
+                                    data_macro["calorie"],
+                                    data_macro["fat"],
+                                    data_macro["carbohydrate"],
+                                )
+                            )
+                        # Ajouter le plat / aliment au menu
+                        menu.content.append(food)
+
+                    # Ajouter le menu au set des menus favoris
+                    self.favorites_menus.add(menu)
 
         except FileNotFoundError:
             # s'il n'y a pas de fichier, réinitialiser les profils à une liste vide
