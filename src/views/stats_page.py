@@ -407,3 +407,9 @@ class StatsPage(ctk.CTkFrame):
             for widget in self.table_rows[-1]:
                 widget.destroy()
             self.table_rows.pop()
+
+
+
+
+
+            
