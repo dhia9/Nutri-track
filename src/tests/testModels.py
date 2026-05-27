@@ -171,3 +171,96 @@ def test_menu_hash_allows_use_in_set():
         print_test("test_menu_hash_allows_use_in_set", False)
         return False
 
+
+# CROSS MODEL TESTS
+
+
+def test_deepcopy_independence():
+    try:
+        menu1 = Menu("2024-01-01")
+
+        macro = Macro(100, 25, 150, 10, 20)
+        food = Food("Chicken", [macro])
+
+        menu1.add_food_menu(food, 150)
+
+        menu2 = deepcopy(menu1)
+
+        menu2.content.clear()
+
+        result = (
+            len(menu1.content) == 1 and
+            len(menu2.content) == 0
+        )
+
+        print_test("test_deepcopy_independence", result)
+        return result
+
+    except Exception:
+        print_test("test_deepcopy_independence", False)
+        return False
+
+
+# ============================================================================
+# RUNNER
+# ============================================================================
+
+def run_all_tests():
+
+    tests = [
+        ("MACRO TESTS", [
+            test_macro_masse_negative_raises_error,
+            test_macro_scaling_affects_all_values,
+            test_macro_zero_masse_creates_zero_values,
+        ]),
+
+        ("FOOD TESTS", [
+            test_food_shares_macro_references,
+            test_food_score_with_zero_calories_returns_zero,
+        ]),
+
+        ("FOODMENU TESTS", [
+            test_foodmenu_inherits_from_food,
+        ]),
+
+        ("MENU TESTS", [
+            test_menu_add_food_mutates_content,
+            test_menu_hash_allows_use_in_set,
+        ]),
+
+        ("CROSS MODEL TESTS", [
+            test_deepcopy_independence,
+        ]),
+    ]
+
+    total_tests = 0
+    passed_tests = 0
+
+    for section_name, test_functions in tests:
+        print_section(section_name)
+
+        for test_func in test_functions:
+            total_tests += 1
+
+            if test_func():
+                passed_tests += 1
+
+    print(f"\n{'=' * 60}")
+    print("  RÉSUMÉ FINAL")
+    print(f"{'=' * 60}")
+
+    print(f"\nTotal: {total_tests}")
+    print(f"Réussis: {passed_tests}")
+    print(f"Échoués: {total_tests - passed_tests}")
+
+    percentage = (passed_tests / total_tests * 100)
+
+    print(f"Taux de réussite: {percentage:.1f}%\n")
+
+    return passed_tests == total_tests
+
+
+if __name__ == "__main__":
+    success = run_all_tests()
+    exit(0 if success else 1)
+
