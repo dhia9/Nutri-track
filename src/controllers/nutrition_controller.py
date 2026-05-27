@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import appdirs
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
-import src.data.food_data as food_data
 import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
@@ -17,12 +16,6 @@ class NutritionController:
         self.view = None  # La view sera assignée par la view elle-même
         self.current_profile = self.main_controller.current_profile
         self.current_date = datetime.now()
-        self.food_data = (
-            food_data.FoodData()
-        )  # Initialiser la base de données en mémoire
-        self.food_data.deserialize(
-            "src/data/data.json"
-        )  # Charger les données depuis le fichier JSON
         self.favorite_menus = (
             self.main_controller.settings.favorites_menus
         )  # Récupérer les menus favoris depuis les paramètres
@@ -34,7 +27,7 @@ class NutritionController:
     def fill_food_list(
         self, food_list
     ):  # Remplir la liste des aliments selon le fichier JSON
-        for food in self.food_data.content:
+        for food in self.main_controller.food_data.content:
             food_list.append(food.name)
 
     def search_foods(self, query: str):
@@ -79,7 +72,7 @@ class NutritionController:
 
     def food_by_name(self, name):
         """Retourne un objet Food de la base de données selon son nom"""
-        for food in self.food_data.content:
+        for food in self.main_controller.food_data.content:
             if food.name == name:
                 return food
         return None  # Si aucun aliment ne correspond au nom donné
@@ -332,7 +325,7 @@ class NutritionController:
         nap = int(self.current_profile.suggestCaracteristics["nap"])
         meals_per_day = int(self.current_profile.suggestCaracteristics["meals_per_day"])
         self.suggested_menus = self.current_profile.generate_menu(
-            self.food_data, nap, meals_per_day
+            self.main_controller.food_data, nap, meals_per_day
         )
         Suggestion_win = SuggestedMenuWindow(
             self.view.winfo_toplevel(), self.main_controller

@@ -5,6 +5,7 @@ import src.controllers.home_controller as home_controller
 import src.controllers.nutrition_controller as nutrition_controller
 import src.controllers.settings_controller as settings_controller
 import src.models.settings as settings
+import src.data.food_data as food_data
 from src.controllers.stats_controller import StatsController
 
 
@@ -28,6 +29,11 @@ class MainController:
         self.current_profile = (
             self.settings.profiles[0] if len(self.settings.profiles) > 0 else None
         )
+        
+        # Initialiser food_data une seule fois au démarrage
+        self.food_data = food_data.FoodData()
+        self.food_data.deserialize("src/data/data.json")
+        
         self.controllers = {
             "Home": home_controller.HomeController(self),
             "Nutrition": nutrition_controller.NutritionController(self),
