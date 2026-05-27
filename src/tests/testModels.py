@@ -1,7 +1,8 @@
-
+from copy import deepcopy
+from src.models.food import Food
+from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
-
-
+from src.models.menu import Menu
 
 def print_test(test_name, status):
     symbol = "✓" if status else "✗"
@@ -15,10 +16,7 @@ def print_section(section_name):
     print(f"  {section_name}")
     print(f"{'=' * 60}")
 
-
-# ============================================================================
 # MACRO TESTS
-# ============================================================================
 
 def test_macro_masse_negative_raises_error():
     try:
@@ -71,5 +69,43 @@ def test_macro_zero_masse_creates_zero_values():
 
     except Exception:
         print_test("test_macro_zero_masse_creates_zero_values", False)
+        return False
+
+# FOOD TESTS
+
+def test_food_shares_macro_references():
+    try:
+        macros = [Macro(100, 25, 150, 10, 20)]
+        food = Food("Chicken", macros)
+
+        macros.append(Macro(150, 30, 200, 12, 25))
+
+        result = (
+            food.macros is macros and
+            len(food.macros) == 2
+        )
+
+        print_test("test_food_shares_macro_references", result)
+        return result
+
+    except Exception:
+        print_test("test_food_shares_macro_references", False)
+        return False
+
+
+def test_food_score_with_zero_calories_returns_zero():
+    try:
+        macro = Macro(100, 25, 0, 10, 20)
+        food = Food("Empty Food", [macro])
+
+        score = food.score(150, 25, 10, 20, 100)
+
+        result = score == 0.0
+
+        print_test("test_food_score_with_zero_calories_returns_zero", result)
+        return result
+
+    except Exception:
+        print_test("test_food_score_with_zero_calories_returns_zero", False)
         return False
 
