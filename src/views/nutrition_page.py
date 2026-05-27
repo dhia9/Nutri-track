@@ -34,7 +34,7 @@ class NutritionPage(ctk.CTkFrame):
         self.tiltle2 = ctk.CTkLabel(
             self,
             text=f"Profil : {self.controller.current_profile.name}",
-            font=ctk.CTkFont(size=13),
+            font=ctk.CTkFont(size=12),
             text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.tiltle2.grid(
@@ -55,7 +55,7 @@ class NutritionPage(ctk.CTkFrame):
             text="◀",
             width=30,
             fg_color="#000000",
-            font=ctk.CTkFont(size=14),
+            font=ctk.CTkFont(size=14, weight="bold"),
             hover_color="#F1F1F1",
             corner_radius=10,
         )
@@ -66,7 +66,7 @@ class NutritionPage(ctk.CTkFrame):
         self.date_label = ctk.CTkLabel(
             date_frame,
             text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
         )
         self.date_label.grid(row=0, column=1, padx=4)
@@ -76,7 +76,7 @@ class NutritionPage(ctk.CTkFrame):
             text="▶",
             width=30,
             fg_color="#0F0A0A",
-            font=ctk.CTkFont(size=14),
+            font=ctk.CTkFont(size=14, weight="bold"),
             hover_color="#F1F1F1",
             corner_radius=10,
         )
@@ -223,7 +223,7 @@ class NutritionPage(ctk.CTkFrame):
         self.suggestion_title = ctk.CTkLabel(
             self.suggestion_card,
             text="Suggérer un menu",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color="#FFFFFF",
         )
         self.suggestion_title.grid(
@@ -427,7 +427,7 @@ class NutritionPage(ctk.CTkFrame):
         setattr(self, frame_attr, frame)
 
         # Label du titre
-        label = ctk.CTkLabel(frame, text=macro_name, font=ctk.CTkFont(size=13))
+        label = ctk.CTkLabel(frame, text=macro_name, font=ctk.CTkFont(size=12))
         label.grid(row=0, column=0, sticky="w", padx=15, pady=(10, 0))
         setattr(self, f"{macro_name.lower()}_label", label)
 

@@ -30,7 +30,7 @@ class HomePage(ctk.CTkFrame):
         self.profil = ctk.CTkLabel(
             self,
             text="Sélectionnez un profil ou créez-en un nouveau pour commencer",
-            font=ctk.CTkFont(size=13),
+            font=ctk.CTkFont(size=12),
             text_color=self.main_controller.theme_colors['text_secondary'],
         )
         self.profil.grid(row=1, column=0, columnspan=3, sticky="w", padx=20)

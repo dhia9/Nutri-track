@@ -25,7 +25,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         title_label = ctk.CTkLabel(
             self,
             text=f"Menus Proposés",
-            font=ctk.CTkFont(size=24, weight="bold"),
+            font=ctk.CTkFont(size=26, weight="bold"),
         )
         title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(15, 10))
 
@@ -58,7 +58,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             no_menu_label = ctk.CTkLabel(
                 self.scrollable_frame,
                 text="Aucun menu à proposer pour le moment",
-                font=ctk.CTkFont(size=13),
+                font=ctk.CTkFont(size=12),
                 text_color=self.main_controller.theme_colors.get('text_secondary', '#A8AFB6'),
             )
             no_menu_label.pack(padx=10, pady=20)
@@ -172,7 +172,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         summary_label = ctk.CTkLabel(
             summary_frame,
             text=summary_text,
-            font=ctk.CTkFont(size=10, weight="bold"),
+            font=ctk.CTkFont(size=11, weight="bold"),
             text_color=self.main_controller.theme_colors.get('primary_accent', '#4CAF50'),
         )
         summary_label.pack(padx=10, pady=8)
