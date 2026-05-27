@@ -8,6 +8,11 @@ class StatsController:
         self.view = None
 
     def macros_by_date(self):
+        """Calcule les macros consommés pour chaque jour.
+
+        Returns:
+            Dictionnaire with calories, carbohydrate, proteins, and fats by date.
+        """
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
         if self.main_controller.current_profile is None:
             return result
@@ -32,6 +37,11 @@ class StatsController:
         return result
 
     def menus_all_dates(self):
+        """Retourne tous les menus de tous les jours du profil actuel.
+
+        Returns:
+            Dictionnaire avec les menus indexés par date.
+        """
         profile_menus = {}
         if self.main_controller.current_profile is None:
             return profile_menus
@@ -40,6 +50,14 @@ class StatsController:
         return profile_menus
 
     def menus_today(self, date: datetime.date):
+        """Retourne les menus d'un jour spécifique.
+
+        Args:
+            date: La date pour laquelle récupérer les menus.
+
+        Returns:
+            Dictionnaire des menus pour cette date.
+        """
         profile_menus = {}
         if self.main_controller.current_profile is None:
             return profile_menus
@@ -52,7 +70,14 @@ class StatsController:
         return profile_menus
 
     def macros_today(self, date: datetime.date):
-        """Retourne les macros consommés par l'utilisateur à un jour donné"""
+        """Retourne les macros consommés par l'utilisateur à un jour donné.
+
+        Args:
+            date: La date pour laquelle récupérer les macros.
+
+        Returns:
+            Dictionnaire with calories, carbohydrate, proteins, and fats totals.
+        """
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
         if self.main_controller.current_profile is None:
             return total_macros
@@ -69,9 +94,24 @@ class StatsController:
         return total_macros
 
     def get_current_profile(self):
+        """Retourne le profil actuellement sélectionné.
+
+        Returns:
+            Le profil Profile actuel ou None.
+        """
         return self.main_controller.current_profile
 
     def generate_history(self, days=30):
+        """Génére un historique de données sur un nombre de jours.
+
+        Returns des données aléatoires pour les tests.
+
+        Args:
+            days: Le nombre de jours d'historique à générer.
+
+        Returns:
+            Liste de dictionnaires contenant les données par jour.
+        """
         history = []
         today = datetime.today()
         for i in range(days):
@@ -90,6 +130,15 @@ class StatsController:
         return history
 
     def mesure_avg(self, data, macro_type):
+        """Calcule la moyenne d'un type de macro pour une liste de données.
+
+        Args:
+            data: Liste de dictionnaires de données.
+            macro_type: La clé du macro à moyenner.
+
+        Returns:
+            La moyenne du macro_type ou 0 si aucune donnée.
+        """
         total = 0
         for item in data:
             total += item[macro_type]

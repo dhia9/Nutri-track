@@ -3,6 +3,14 @@ import customtkinter as ctk
 
 class CTkMessageBox(ctk.CTkToplevel):
     def __init__(self, parent, title="", message="", button_text="OK"):
+        """Initialise une boîte de message modale.
+
+        Args:
+            parent: Widget parent (fenêtre principale).
+            title: Titre de la boîte de message.
+            message: Texte du message.
+            button_text: Texte du bouton (par défaut "OK").
+        """
         super().__init__()
         self.title(title)
         self.geometry("300x150")

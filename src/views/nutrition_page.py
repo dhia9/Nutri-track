@@ -389,13 +389,25 @@ class NutritionPage(ctk.CTkFrame):
         self.bouton_suggestion.bind("<Button-1>", self.controller.show_Suggested_menus)
 
     def _configure_frame_grid(self, frame):
-        """Factorisation : Configure la grille d'un frame avec poids égal"""
+        """Factorisation : Configure la grille d'un frame avec poids égal.
+
+        Args:
+            frame: Le frame à configurer.
+        """
         for i in range(10):
             frame.grid_columnconfigure(i, weight=1)
             frame.grid_rowconfigure(i, weight=1)
 
     def _create_macro_card(self, macro_name, frame_attr, row, col_start, col_span):
-        """Factorisation : Crée une carte de macro (Calories, Protéines, etc.)"""
+        """Factorisation : Crée une carte de macro (Calories, Protéines, etc.)
+
+        Args:
+            macro_name: Nom du macronutriment.
+            frame_attr: Nom de l'attribut pour stocker le frame.
+            row: Ligne du grid où placer la carte.
+            col_start: Colonne de début.
+            col_span: Nombre de colonnes à couvrir.
+        """
         frame = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
         frame.grid(
             row=row,

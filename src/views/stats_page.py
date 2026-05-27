@@ -47,6 +47,10 @@ class StatsPage(ctk.CTkFrame):
         self._build()
 
     def refresh(self):
+        """Rafraîchit l'affichage des statistiques avec les données actuelles.
+
+        Detruit et recrée tous les graphiques et éléments de l'interface.
+        """
         for child in self.winfo_children():
             child.destroy()
 
@@ -57,6 +61,15 @@ class StatsPage(ctk.CTkFrame):
         self._build()
 
     def _create_card(self, parent, title):
+        """Crée une carte pour afficher un graphique.
+
+        Args:
+            parent: Widget parent où ajouter la carte.
+            title: Titre de la carte.
+
+        Returns:
+            Un frame CTkFrame formatté comme carte.
+        """
         card = ctk.CTkFrame(parent, fg_color=C_CARD, corner_radius=14)
         card.pack(fill="x", pady=10)
         header = ctk.CTkFrame(card, fg_color="transparent")
@@ -70,6 +83,12 @@ class StatsPage(ctk.CTkFrame):
         return card
 
     def _embed(self, fig, parent):
+        """Insère un graphique matplotlib dans un widget tkinter.
+
+        Args:
+            fig: La figure matplotlib à insérer.
+            parent: Le widget parent où ajouter le graphique.
+        """
         fig.patch.set_facecolor("#1D1F21")
         fig.tight_layout()
         fig.subplots_adjust(bottom=0.25)
@@ -81,6 +100,10 @@ class StatsPage(ctk.CTkFrame):
         plt.close(fig)
 
     def _build(self):
+        """Construit l'interface des statistiques.
+
+        Crée l'entête et les graphiques à afficher.
+        """
         header = ctk.CTkFrame(self, fg_color="transparent")
         header.pack(fill="x", padx=20, pady=20)
         ctk.CTkLabel(
@@ -93,6 +116,11 @@ class StatsPage(ctk.CTkFrame):
         self._render_all_charts()
 
     def _render_all_charts(self):
+        """Affiche tous les graphiques de statistiques.
+
+        Crée et affiche les graphiques de calories, caractéristiques,
+        et macros (pie et bar).
+        """
         data = self.macrosDated
         calories = data["calories"]
         self._chart_calories(calories)
@@ -104,6 +132,11 @@ class StatsPage(ctk.CTkFrame):
         self._chart_macros_bar(row)
 
     def _chart_calories(self, data):
+        """Crée un graphique d'évolution des calories.
+
+        Args:
+            data: Dictionnaire des calories par date.
+        """
         card = self._create_card(self.scroll, "Évolution calories")
         fig, ax = plt.subplots(figsize=(8, 3))
         if not data:
@@ -132,6 +165,11 @@ class StatsPage(ctk.CTkFrame):
         self._embed(fig, card)
 
     def _chart_macros_pie(self, parent):
+        """Crée un graphique en camembert des macros du dernier repas.
+
+        Args:
+            parent: Widget parent où afficher le graphique.
+        """
         card = self._create_card(parent, "Macros du dernier repas")
         avg_p = self.macrosToday["proteins"]
         avg_c = self.macrosToday["carbohydrate"]
@@ -167,6 +205,11 @@ class StatsPage(ctk.CTkFrame):
         self._embed(fig, card)
 
     def _chart_macros_bar(self, parent):
+        """Crée un graphique en barres pour comparer les macros du dernier repas.
+
+        Args:
+            parent: Widget parent où afficher le graphique.
+        """
         card = self._create_card(parent, "Comparaison pour le dernier repas")
         avg_p = self.macrosToday["proteins"]
         avg_c = self.macrosToday["carbohydrate"]
@@ -200,6 +243,7 @@ class StatsPage(ctk.CTkFrame):
         self._embed(fig, card)
 
     def _caracteristicsChart(self):
+        """Crée un graphique d'évolution des macros (protéines, lipides, glucides)."""
         card = self._create_card(self.scroll, "Évolution macros")
         fig, ax = plt.subplots(figsize=(8, 3))
         if not self.macrosDated["proteins"]:

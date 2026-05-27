@@ -225,6 +225,10 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0, 10))
 
     def edit_profile(self):
+        """Modifie le profil actuel avec les données saisies dans le formulaire.
+
+        Appelle le contrôleur pour valider et enregistrer les modifications.
+        """
         if self.profile is None:
             self.controlleur.edit_profile(None, None, None, None, None, None)
             return
@@ -253,6 +257,7 @@ class SettingsPage(ctk.CTkFrame):
         self.controlleur.edit_profile(name, age, height, weight, target_weight, sex)
 
     def delete_profile(self):
+        """Supprime le profil actuel et nettoie les champs du formulaire."""
         self.controlleur.delete_profile()
         self.nom_entry.delete(0, "end")
         self.age_entry.delete(0, "end")
@@ -261,6 +266,11 @@ class SettingsPage(ctk.CTkFrame):
         self.objectif_entry.delete(0, "end")
 
     def update_profile_details(self, profile):
+        """Met à jour l'affichage avec les détails du profil sélectionné.
+
+        Args:
+            profile: Le profil à afficher (ou None).
+        """
         self.profile = profile
 
         self.nom_entry.delete(0, "end")
@@ -285,8 +295,10 @@ class SettingsPage(ctk.CTkFrame):
             self.sexe_var.set("Homme")
 
     def change_mode(self):
+        """Change le mode d'affichage de l'application (clair/sombre)."""
         mode = self.mode_var.get()
         ctk.set_appearance_mode(mode)
 
     def change_theme(self):
+        """Change le thème de couleur de l'application."""
         theme = self.theme_var.get()
