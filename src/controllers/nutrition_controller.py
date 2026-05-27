@@ -16,12 +16,6 @@ class NutritionController:
         self.view = None  # La view sera assignée par la view elle-même
         self.current_profile = self.main_controller.current_profile
         self.current_date = datetime.now()
-        self.food_data = (
-            food_data.FoodData()
-        )  # Initialiser la base de données en mémoire
-        self.food_data.deserialize(
-            "src/data/data.json"
-        )  # Charger les données depuis le fichier JSON
         self.favorite_menus = (
             self.main_controller.settings.favorites_menus
         )  # Récupérer les menus favoris depuis les paramètres
@@ -35,9 +29,7 @@ class NutritionController:
         """
         self.current_profile = profile
 
-    def fill_food_list(
-        self, food_list
-    ):
+    def fill_food_list(self, food_list):
         """Remplit une liste avec tous les aliments disponibles.
 
         Args:
@@ -137,7 +129,9 @@ class NutritionController:
 
         # Ouvrir la fenêtre de quantités
         quantity_window = food_quantity.FoodQuantity(
-            selected_foods, parent=self.view.winfo_toplevel()
+            selected_foods,
+            parent=self.view.winfo_toplevel(),
+            main_controller=self.main_controller,
         )
         quantity_window.wait_window()  # Attendre que la fenêtre soit fermée
         quantities = quantity_window.quantities  # Récupérer les quantités saisies
@@ -221,8 +215,8 @@ class NutritionController:
     def toggle_favorite(self, menu: Menu.Menu):
         """Ajoute ou retire un menu des favoris et met à jour l'affichage.
 
-         Args:
-             menu: Le menu à ajouter/retirer des favoris.
+        Args:
+            menu: Le menu à ajouter/retirer des favoris.
         """
         # Chercher un favori avec la même composition
         matching_favorite = None
@@ -258,7 +252,7 @@ class NutritionController:
                 self.view.menus_container,
                 text="Aucun menu consommé aujourd'hui",
                 font=ctk.CTkFont(size=13, weight="bold"),
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors["text_secondary"],
             )
             no_menu_label.pack(padx=10, pady=20)
             # Mettre à jour les labels des macros à zéro
@@ -273,11 +267,15 @@ class NutritionController:
             menu_time = menu_obj.date
             # Créer un frame pour chaque menu
             menu_frame = ctk.CTkFrame(
-                self.view.menus_container, fg_color="#2A2A4A", corner_radius=8
+                self.view.menus_container,
+                fg_color=self.main_controller.theme_colors["frame_dark"],
+                corner_radius=8,
             )
             menu_frame.pack(fill="x", padx=5, pady=5)
 
-            header_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+            header_frame = ctk.CTkFrame(
+                menu_frame, fg_color=self.main_controller.theme_colors["frame_dark"]
+            )
             header_frame.pack(fill="x", padx=10, pady=(8, 0))
 
             # Afficher l'heure du menu
@@ -290,11 +288,16 @@ class NutritionController:
             time_label.pack(side="left")
 
             # Frame pour les boutons à droite (étoile au-dessus, supprimer en bas)
-            right_buttons_frame = ctk.CTkFrame(header_frame, fg_color="#2A2A4A")
+            right_buttons_frame = ctk.CTkFrame(
+                header_frame, fg_color=self.main_controller.theme_colors["frame_dark"]
+            )
             right_buttons_frame.pack(side="right", padx=5)
 
             # Étoile pour les favoris (cliquable)
-            is_favorite = menu_obj in self.favorite_menus
+            is_favorite = any(
+                menu_obj.has_same_composition(fav) for fav in self.favorite_menus
+            )
+
             star_text = "★" if is_favorite else "☆"
             star_button = ctk.CTkButton(
                 right_buttons_frame,
@@ -302,8 +305,8 @@ class NutritionController:
                 width=30,
                 height=24,
                 corner_radius=6,
-                fg_color="#2A2A4A",
-                hover_color="#3A3A4A",
+                fg_color=self.main_controller.theme_colors["frame_dark"],
+                hover_color=self.main_controller.theme_colors["button_hover"],
                 text_color="#FFD700",
                 font=ctk.CTkFont(size=16),
                 command=lambda m=menu_obj: self.toggle_favorite(m),
@@ -320,9 +323,9 @@ class NutritionController:
                 width=80,
                 height=24,
                 corner_radius=6,
-                fg_color="#D9534F",
-                hover_color="#C9302C",
-                text_color="#FFFFFF",
+                fg_color=self.main_controller.theme_colors["error"],
+                hover_color=self.main_controller.theme_colors["error_hover"],
+                text_color=self.main_controller.theme_colors["text"],
                 font=ctk.CTkFont(size=9),
                 command=lambda mt=menu_time: self.delete_menu(mt),
             )
@@ -364,7 +367,7 @@ class NutritionController:
         nap = int(self.current_profile.suggestCaracteristics["nap"])
         meals_per_day = int(self.current_profile.suggestCaracteristics["meals_per_day"])
         self.suggested_menus = self.current_profile.generate_menu(
-            self.food_data, nap, meals_per_day
+            self.main_controller.food_data, nap, meals_per_day
         )
         Suggestion_win = SuggestedMenuWindow(
             self.view.winfo_toplevel(), self.main_controller

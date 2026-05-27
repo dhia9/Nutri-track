@@ -5,29 +5,26 @@ import appdirs
 from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
-from src.models.profile import Profile
 from src.models.mesures_corporelles import MesuresCorporelles
+from src.models.profile import Profile
 from src.utils.json_serializable import JsonSerializable
 
 SETTINGS_PATH = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
 
 
 class Settings(JsonSerializable):
-    # Mapping des thèmes aux couleurs d'accentuation
-
     def __init__(self):
         self.profiles = []
         self.appearance_mode = "dark"  # Mode d'apparence (dark/light)
         self.theme = "#2DBA7F"  # Nom du thème (couleur)
-        
+        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
+
         os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
         # créer le fichier settings.json s'il n'existe pas déjà
         if not os.path.isfile(SETTINGS_PATH):
             self.serialize(
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
-
-        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
     def create_profile(self, name, age, height, weight, sex, target_weight):
         """Crée un nouveau profil et le sauvegarde.
@@ -186,7 +183,7 @@ class Settings(JsonSerializable):
             # s'il n'y a pas de fichier, réinitialiser les profils à une liste vide
             self.profiles.clear()
             print(f"Le fichier {path} n'existe pas")
-    
+
     def set_theme_color(self, theme: str):
         """Met à jour la couleur d'accentuation du thème"""
         self.theme = theme
@@ -194,16 +191,6 @@ class Settings(JsonSerializable):
 
     def set_appearance_mode(self, mode: str):
         """Met à jour le mode d'apparence (dark/light)"""
-        if mode in ['dark', 'light']:
+        if mode in ["dark", "light"]:
             self.appearance_mode = mode
             self.serialize(SETTINGS_PATH)
-
-    def to_dict(self):
-        """Sérialise l'objet Settings en dictionnaire"""
-        return {
-            "appearance_mode": self.appearance_mode,
-            "theme": self.theme,
-            "profiles": [profile.to_dict() for profile in self.profiles],
-            "favorites_menus": [menu.to_dict() for menu in self.favorites_menus],
-        }
-

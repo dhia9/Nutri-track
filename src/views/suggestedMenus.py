@@ -25,14 +25,14 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         title_label = ctk.CTkLabel(
             self,
             text=f"Menus Proposés",
-            font=ctk.CTkFont(size=24, weight="bold"),
+            font=ctk.CTkFont(size=26, weight="bold"),
         )
         title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(15, 10))
 
         # Frame scrollable pour afficher les menus
         self.scrollable_frame = ctk.CTkScrollableFrame(
             self,
-            fg_color="#35393D",
+            fg_color=self.main_controller.theme_colors.get("frame", "#35393D"),
             corner_radius=10,
         )
         self.scrollable_frame.grid(
@@ -58,8 +58,10 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             no_menu_label = ctk.CTkLabel(
                 self.scrollable_frame,
                 text="Aucun menu à proposer pour le moment",
-                font=ctk.CTkFont(size=13),
-                text_color="#A8AFB6",
+                font=ctk.CTkFont(size=12),
+                text_color=self.main_controller.theme_colors.get(
+                    "text_secondary", "#A8AFB6"
+                ),
             )
             no_menu_label.pack(padx=10, pady=20)
             return
@@ -71,14 +73,17 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         # Frame principal du menu
         menu_frame = ctk.CTkFrame(
             self.scrollable_frame,
-            fg_color="#2A2A4A",
+            fg_color=self.main_controller.theme_colors.get("frame_dark", "#2A2A4A"),
             corner_radius=10,
         )
         menu_frame.pack(fill="x", padx=5, pady=5)
         menu_frame.grid_columnconfigure(0, weight=1)
 
         # Liste des aliments
-        foods_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+        foods_frame = ctk.CTkFrame(
+            menu_frame,
+            fg_color=self.main_controller.theme_colors.get("frame_dark", "#2A2A4A"),
+        )
         foods_frame.pack(fill="x", padx=5, pady=5)
 
         # Afficher chaque aliment du menu
@@ -90,21 +95,22 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         add_button = ctk.CTkButton(
             menu_frame,
             text="Ajouter Menu",
-            fg_color="#4CAF50",
-            hover_color="#45A049",
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
             command=lambda m=menu: self.controller.add_suggested_menu(m, self),
         )
 
         add_button.pack(pady=10)
 
     def create_food_item(self, parent_frame, food_menu):
-        """Crée un item pour afficher un aliment avec ses macros.
-
-        Args:
-            parent_frame: Le frame parent où ajouter l'item.
-            food_menu: L'aliment à afficher.
-        """
-        item_frame = ctk.CTkFrame(parent_frame, fg_color=self.main_controller.theme_colors.get('frame', '#35393D'), corner_radius=6)
+        """Crée un item pour afficher un aliment avec ses macros"""
+        item_frame = ctk.CTkFrame(
+            parent_frame,
+            fg_color=self.main_controller.theme_colors.get("frame", "#35393D"),
+            corner_radius=6,
+        )
         item_frame.pack(fill="x", pady=3)
         item_frame.grid_columnconfigure(0, weight=1)
 
@@ -113,7 +119,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
             item_frame,
             text=f"• {food_menu.name} ({food_menu.quantity}g)",
             font=ctk.CTkFont(size=11, weight="bold"),
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors.get("text", "#FFFFFF"),
         )
         food_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(5, 2))
 
@@ -139,7 +145,9 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
                 item_frame,
                 text=macros_text,
                 font=ctk.CTkFont(size=9),
-                text_color="#A8AFB6",
+                text_color=self.main_controller.theme_colors.get(
+                    "text_secondary", "#A8AFB6"
+                ),
             )
             macros_label.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 5))
 
@@ -170,14 +178,20 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
                 )
 
         # Frame de résumé
-        summary_frame = ctk.CTkFrame(parent_frame, fg_color="#1A1A2E", corner_radius=6)
+        summary_frame = ctk.CTkFrame(
+            parent_frame,
+            fg_color=self.main_controller.theme_colors.get("frame_darker", "#1A1A2E"),
+            corner_radius=6,
+        )
         summary_frame.pack(fill="x", padx=15, pady=(5, 10))
 
         summary_text = f"Total: {int(total_calories)} kcal | Protéines: {int(total_proteins)}g | Glucides: {int(total_carbs)}g | Lipides: {int(total_fats)}g"
         summary_label = ctk.CTkLabel(
             summary_frame,
             text=summary_text,
-            font=ctk.CTkFont(size=10, weight="bold"),
-            text_color="#4CAF50",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=self.main_controller.theme_colors.get(
+                "primary_accent", "#4CAF50"
+            ),
         )
         summary_label.pack(padx=10, pady=8)

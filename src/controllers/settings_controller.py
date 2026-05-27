@@ -1,6 +1,5 @@
-import src.views.settings_page as settings_page
 import src.views.message_box as message_box
-from src.models.profile import Profile
+import src.views.settings_page as settings_page
 
 
 class SettingsController:
@@ -25,6 +24,7 @@ class SettingsController:
         if not profile:
             message_box.CTkMessageBox(
                 self.main_controller.view,
+                self.main_controller,
                 title="Erreur",
                 message="Aucun profil sélectionné.",
             )

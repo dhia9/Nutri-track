@@ -4,7 +4,6 @@ from datetime import datetime
 from src.models.menu import Menu
 
 
-
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         """Initialise la fenêtre des menus favoris.
@@ -22,7 +21,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         ctk.set_appearance_mode(self.main_controller.settings.appearance_mode)
 
         # Appliquer la couleur de fond cohérente avec le thème
-        self.configure(fg_color=self.main_controller.theme_colors['bg'])
+        self.configure(fg_color=self.main_controller.theme_colors["bg"])
 
         # titre et dimensions de la fenêtre
         self.title("Menus favoris")
@@ -46,7 +45,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         # Frame scrollable pour afficher les menus
         self.scrollable_frame = ctk.CTkScrollableFrame(
             self,
-            fg_color=self.main_controller.theme_colors['frame'],
+            fg_color=self.main_controller.theme_colors["frame"],
             corner_radius=10,
         )
         self.scrollable_frame.grid(
@@ -93,7 +92,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
                 self.scrollable_frame,
                 text="Aucun menu favori pour le moment",
                 font=ctk.CTkFont(size=12),
-                text_color=self.main_controller.theme_colors['text_secondary'],
+                text_color=self.main_controller.theme_colors["text_secondary"],
             )
             no_menu_label.pack(padx=10, pady=20)
             return
@@ -111,14 +110,16 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         # Frame principal du menu
         menu_frame = ctk.CTkFrame(
             self.scrollable_frame,
-            fg_color=self.main_controller.theme_colors['frame_dark'],
+            fg_color=self.main_controller.theme_colors["frame_dark"],
             corner_radius=10,
         )
         menu_frame.pack(fill="x", padx=5, pady=10)
         menu_frame.grid_columnconfigure(0, weight=1)
 
         # Header avec date/heure et bouton
-        header_frame = ctk.CTkFrame(menu_frame, fg_color=self.main_controller.theme_colors['frame_dark'])
+        header_frame = ctk.CTkFrame(
+            menu_frame, fg_color=self.main_controller.theme_colors["frame_dark"]
+        )
         header_frame.pack(fill="x", padx=15, pady=(10, 5))
         header_frame.grid_columnconfigure(1, weight=1)
 
@@ -129,9 +130,9 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             width=100,
             height=28,
             corner_radius=6,
-            fg_color=self.main_controller.theme_colors['error'],
-            hover_color=self.main_controller.theme_colors['error_hover'],
-            text_color=self.main_controller.theme_colors['text'],
+            fg_color=self.main_controller.theme_colors["error"],
+            hover_color=self.main_controller.theme_colors["error_hover"],
+            text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11, weight="bold"),
             command=lambda m=menu: self.on_delete_menu(m),
         )
@@ -145,8 +146,10 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             height=28,
             corner_radius=6,
             fg_color=self.main_controller.settings.theme,
-            hover_color=self.main_controller.darken_color(self.main_controller.settings.theme),
-            text_color=self.main_controller.theme_colors['text'],
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11, weight="bold"),
             command=lambda m=menu: self.on_add_menu(m),
         )
@@ -170,7 +173,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             parent_frame: Le frame parent où ajouter l'item.
             food_menu: L'aliment à afficher.
         """
-        item_frame = ctk.CTkFrame(parent_frame, fg_color=self.main_controller.theme_colors['frame'], corner_radius=6)
+        item_frame = ctk.CTkFrame(
+            parent_frame,
+            fg_color=self.main_controller.theme_colors["frame"],
+            corner_radius=6,
+        )
         item_frame.pack(fill="x", pady=3)
         item_frame.grid_columnconfigure(0, weight=1)
 
@@ -179,7 +186,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             item_frame,
             text=f"• {food_menu.name} ({food_menu.quantity}g)",
             font=ctk.CTkFont(size=11, weight="bold"),
-            text_color=self.main_controller.theme_colors['text'],
+            text_color=self.main_controller.theme_colors["text"],
         )
         food_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(5, 2))
 
@@ -205,7 +212,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
                 item_frame,
                 text=macros_text,
                 font=ctk.CTkFont(size=9),
-                text_color=self.main_controller.theme_colors['text_secondary'],
+                text_color=self.main_controller.theme_colors["text_secondary"],
             )
             macros_label.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 5))
 
@@ -241,7 +248,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
                 )
 
         # Frame de résumé
-        summary_frame = ctk.CTkFrame(parent_frame, fg_color=self.main_controller.theme_colors['frame_darker'], corner_radius=6)
+        summary_frame = ctk.CTkFrame(
+            parent_frame,
+            fg_color=self.main_controller.theme_colors["frame_darker"],
+            corner_radius=6,
+        )
         summary_frame.pack(fill="x", padx=15, pady=(5, 10))
 
         summary_text = f"📊 Total: {int(total_calories)} kcal | Protéines: {int(total_proteins)}g | Glucides: {int(total_carbs)}g | Lipides: {int(total_fats)}g"

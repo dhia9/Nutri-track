@@ -25,7 +25,15 @@ class CTkMessageBox(ctk.CTkToplevel):
         label = ctk.CTkLabel(self, text=message, wraplength=250)
         label.pack(pady=20, padx=20)
 
-        button = ctk.CTkButton(self, text=button_text, command=self.destroy)
+        button = ctk.CTkButton(
+            self,
+            text=button_text,
+            command=self.destroy,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+        )
         button.pack(pady=10)
 
         # Centrer la messagebox sur l'écran
