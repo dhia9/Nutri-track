@@ -1,4 +1,6 @@
 import random
+import os
+import appdirs
 from datetime import datetime, timedelta
 
 
@@ -6,6 +8,8 @@ class StatsController:
     def __init__(self, main_controller):
         self.main_controller = main_controller
         self.view = None
+        self.current_date = datetime.now()
+        self.mesures_corporelles = []
 
     def macros_by_date(self):
         """Calcule les macros consommés pour chaque jour.
@@ -143,3 +147,38 @@ class StatsController:
         for item in data:
             total += item[macro_type]
         return total / len(data) if data else 0
+
+    def update_date(self):
+        # Mettre a jour sur la vue la date affiché dans le label
+        self.view.date_label.configure(
+            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
+        )
+
+    def previous_day(self, event):
+        # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+        self.current_date -= timedelta(days=1)
+        self.update_date()
+
+    def next_day(self, event):
+        # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+        self.current_date += timedelta(days=1)
+        self.update_date()
+
+    def ajouter_mesure(self, mesure):
+        # Ajouter la mesure au profil courant
+        if self.main_controller.current_profile is not None:
+            self.main_controller.current_profile.mesures_corporelles.append(mesure)
+            # Sauvegarder les modifications dans le fichier JSON
+            settings_path = os.path.join(
+                appdirs.user_data_dir("Nutritrack"), "settings.json"
+            )
+            self.main_controller.settings.serialize(settings_path)
+        # Garder aussi en mémoire dans le contrôleur pour la vue actuelle
+        self.mesures_corporelles.append(mesure)
+        return self.mesures_corporelles
+
+    def get_mesures_corporelles(self):
+        """Retourne les mesures corporelles du profil courant"""
+        if self.main_controller.current_profile is not None:
+            return self.main_controller.current_profile.mesures_corporelles
+        return []

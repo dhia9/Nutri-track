@@ -6,6 +6,7 @@ from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
 from src.models.profile import Profile
+from src.models.mesures_corporelles import MesuresCorporelles
 from src.utils.json_serializable import JsonSerializable
 
 SETTINGS_PATH = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
@@ -126,6 +127,18 @@ class Settings(JsonSerializable):
 
                     # Ajouter le menu à la liste des habitudes alimentaires du profil
                     profile.eating_habits.append(menu)
+
+                # Charger les mesures corporelles si elles existent
+                if "mesures_corporelles" in data_profile:
+                    for data_mesure in data_profile["mesures_corporelles"]:
+                        mesure = MesuresCorporelles(
+                            data_mesure["date"],
+                            data_mesure["poids"],
+                            data_mesure["tour_de_taille"],
+                            data_mesure["tour_de_bras"],
+                            data_mesure["masse_grasse"],
+                        )
+                        profile.mesures_corporelles.append(mesure)
 
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)

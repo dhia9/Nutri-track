@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import datetime
 import math
 import matplotlib.dates as mdates
+from src.models.mesures_corporelles import MesuresCorporelles
 
 plt.rcParams.update(
     {
@@ -44,6 +45,8 @@ class StatsPage(ctk.CTkFrame):
         self.period = 7
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        self.table_rows = []
+
         self._build()
 
     def refresh(self):
@@ -58,6 +61,7 @@ class StatsPage(ctk.CTkFrame):
         self.history = self.controller.generate_history(30)
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        self.table_rows = []
         self._build()
 
     def _create_card(self, parent, title):
@@ -123,6 +127,7 @@ class StatsPage(ctk.CTkFrame):
         """
         data = self.macrosDated
         calories = data["calories"]
+        self._bodyanalys()
         self._chart_calories(calories)
         self._caracteristicsChart()
         # self._chart_salt_sugar(data)
@@ -278,3 +283,179 @@ class StatsPage(ctk.CTkFrame):
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m %H:%M"))
             fig.autofmt_xdate()
         self._embed(fig, card)
+
+    def _bodyanalys(self):
+
+        # création de la card
+        card = self._create_card(self.scroll, "Mesures corporelles")
+
+        # Ajout d'une frame sur la meme ligne
+        top_row = ctk.CTkFrame(card, fg_color="transparent")
+        top_row.pack(fill="x", padx=15, pady=10)
+
+        # Ajout de la date
+        date_frame = ctk.CTkFrame(top_row, fg_color="#000000", corner_radius=10)
+        date_frame.pack(side="right")
+
+        self.button_previous = ctk.CTkButton(
+            date_frame,
+            text="◀",
+            width=30,
+            fg_color="#000000",
+            font=ctk.CTkFont(size=14),
+            hover_color="#F1F1F1",
+            corner_radius=10,
+        )
+        self.button_previous.pack(side="left", padx=6, pady=4)
+        self.button_previous.bind("<Button-1>", self.controller.previous_day)
+
+        self.date_label = ctk.CTkLabel(
+            date_frame,
+            text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),
+            font=ctk.CTkFont(size=13, weight="bold"),
+            corner_radius=10,
+        )
+        self.date_label.pack(side="left", padx=18, pady=4)
+
+        self.button_next = ctk.CTkButton(
+            date_frame,
+            text="▶",
+            width=30,
+            fg_color="#0F0A0A",
+            font=ctk.CTkFont(size=14),
+            hover_color="#F1F1F1",
+            corner_radius=10,
+        )
+        self.button_next.pack(side="left", padx=6, pady=4)
+        self.button_next.bind("<Button-1>", self.controller.next_day)
+
+        # Boutton ajouter
+        boutton_ajouter = ctk.CTkButton(top_row, text="Ajouter une mesure corporelle")
+        boutton_ajouter.pack(side="left")
+        boutton_ajouter.bind("<Button-1>", self.ajouter_mesure)
+
+        # Frame pour les labels
+        labels_frame = ctk.CTkFrame(card, fg_color="transparent")
+        labels_frame.pack(fill="x", padx=15, pady=(10, 0))
+
+        poids_label = ctk.CTkLabel(labels_frame, text="Poids en kg")
+        poids_label.pack(side="left", expand=True)
+
+        taille_label = ctk.CTkLabel(labels_frame, text="Tour de taille en cm")
+        taille_label.pack(side="left", expand=True)
+
+        bras_label = ctk.CTkLabel(labels_frame, text="Tour de bras en cm")
+        bras_label.pack(side="left", expand=True)
+
+        graisse_label = ctk.CTkLabel(labels_frame, text="Masse grasse en %")
+        graisse_label.pack(side="left", expand=True)
+
+        # Frame pour les entries
+        entries_frame = ctk.CTkFrame(card, fg_color="transparent")
+        entries_frame = ctk.CTkFrame(card, fg_color="transparent")
+        entries_frame.pack(fill="x", padx=15, pady=(5, 15))
+
+        self.poids_entry = ctk.CTkEntry(entries_frame, placeholder_text="Poids en kg")
+        self.poids_entry.pack(side="left", expand=True, padx=5)
+
+        self.taille_entry = ctk.CTkEntry(
+            entries_frame, placeholder_text="Tour de taille en cm"
+        )
+        self.taille_entry.pack(side="left", expand=True, padx=5)
+
+        self.bras_entry = ctk.CTkEntry(
+            entries_frame, placeholder_text="Tour de bras en cm"
+        )
+        self.bras_entry.pack(side="left", expand=True, padx=5)
+
+        self.graisse_entry = ctk.CTkEntry(
+            entries_frame, placeholder_text="Masse grasse en %"
+        )
+        self.graisse_entry.pack(side="left", expand=True, padx=5)
+
+        # Label historique
+        ctk.CTkLabel(
+            card,
+            text="Historique des mesures corporelles",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#F1F1F1",
+        ).pack(anchor="w")
+
+        # Tableau de l'historique
+        self.tableau_frame = ctk.CTkFrame(card, fg_color="#000000", corner_radius=10)
+        self.tableau_frame.pack(fill="x", padx=15, pady=10)
+        self.ligne_tableau = 1
+        headers = [
+            "Date",
+            "Poids (kg)",
+            "Tour de taille (cm)",
+            "Tour de bras (cm)",
+            "Masse grasse (%)",
+        ]
+        for col, header in enumerate(headers):
+            label = ctk.CTkLabel(
+                self.tableau_frame, text=header, font=ctk.CTkFont(weight="bold")
+            )
+            label.grid(row=0, column=col, padx=35, pady=5)
+
+        # Charger et afficher les mesures existantes depuis le profil
+        mesures_existantes = self.controller.get_mesures_corporelles()
+        # Afficher les mesures en ordre inverse (plus récentes en haut)
+        for mesure in reversed(mesures_existantes):
+            self.ajouter_ligne_mesure(mesure)
+
+    def ajouter_mesure(self, event):
+        mesure = MesuresCorporelles(
+            self.controller.current_date.strftime("%Y-%m-%d"),
+            self.poids_entry.get(),
+            self.taille_entry.get(),
+            self.bras_entry.get(),
+            self.graisse_entry.get(),
+        )
+
+        self.controller.ajouter_mesure(mesure)
+        self.ajouter_ligne_mesure(mesure)
+
+    def ajouter_ligne_mesure(self, mesure):
+        values = [
+            mesure.date,
+            mesure.poids,
+            mesure.tour_de_taille,
+            mesure.tour_de_bras,
+            mesure.masse_grasse,
+        ]
+        mesure_date = mesure.date
+
+        # Trouver la bonne position pour insérer la mesure (ordre décroissant par date)
+        insert_position = 0
+        for i, row in enumerate(self.table_rows):
+            # Récupérer la date de la ligne existante (première cellule)
+            row_date_label = row[0]
+            row_date = row_date_label.cget("text")
+
+            # Si la nouvelle date est plus récente, insérer avant cette ligne
+            if mesure_date > row_date:
+                insert_position = i
+                break
+            insert_position = i + 1
+
+        # Décaler les lignes après la position d'insertion
+        for row in self.table_rows[insert_position:]:
+            for widget in row:
+                current_info = widget.grid_info()
+                widget.grid_configure(row=current_info["row"] + 1)
+
+        # Créer la nouvelle ligne à la bonne position
+        row_widget = []
+        for col, value in enumerate(values):
+            label = ctk.CTkLabel(self.tableau_frame, text=value)
+            label.grid(row=insert_position + 1, column=col, padx=35, pady=5)
+            row_widget.append(label)
+
+        self.table_rows.insert(insert_position, row_widget)
+
+        # Supprimer la ligne la plus ancienne si on dépasse 10 lignes
+        if len(self.table_rows) > 10:
+            for widget in self.table_rows[-1]:
+                widget.destroy()
+            self.table_rows.pop()

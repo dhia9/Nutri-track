@@ -1,7 +1,5 @@
 import customtkinter as ctk
 
-from models import profile
-
 
 class HomePage(ctk.CTkFrame):
     PROFILE_BTN_DEFAULT = "#2DBA7F"
