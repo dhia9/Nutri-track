@@ -153,7 +153,6 @@ class StatsController:
         self.view.date_label.configure(
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
-        
 
     def previous_day(self, event):
         # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
@@ -170,7 +169,9 @@ class StatsController:
         if self.main_controller.current_profile is not None:
             self.main_controller.current_profile.mesures_corporelles.append(mesure)
             # Sauvegarder les modifications dans le fichier JSON
-            settings_path = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
+            settings_path = os.path.join(
+                appdirs.user_data_dir("Nutritrack"), "settings.json"
+            )
             self.main_controller.settings.serialize(settings_path)
         # Garder aussi en mémoire dans le contrôleur pour la vue actuelle
         self.mesures_corporelles.append(mesure)
