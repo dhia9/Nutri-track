@@ -87,7 +87,7 @@ class Settings(JsonSerializable):
             # Lire le fichier json
             with open(path, "r", encoding="utf-8") as file:
                 data = json.load(file)
-            print(data)
+            
             # Pour chaque profil
             for data_profile in data["profiles"]:
                 # Extraire les propriétés du profil
