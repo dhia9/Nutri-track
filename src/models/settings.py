@@ -26,7 +26,7 @@ class Settings(JsonSerializable):
 
     def create_profile(self, name, age, height, weight, sex, target_weight):
         """Crée un nouveau profil et le sauvegarde.
-        
+
         Args:
             name: Nom du profil.
             age: Âge du profil.
@@ -42,7 +42,7 @@ class Settings(JsonSerializable):
 
     def update_profile(self, profile, name, age, height, weight, sex, target_weight):
         """Met à jour les données d'un profil et les sauvegarde.
-        
+
         Args:
             profile: Le profil à mettre à jour.
             name: Nouveau nom.
@@ -63,7 +63,7 @@ class Settings(JsonSerializable):
 
     def delete_profile(self, name):
         """Supprime un profil par son nom et sauvegarde.
-        
+
         Args:
             name: Nom du profil à supprimer.
         """
@@ -76,9 +76,9 @@ class Settings(JsonSerializable):
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
         """Désérialise les données depuis un fichier JSON.
-        
+
         Charge tous les profils, leurs menus et les menus favoris.
-        
+
         Args:
             path: Chemin du fichier JSON.
         """

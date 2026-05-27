@@ -8,7 +8,7 @@ from src.utils.json_serializable import JsonSerializable
 class FoodData(JsonSerializable):
     def __init__(self, content: list = None):
         """Initialise la base de données d'aliments.
-        
+
         Args:
             content: Liste initiale des aliments (optionnel).
         """
@@ -18,7 +18,7 @@ class FoodData(JsonSerializable):
 
     def deserialize(self, path):
         """Désérialise les aliments depuis un fichier JSON.
-        
+
         Args:
             path: Chemin du fichier JSON contenant les aliments.
         """

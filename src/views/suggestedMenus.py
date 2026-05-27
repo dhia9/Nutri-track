@@ -4,7 +4,7 @@ import customtkinter as ctk
 class SuggestedMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         """Initialise la fenêtre des menus suggérés.
-        
+
         Args:
             parent: Widget parent (fenêtre principale).
             main_controller: Le contrôleur principal de l'application.
@@ -74,7 +74,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
 
     def create_menu_frame(self, menu):
         """Crée un frame pour afficher un menu avec sa composition.
-        
+
         Args:
             menu: Le menu à afficher.
         """
@@ -109,7 +109,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
 
     def create_food_item(self, parent_frame, food_menu):
         """Crée un item pour afficher un aliment avec ses macros.
-        
+
         Args:
             parent_frame: Le frame parent où ajouter l'item.
             food_menu: L'aliment à afficher.
@@ -155,7 +155,7 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
 
     def _create_macros_summary(self, parent_frame, menu):
         """Affiche le résumé des macros totales du menu.
-        
+
         Args:
             parent_frame: Le frame parent où ajouter le résumé.
             menu: Le menu dont afficher le résumé.

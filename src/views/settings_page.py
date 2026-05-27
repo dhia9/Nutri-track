@@ -226,7 +226,7 @@ class SettingsPage(ctk.CTkFrame):
 
     def edit_profile(self):
         """Modifie le profil actuel avec les données saisies dans le formulaire.
-        
+
         Appelle le contrôleur pour valider et enregistrer les modifications.
         """
         if self.profile is None:
@@ -267,7 +267,7 @@ class SettingsPage(ctk.CTkFrame):
 
     def update_profile_details(self, profile):
         """Met à jour l'affichage avec les détails du profil sélectionné.
-        
+
         Args:
             profile: Le profil à afficher (ou None).
         """

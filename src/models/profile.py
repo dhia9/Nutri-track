@@ -30,7 +30,7 @@ class Profile(Model):
 
     def get_imc(self):
         """Calcule l'Indice de Masse Corporelle (IMC) du profil.
-        
+
         Returns:
             L'IMC calculé ou 0 si la taille est 0.
         """

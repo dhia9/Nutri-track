@@ -10,9 +10,9 @@ class SettingsController:
 
     def edit_profile(self, name, age, height, weight, target_weight, sex):
         """Modifie les informations du profil actuellement sélectionné.
-        
+
         Valide les données et met à jour le profil.
-        
+
         Args:
             name: Nouveau nom du profil.
             age: Nouvel âge.

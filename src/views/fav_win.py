@@ -6,7 +6,7 @@ from src.models.menu import Menu
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         """Initialise la fenêtre des menus favoris.
-        
+
         Args:
             parent: Widget parent (fenêtre principale).
             main_controller: Le contrôleur principal de l'application.
@@ -76,7 +76,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def create_menu_frame(self, menu):
         """Crée un frame pour afficher un menu avec sa composition.
-        
+
         Args:
             menu: Le menu à afficher.
         """
@@ -137,7 +137,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def create_food_item(self, parent_frame, food_menu):
         """Crée un item pour afficher un aliment avec ses macros.
-        
+
         Args:
             parent_frame: Le frame parent où ajouter l'item.
             food_menu: L'aliment à afficher.
@@ -183,7 +183,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def _create_macros_summary(self, parent_frame, menu):
         """Affiche le résumé des macros totales du menu.
-        
+
         Args:
             parent_frame: Le frame parent où ajouter le résumé.
             menu: Le menu dont afficher le résumé.
@@ -227,9 +227,9 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def on_add_menu(self, menu):
         """Callback pour le bouton Ajouter.
-        
+
         Ajoute le menu favori aux habitudes alimentaires du profil à la date courante.
-        
+
         Args:
             menu: Le menu à ajouter.
         """
@@ -248,9 +248,9 @@ class FavorieMenuWindow(ctk.CTkToplevel):
 
     def on_delete_menu(self, menu):
         """Callback pour le bouton Supprimer.
-        
+
         Supprime le menu des favoris et rafraîchit l'affichage.
-        
+
         Args:
             menu: Le menu à supprimer.
         """

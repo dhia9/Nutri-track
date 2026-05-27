@@ -53,7 +53,7 @@ class MainController:
 
     def set_current_profile(self, profile):
         """Définit le profil actuel et met à jour l'interface.
-        
+
         Args:
             profile: Le profil Profile à définir.
         """
@@ -68,7 +68,7 @@ class MainController:
 
     def update_nav_buttons(self):
         """Met à jour l'état des boutons de navigation en fonction du profil sélectionné.
-        
+
         Active/désactive les boutons pour les pages nécessitant un profil.
         """
         if self.view is None:
@@ -87,7 +87,7 @@ class MainController:
 
     def enable_profile_pages(self):
         """Active et affiche les pages de profil.
-        
+
         Construit les pages si nécessaire et affiche la page courante.
         """
         if self.view is None:

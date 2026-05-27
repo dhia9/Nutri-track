@@ -4,7 +4,7 @@ import customtkinter as ctk
 class FoodQuantity(ctk.CTkToplevel):
     def __init__(self, food_list, parent=None):
         """Initialise la fenêtre de saisie des quantités d'aliments.
-        
+
         Args:
             food_list: Liste des noms d'aliments pour lesquels saisir les quantités.
             parent: Widget parent (optionnel).
@@ -111,7 +111,7 @@ class FoodQuantity(ctk.CTkToplevel):
 
     def get_quantities(self):
         """Retourne un dictionnaire avec les quantités saisies.
-        
+
         Returns:
             Dictionnaire {nom_aliment: quantité}.
         """
@@ -126,7 +126,7 @@ class FoodQuantity(ctk.CTkToplevel):
 
     def on_submit(self):
         """Valider et fermer la fenêtre.
-        
+
         Enregistre les quantités saisies et ferme la fenêtre.
         """
         self.quantities = (

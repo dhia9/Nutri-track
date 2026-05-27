@@ -30,7 +30,7 @@ class NutritionController:
 
     def set_current_profile(self, profile):
         """Définit le profil actuel.
-        
+
         Args:
             profile: Le profil à définir comme profil actuel.
         """
@@ -38,7 +38,7 @@ class NutritionController:
 
     def fill_food_list(self, food_list):
         """Remplit une liste avec tous les aliments disponibles.
-        
+
         Args:
             food_list: La liste à remplir avec les noms des aliments.
         """
@@ -47,10 +47,10 @@ class NutritionController:
 
     def search_foods(self, query: str):
         """Filtre les aliments selon la requête de recherche.
-        
+
         La recherche est insensible à la casse. Affiche/masque les aliments
         qui correspondent dans l'interface.
-        
+
         Args:
             query: La chaîne de recherche.
         """
@@ -79,7 +79,7 @@ class NutritionController:
 
     def previous_day(self, event):
         """Affiche le jour précédent et met à jour l'affichage.
-        
+
         Args:
             event: L'événement lié au clic du bouton.
         """
@@ -89,7 +89,7 @@ class NutritionController:
 
     def next_day(self, event):
         """Affiche le jour suivant et met à jour l'affichage.
-        
+
         Args:
             event: L'événement lié au clic du bouton.
         """
@@ -99,10 +99,10 @@ class NutritionController:
 
     def food_by_name(self, name):
         """Retourne un objet Food de la base de données selon son nom.
-        
+
         Args:
             name: Le nom de l'aliment.
-            
+
         Returns:
             L'objet Food correspondant ou None si non trouvé.
         """
@@ -113,7 +113,7 @@ class NutritionController:
 
     def add_menu(self):
         """Ouvre une fenetre pour ajouter un aliment avec sa quantité.
-        
+
         Sélectionne les aliments cochés, ouvre une fenêtre de quantités,
         et ajoute le menu aux habitudes alimentaires du profil.
         """
@@ -175,10 +175,10 @@ class NutritionController:
 
     def menus_today(self, date: datetime.date):
         """Retourne les menus consommés par l'utilisateur à un jour donné.
-        
+
         Args:
             date: La date pour laquelle récupérer les menus.
-            
+
         Returns:
             Liste des menus du jour spécifié.
         """
@@ -194,10 +194,10 @@ class NutritionController:
 
     def macros_today(self, date: datetime.date):
         """Retourne les macros consommés par l'utilisateur à un jour donné.
-        
+
         Args:
             date: La date pour laquelle récupérer les macros.
-            
+
         Returns:
             Dictionnaire avec les totaux de calories, protéines, glucides et lipides.
         """
@@ -217,7 +217,7 @@ class NutritionController:
 
     def delete_menu(self, menu_time: str):
         """Supprime un menu par sa date (timestamp) et met à jour l'affichage.
-        
+
         Args:
             menu_time: La date/heure du menu à supprimer.
         """
@@ -235,7 +235,7 @@ class NutritionController:
 
     def toggle_favorite(self, menu: Menu.Menu):
         """Ajoute ou retire un menu des favoris et met à jour l'affichage.
-        
+
         Args:
             menu: Le menu à ajouter/retirer des favoris.
         """
@@ -252,7 +252,7 @@ class NutritionController:
 
     def display_menus(self):
         """Affiche les menus consommés pour la date courante.
-        
+
         Nettoie et recrée l'affichage des menus, avec les totaux de macros.
         """
         # Nettoyer la scrollable frame
@@ -367,7 +367,7 @@ class NutritionController:
 
     def show_favorite_menus(self, event):
         """Affiche la fenêtre des menus favoris.
-        
+
         Args:
             event: L'événement lié au clic du bouton.
         """
@@ -376,9 +376,9 @@ class NutritionController:
 
     def show_Suggested_menus(self, event=None):
         """Affiche la fenêtre des menus proposés par l'algorithme.
-        
+
         Génére un menu suggéré en fonction de l'activité et du nombre de repas.
-        
+
         Args:
             event: L'événement lié au clic (optionnel).
         """
@@ -394,7 +394,7 @@ class NutritionController:
 
     def mealPerD_change(self, event=None):
         """Met à jour le nombre de repas par jour.
-        
+
         Args:
             event: L'événement lié au changement du widget (optionnel).
         """
@@ -404,7 +404,7 @@ class NutritionController:
 
     def nap_change(self, event=None):
         """Met à jour le facteur d'activité physique (NAP).
-        
+
         Args:
             event: L'événement lié au changement du widget (optionnel).
         """
@@ -412,9 +412,9 @@ class NutritionController:
 
     def add_suggested_menu(self, menu, window):
         """Ajoute un menu suggéré à la date actuelle.
-        
+
         Enregistre le menu dans les habitudes alimentaires et ferme la fenêtre.
-        
+
         Args:
             menu: Le menu suggéré à ajouter.
             window: La fenêtre de suggéstion à fermer.

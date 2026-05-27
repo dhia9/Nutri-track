@@ -153,11 +153,11 @@ class MainPage(ctk.CTk):
 
     def create_nav_button(self, parent, page_name):
         """Crée un bouton de navigation stylisé.
-        
+
         Args:
             parent: Widget parent où placer le bouton.
             page_name: Nom de la page associée au bouton.
-            
+
         Returns:
             Un bouton CTkButton stylisé pour la navigation.
         """
@@ -179,7 +179,7 @@ class MainPage(ctk.CTk):
 
     def create_page_container(self):
         """Crée la zone de droite qui affichera les autres pages.
-        
+
         Configure le frame principal pour afficher le contenu des pages avec
         une grille responsive.
         """
@@ -194,7 +194,7 @@ class MainPage(ctk.CTk):
 
     def build_profile_pages(self):
         """Construit les pages liées aux profils (Nutrition et Statistiques).
-        
+
         Returns:
             Dictionnaire contenant les pages avec leurs noms comme clés.
         """
@@ -214,7 +214,7 @@ class MainPage(ctk.CTk):
 
     def reload_profile_pages(self):
         """Recharge les pages de profil en les détruisant et en les recréant.
-        
+
         Utilisé quand le profil actuel change pour rafraîchir les données affichées.
         """
         if self.nutrition_page is not None and self.nutrition_page.winfo_exists():

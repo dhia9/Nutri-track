@@ -11,10 +11,10 @@ from src.models.profile import Profile
 
 def make_menu(items: list[tuple[str, float, float, float, float, float]]) -> Menu:
     """Crée un Menu pré-rempli pour simuler un repas déjà enregistré.
-    
+
     Args:
         items: Liste de tuples (nom, masse_g, proteine/100g, calorie/100g, fat/100g, carb/100g).
-        
+
     Returns:
         Un Menu créé avec les aliments spécifiés.
     """
@@ -28,7 +28,7 @@ def make_menu(items: list[tuple[str, float, float, float, float, float]]) -> Men
 
 def print_menu(menu: Menu, label: str = ""):
     """Affiche le contenu d'un menu avec ses macros.
-    
+
     Args:
         menu: Le menu à afficher.
         label: Label optionnel pour identifier le menu.
@@ -58,7 +58,7 @@ def print_menu(menu: Menu, label: str = ""):
 
 def print_daily_summary(profile: Profile, nap: float):
     """Affiche un résumé des macros consommés vs objectifs pour la journée.
-    
+
     Args:
         profile: Le profil pour lequel afficher le bilan.
         nap: Le facteur d'activité physique.
@@ -94,10 +94,10 @@ def run_scenario(
     description: str,
 ):
     """Exécute un scénario de génération de menu.
-    
+
     Génére un menu pour un profil donné avec les conditions spécifiées
     et affiche les résultats.
-    
+
     Args:
         food_data: Base de données des aliments.
         profile: Le profil pour lequel générer un menu.
@@ -134,7 +134,7 @@ def run_scenario(
 
 def test_alice_perte_premier_repas(food_data):
     """Fonction de test : Femme en perte de poids avec aucun repas enregistré, génére le petit-déjeuner.
-    
+
     Args:
         food_data: Base de données des aliments.
     """
@@ -150,7 +150,7 @@ def test_alice_perte_premier_repas(food_data):
 
 def test_bob_masse_apres_dejeuner(food_data):
     """Fonction de test : Homme en prise de masse avec déjeuner déjà fait, génére le dîner.
-    
+
     Args:
         food_data: Base de données des aliments.
     """
@@ -173,7 +173,7 @@ def test_bob_masse_apres_dejeuner(food_data):
 
 def test_clara_maintien_collation(food_data):
     """Fonction de test : Femme en maintien avec 3 repas sur 5 déjà faits, génére une collation.
-    
+
     Args:
         food_data: Base de données des aliments.
     """
@@ -208,7 +208,7 @@ def test_clara_maintien_collation(food_data):
 
 def test_david_perte_journee_complete(food_data):
     """Fonction de test : Homme en perte de poids et génére les 3 repas un par un.
-    
+
     Args:
         food_data: Base de données des aliments.
     """
@@ -230,7 +230,7 @@ def test_david_perte_journee_complete(food_data):
 
 def test_emma_sedentaire_repas_unique(food_data):
     """Fonction de test : Femme sédentaire avec 1 seul repas par jour.
-    
+
     Args:
         food_data: Base de données des aliments.
     """

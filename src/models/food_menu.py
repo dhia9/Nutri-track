@@ -5,7 +5,7 @@ from src.models.model import Model
 class FoodMenu(Food, Model):
     def __init__(self, quantity, name, macros=None):
         """Initialise un aliment avec sa quantité et ses macros.
-        
+
         Args:
             quantity: Quantité de l'aliment en grammes.
             name: Nom de l'aliment.

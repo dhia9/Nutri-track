@@ -9,7 +9,7 @@ class StatsController:
 
     def macros_by_date(self):
         """Calcule les macros consommés pour chaque jour.
-        
+
         Returns:
             Dictionnaire with calories, carbohydrate, proteins, and fats by date.
         """
@@ -38,7 +38,7 @@ class StatsController:
 
     def menus_all_dates(self):
         """Retourne tous les menus de tous les jours du profil actuel.
-        
+
         Returns:
             Dictionnaire avec les menus indexés par date.
         """
@@ -51,10 +51,10 @@ class StatsController:
 
     def menus_today(self, date: datetime.date):
         """Retourne les menus d'un jour spécifique.
-        
+
         Args:
             date: La date pour laquelle récupérer les menus.
-            
+
         Returns:
             Dictionnaire des menus pour cette date.
         """
@@ -71,10 +71,10 @@ class StatsController:
 
     def macros_today(self, date: datetime.date):
         """Retourne les macros consommés par l'utilisateur à un jour donné.
-        
+
         Args:
             date: La date pour laquelle récupérer les macros.
-            
+
         Returns:
             Dictionnaire with calories, carbohydrate, proteins, and fats totals.
         """
@@ -95,7 +95,7 @@ class StatsController:
 
     def get_current_profile(self):
         """Retourne le profil actuellement sélectionné.
-        
+
         Returns:
             Le profil Profile actuel ou None.
         """
@@ -103,12 +103,12 @@ class StatsController:
 
     def generate_history(self, days=30):
         """Génére un historique de données sur un nombre de jours.
-        
+
         Returns des données aléatoires pour les tests.
-        
+
         Args:
             days: Le nombre de jours d'historique à générer.
-            
+
         Returns:
             Liste de dictionnaires contenant les données par jour.
         """
@@ -131,11 +131,11 @@ class StatsController:
 
     def mesure_avg(self, data, macro_type):
         """Calcule la moyenne d'un type de macro pour une liste de données.
-        
+
         Args:
             data: Liste de dictionnaires de données.
             macro_type: La clé du macro à moyenner.
-            
+
         Returns:
             La moyenne du macro_type ou 0 si aucune donnée.
         """
