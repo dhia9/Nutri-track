@@ -1,4 +1,7 @@
-class MesuresCorporelles:
+from src.models.model import Model
+
+
+class MesuresCorporelles(Model):
     def __init__(self, date, poids, tour_de_taille, tour_de_bras, masse_grasse):
         self.poids = poids
         self.date = date
