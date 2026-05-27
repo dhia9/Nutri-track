@@ -404,20 +404,28 @@ class StatsPage(ctk.CTkFrame):
         for mesure in reversed(mesures_existantes):
             self.ajouter_ligne_mesure(mesure)
 
-       
-
-    
-    def ajouter_mesure(self,event):
-        mesure = MesuresCorporelles(self.controller.current_date.strftime("%Y-%m-%d") , self.poids_entry.get(), self.taille_entry.get() , self.bras_entry.get(), self.graisse_entry.get())
-    
+    def ajouter_mesure(self, event):
+        mesure = MesuresCorporelles(
+            self.controller.current_date.strftime("%Y-%m-%d"),
+            self.poids_entry.get(),
+            self.taille_entry.get(),
+            self.bras_entry.get(),
+            self.graisse_entry.get(),
+        )
 
         self.controller.ajouter_mesure(mesure)
         self.ajouter_ligne_mesure(mesure)
 
     def ajouter_ligne_mesure(self, mesure):
-        values = [mesure.date, mesure.poids, mesure.tour_de_taille, mesure.tour_de_bras, mesure.masse_grasse]
+        values = [
+            mesure.date,
+            mesure.poids,
+            mesure.tour_de_taille,
+            mesure.tour_de_bras,
+            mesure.masse_grasse,
+        ]
         mesure_date = mesure.date
-        
+
         # Trouver la bonne position pour insérer la mesure (ordre décroissant par date)
         insert_position = 0
         for i, row in enumerate(self.table_rows):

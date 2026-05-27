@@ -129,14 +129,14 @@ class Settings(JsonSerializable):
                     profile.eating_habits.append(menu)
 
                 # Charger les mesures corporelles si elles existent
-                if "mesures_corporelles" in data_profile: 
+                if "mesures_corporelles" in data_profile:
                     for data_mesure in data_profile["mesures_corporelles"]:
                         mesure = MesuresCorporelles(
                             data_mesure["date"],
                             data_mesure["poids"],
                             data_mesure["taille"],
                             data_mesure["bras"],
-                            data_mesure["graisse"]
+                            data_mesure["graisse"],
                         )
                         profile.mesures_corporelles.append(mesure)
 
