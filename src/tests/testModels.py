@@ -109,6 +109,31 @@ if "165" in s and "25" in s:
 else:
     fail("__str__ ne contient pas les valeurs attendues", s)
 
+# ─────────────────────────────────────────────
+# SECTION 3 — Profile.get_imc
+# ─────────────────────────────────────────────
+
+section("3. Profile — calcul de l'IMC")
+
+print("\n  IMC = poids (kg) / taille² (m)\n")
+
+p = Profile("Test", age=30, height=1.75, weight=70, sex="Homme", target_weight=70)
+imc = p.get_imc()
+print(f"  Profil : 70 kg / 1.75 m → IMC attendu ≈ 22.86")
+assert_approx(imc, 22.86, "IMC calculé ≈ 22.86", tol=0.01)
+
+p2 = Profile("Test2", age=25, height=1.60, weight=55, sex="Femme", target_weight=55)
+imc2 = p2.get_imc()
+print(f"\n  Profil : 55 kg / 1.60 m → IMC attendu ≈ 21.48")
+assert_approx(imc2, 21.48, "IMC calculé ≈ 21.48", tol=0.01)
+
+print("\n  Cas limite : taille = 0 → retourne 0 (pas de division par zéro)")
+p_zero = Profile("Zero", age=30, height=0, weight=70, sex="Homme", target_weight=70)
+if p_zero.get_imc() == 0:
+    ok("Taille = 0 → IMC = 0 (division par zéro évitée)")
+else:
+    fail("Taille = 0 devrait retourner IMC = 0")
+
 # Résumé final
 
 
