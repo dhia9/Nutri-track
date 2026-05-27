@@ -144,7 +144,15 @@ class MainPage(ctk.CTk):
         footer_label.grid(row=5, column=0, sticky="sw", padx=20, pady=(0, 20))
 
     def create_nav_button(self, parent, page_name):
-        """Crée un bouton de navigation stylisé."""
+        """Crée un bouton de navigation stylisé.
+
+        Args:
+            parent: Widget parent où placer le bouton.
+            page_name: Nom de la page associée au bouton.
+
+        Returns:
+            Un bouton CTkButton stylisé pour la navigation.
+        """
         btn = ctk.CTkButton(
             parent,
             text=page_name,
@@ -162,7 +170,11 @@ class MainPage(ctk.CTk):
         return btn
 
     def create_page_container(self):
-        """Crée la zone de droite qui affichera les autres pages."""
+        """Crée la zone de droite qui affichera les autres pages.
+
+        Configure le frame principal pour afficher le contenu des pages avec
+        une grille responsive.
+        """
         self.pages_container = ctk.CTkFrame(
             self,
             fg_color=self.controller.theme_colors['content'],
@@ -173,6 +185,11 @@ class MainPage(ctk.CTk):
         self.pages_container.grid_rowconfigure(0, weight=1)
 
     def build_profile_pages(self):
+        """Construit les pages liées aux profils (Nutrition et Statistiques).
+
+        Returns:
+            Dictionnaire contenant les pages avec leurs noms comme clés.
+        """
         if self.nutrition_page is None:
             self.nutrition_page = NutritionPage(
                 self.pages_container, main_controller=self.controller
@@ -188,6 +205,10 @@ class MainPage(ctk.CTk):
         }
 
     def reload_profile_pages(self):
+        """Recharge les pages de profil en les détruisant et en les recréant.
+
+        Utilisé quand le profil actuel change pour rafraîchir les données affichées.
+        """
         if self.nutrition_page is not None and self.nutrition_page.winfo_exists():
             self.nutrition_page.destroy()
         if self.stats_page is not None and self.stats_page.winfo_exists():

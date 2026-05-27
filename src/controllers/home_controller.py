@@ -11,24 +11,51 @@ class HomeController:
         self.main_controller = main_controller
 
     def existing_name_profile(self, name):
+        """Vérifie si un profil avec ce nom existe déjà.
+
+        Args:
+            name: Le nom du profil à vérifier.
+
+        Returns:
+            True si le profil existe, False sinon.
+        """
         for profile in self.main_controller.settings.profiles:
             if profile.name == name:
                 return True
         return False
 
     def validate_int(self, char):
-        """Accepte uniquement les chiffres entiers"""
+        """Accepte uniquement les chiffres entiers.
+
+        Args:
+            char: Le caractère saisi.
+
+        Returns:
+            True si le caractère est valide (vide ou chiffre), False sinon.
+        """
         if char == "":
             return True
         return char.isdigit()
 
     def validate_float(self, char):
-        """Accepte uniquement les chiffres et virgule/point à la saisie"""
+        """Accepte uniquement les chiffres et virgule/point à la saisie.
+
+        Args:
+            char: Le caractère saisi.
+
+        Returns:
+            True si le caractère est valide, False sinon.
+        """
         if char == "":
             return True
         return char.isdigit() or char == "."
 
     def create_profile(self):
+        """Crée un nouveau profil avec les données du formulaire.
+
+        Valide les données saisies, vérifie l'unicité du nom, et crée
+        le profil dans les paramètres.
+        """
         # Récupérer les données du formulaire
         nom = self.view.nom_entry.get()
         age = self.view.age_entry.get()
@@ -87,6 +114,11 @@ class HomeController:
         )
 
     def select_profile(self, profile: Profile):
+        """Sélectionne un profil et met à jour l'interface.
+
+        Args:
+            profile: Le profil Profile à sélectionner.
+        """
         self.main_controller.set_current_profile(profile)
         if self.view is not None:
             self.view.set_selected_profile(profile)

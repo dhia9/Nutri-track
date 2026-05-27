@@ -165,6 +165,11 @@ class HomePage(ctk.CTkFrame):
         self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
 
     def render_profiles(self):
+        """Affiche les profils existants dans la liste des profils.
+
+        Recrée les boutons de sélection des profils et met à jour l'interface
+        pour afficher le statut du profil actuellement sélectionné.
+        """
         for child in self.profiles_container.winfo_children():
             child.destroy()
         self.profile_buttons.clear()
@@ -232,7 +237,14 @@ class HomePage(ctk.CTkFrame):
             self.profile_buttons[profile.name] = select_button
 
     def set_selected_profile(self, profile):
+        """Met à jour l'interface pour montrer le profil sélectionné.
+
+        Args:
+            profile: Le profil sélectionné (ou None si aucun).
+        """
+
         selected_name = profile.name if profile else None
+
         for profile_name, button in self.profile_buttons.items():
             is_selected = profile_name == selected_name
             button.configure(
@@ -250,5 +262,10 @@ class HomePage(ctk.CTkFrame):
             )
 
     def create_profile(self):
+        """Lance la création d'un nouveau profil et rafraîchit l'affichage.
+
+        Appelle le contrôleur pour créer un nouveau profil, puis recharge
+        la liste des profils affichés.
+        """
         self.controlleur.create_profile()
         self.render_profiles()

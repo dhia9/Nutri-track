@@ -8,6 +8,12 @@ class Menu(Model):
         self.content = []
 
     def add_food_menu(self, food, quantity):
+        """Ajoute un aliment avec sa quantité au menu.
+
+        Args:
+            food: L'objet Food à ajouter.
+            quantity: La quantité en grammes.
+        """
         self.content.append(FoodMenu(quantity, food.name, food.macros))
 
     def has_same_composition(self, other):
@@ -23,11 +29,22 @@ class Menu(Model):
         return self_foods == other_foods
 
     def __eq__(self, other):
-        """Compare les menus par leur date complète (pour l'unicité)"""
+        """Compare les menus par leur date.
+
+        Args:
+            other: L'autre objet à comparer.
+
+        Returns:
+            True si les menus ont la même date, False sinon.
+        """
         if not isinstance(other, Menu):
             return False
         return self.date == other.date
 
     def __hash__(self):
-        """Hash basé sur la date complète pour utilisation dans les sets"""
+        """Hash basé sur la date pour utilisation dans les sets.
+
+        Returns:
+            Un hash basé sur la date du menu.
+        """
         return hash(self.date)
