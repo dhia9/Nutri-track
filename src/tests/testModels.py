@@ -134,6 +134,118 @@ if p_zero.get_imc() == 0:
 else:
     fail("Taille = 0 devrait retourner IMC = 0")
 
+# SECTION 4 — Profile.get_nutritional_needs
+
+
+section("4. Profile — besoins nutritionnels (Mifflin-St Jeor)")
+
+print("\n  Formule Homme : 10×poids + 6.25×taille − 5×âge + 5, × NAP")
+print("  Formule Femme : 10×poids + 6.25×taille − 5×âge − 161, × NAP\n")
+
+# Homme, maintien
+ph = Profile("Homme", age=30, height=175, weight=75, sex="Homme", target_weight=75)
+mb_h = 10 * 75 + 6.25 * 175 - 5 * 30 + 5       # = 1818.75
+det_h = mb_h * 1.55                              # ≈ 2819.06
+cal_attendu_h = det_h + 0                        # maintien
+needs_h = ph.get_nutritional_needs(nap=1.55)
+print(f"  Homme 75kg/175cm/30ans, maintien → calories attendues ≈ {cal_attendu_h:.0f} kcal")
+assert_approx(needs_h["calories"], cal_attendu_h, "Calories homme/maintien", tol=1.0)
+if needs_h["proteines_g"] > 0 and needs_h["lipides_g"] > 0 and needs_h["glucides_g"] > 0:
+    ok("Toutes les macros sont positives pour un profil valide")
+else:
+    fail("Au moins une macro est nulle ou négative")
+
+# Femme, maintien
+pf = Profile("Femme", age=25, height=165, weight=60, sex="Femme", target_weight=60)
+mb_f = 10 * 60 + 6.25 * 165 - 5 * 25 - 161     # = 1420.25
+det_f = mb_f * 1.55                              # ≈ 2201.39
+needs_f = pf.get_nutritional_needs(nap=1.55)
+print(f"\n  Femme 60kg/165cm/25ans, maintien → calories attendues ≈ {det_f:.0f} kcal")
+assert_approx(needs_f["calories"], det_f, "Calories femme/maintien", tol=1.0)
+
+# Objectifs — ajustement calorique
+print("\n  Ajustements selon objectif :")
+# Note : pour comparer l'ajustement exact (+300 / -400), il faut un profil
+# dont le poids == target_weight (maintien), puis simuler les deux autres
+# objectifs en changeant uniquement target_weight sur le MÊME poids de base.
+# Si les poids diffèrent entre profils, le MB change et l'écart n'est plus 400/300.
+
+p_base = Profile("Base", age=30, height=175, weight=75, sex="Homme", target_weight=75)
+n_maint = p_base.get_nutritional_needs()["calories"]   # target == weight → maintien
+
+p_base.target_weight = 80   # → objectif masse  (target > weight)
+n_masse = p_base.get_nutritional_needs()["calories"]
+
+p_base.target_weight = 70   # → objectif perte  (target < weight)
+n_perte = p_base.get_nutritional_needs()["calories"]
+
+p_base.target_weight = 75   # reset
+
+if n_perte < n_maint:
+    ok("Objectif perte → calories < maintien (−400 kcal appliqué)")
+else:
+    fail("Objectif perte devrait donner moins de calories que le maintien",
+         f"perte={n_perte:.0f}, maintien={n_maint:.0f}")
+
+if n_masse > n_maint:
+    ok("Objectif masse → calories > maintien (+300 kcal appliqué)")
+else:
+    fail("Objectif masse devrait donner plus de calories que le maintien",
+         f"masse={n_masse:.0f}, maintien={n_maint:.0f}")
+
+diff_perte = n_maint - n_perte
+diff_masse = n_masse - n_maint
+assert_approx(diff_perte, 400, "Écart perte/maintien = exactement 400 kcal", tol=1.0)
+assert_approx(diff_masse, 300, "Écart masse/maintien = exactement 300 kcal", tol=1.0)
+
+# SECTION 5 — Profile.get_meal_budget
+
+
+section("5. Profile — budget du repas")
+
+print("\n  Budget = (besoins − déjà consommé) / repas restants")
+print("  Le budget ne peut jamais être négatif.\n")
+
+today = str(date.today())
+
+# Aucun repas enregistré → budget = besoins / meals_per_day
+p_clean = Profile("Clean", age=30, height=175, weight=75, sex="Homme", target_weight=75)
+besoins = p_clean.get_nutritional_needs(1.55)
+cal_b, *_ = p_clean.get_meal_budget(nap=1.55, meals_per_day=3, today=today)
+attendu_clean = besoins["calories"] / 3
+print(f"  0 repas enregistrés, 3 repas/jour → budget cal ≈ {attendu_clean:.0f} kcal")
+assert_approx(cal_b, attendu_clean, "Budget 1er repas = besoins/3", tol=1.0)
+
+# Budget négatif impossible : on consomme plus que les besoins
+print("\n  Si les besoins sont dépassés → budget = 0 (jamais négatif)")
+p_over = Profile("Over", age=30, height=175, weight=75, sex="Homme", target_weight=75)
+macro_surcharge = Macro(masse=100, proteine=100, calorie=5000, fat=100, carbohydrate=500)
+food_surcharge = Food("Surcharge", [macro_surcharge])
+menu_surcharge = Menu(today)
+menu_surcharge.add_food_menu(food_surcharge, quantity=100)
+p_over.eating_habits.append(menu_surcharge)
+cal_budget_over, prot_budget_over, fat_budget_over, carb_budget_over = \
+    p_over.get_meal_budget(nap=1.55, meals_per_day=3, today=today)
+if cal_budget_over == 0.0:
+    ok("Budget calorique = 0.0 quand les besoins sont dépassés")
+else:
+    fail("Budget calorique devrait être 0 si besoins dépassés", f"obtenu : {cal_budget_over:.2f}")
+
+# Avec 2 repas déjà faits sur 3 → il reste 1 repas
+print("\n  2 repas déjà faits sur 3 → le budget porte sur le 1 repas restant")
+p_2done = Profile("TwoDone", age=30, height=175, weight=75, sex="Homme", target_weight=75)
+macro_small = Macro(masse=100, proteine=10, calorie=200, fat=5, carbohydrate=25)
+for _ in range(2):
+    m = Menu(today)
+    m.add_food_menu(Food("Riz", [macro_small]), quantity=100)
+    p_2done.eating_habits.append(m)
+besoins2 = p_2done.get_nutritional_needs(1.55)
+cal_b2, *_ = p_2done.get_meal_budget(nap=1.55, meals_per_day=3, today=today)
+cal_restante = max(0.0, besoins2["calories"] - 2 * macro_small.calorie)
+print(f"  Calories restantes attendues (1 repas) ≈ {cal_restante:.0f} kcal")
+assert_approx(cal_b2, cal_restante, "Budget = calories restantes / 1 repas", tol=1.0)
+
+
 # Résumé final
 
 
