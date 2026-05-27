@@ -4,6 +4,7 @@ from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
 
+
 def print_test(test_name, status):
     symbol = "✓" if status else "✗"
     color = "\033[92m" if status else "\033[91m"
@@ -16,7 +17,9 @@ def print_section(section_name):
     print(f"  {section_name}")
     print(f"{'=' * 60}")
 
+
 # MACRO TESTS
+
 
 def test_macro_masse_negative_raises_error():
     try:
@@ -35,14 +38,14 @@ def test_macro_scaling_affects_all_values():
         macro_50g = Macro(50, 25, 150, 10, 20)
 
         result = (
-            macro_100g.proteine == 25 and
-            macro_50g.proteine == 12.5 and
-            macro_100g.calorie == 150 and
-            macro_50g.calorie == 75 and
-            macro_100g.fat == 10 and
-            macro_50g.fat == 5 and
-            macro_100g.carbohydrate == 20 and
-            macro_50g.carbohydrate == 10
+            macro_100g.proteine == 25
+            and macro_50g.proteine == 12.5
+            and macro_100g.calorie == 150
+            and macro_50g.calorie == 75
+            and macro_100g.fat == 10
+            and macro_50g.fat == 5
+            and macro_100g.carbohydrate == 20
+            and macro_50g.carbohydrate == 10
         )
 
         print_test("test_macro_scaling_affects_all_values", result)
@@ -58,10 +61,10 @@ def test_macro_zero_masse_creates_zero_values():
         macro = Macro(0, 25, 150, 10, 20)
 
         result = (
-            macro.proteine == 0 and
-            macro.calorie == 0 and
-            macro.fat == 0 and
-            macro.carbohydrate == 0
+            macro.proteine == 0
+            and macro.calorie == 0
+            and macro.fat == 0
+            and macro.carbohydrate == 0
         )
 
         print_test("test_macro_zero_masse_creates_zero_values", result)
@@ -71,7 +74,9 @@ def test_macro_zero_masse_creates_zero_values():
         print_test("test_macro_zero_masse_creates_zero_values", False)
         return False
 
+
 # FOOD TESTS
+
 
 def test_food_shares_macro_references():
     try:
@@ -80,10 +85,7 @@ def test_food_shares_macro_references():
 
         macros.append(Macro(150, 30, 200, 12, 25))
 
-        result = (
-            food.macros is macros and
-            len(food.macros) == 2
-        )
+        result = food.macros is macros and len(food.macros) == 2
 
         print_test("test_food_shares_macro_references", result)
         return result
@@ -109,7 +111,9 @@ def test_food_score_with_zero_calories_returns_zero():
         print_test("test_food_score_with_zero_calories_returns_zero", False)
         return False
 
+
 # FOODMENU TESTS
+
 
 def test_foodmenu_inherits_from_food():
     try:
@@ -117,9 +121,9 @@ def test_foodmenu_inherits_from_food():
         food_menu = FoodMenu(150, "Chicken", macros)
 
         result = (
-            food_menu.name == "Chicken" and
-            food_menu.quantity == 150 and
-            isinstance(food_menu, Food)
+            food_menu.name == "Chicken"
+            and food_menu.quantity == 150
+            and isinstance(food_menu, Food)
         )
 
         print_test("test_foodmenu_inherits_from_food", result)
@@ -129,7 +133,9 @@ def test_foodmenu_inherits_from_food():
         print_test("test_foodmenu_inherits_from_food", False)
         return False
 
+
 # MENU TESTS
+
 
 def test_menu_add_food_mutates_content():
     try:
@@ -141,9 +147,9 @@ def test_menu_add_food_mutates_content():
         menu.add_food_menu(food, 150)
 
         result = (
-            len(menu.content) == 1 and
-            menu.content[0].name == "Chicken" and
-            menu.content[0].quantity == 150
+            len(menu.content) == 1
+            and menu.content[0].name == "Chicken"
+            and menu.content[0].quantity == 150
         )
 
         print_test("test_menu_add_food_mutates_content", result)
@@ -188,10 +194,7 @@ def test_deepcopy_independence():
 
         menu2.content.clear()
 
-        result = (
-            len(menu1.content) == 1 and
-            len(menu2.content) == 0
-        )
+        result = len(menu1.content) == 1 and len(menu2.content) == 0
 
         print_test("test_deepcopy_independence", result)
         return result
@@ -205,32 +208,44 @@ def test_deepcopy_independence():
 # RUNNER
 # ============================================================================
 
+
 def run_all_tests():
 
     tests = [
-        ("MACRO TESTS", [
-            test_macro_masse_negative_raises_error,
-            test_macro_scaling_affects_all_values,
-            test_macro_zero_masse_creates_zero_values,
-        ]),
-
-        ("FOOD TESTS", [
-            test_food_shares_macro_references,
-            test_food_score_with_zero_calories_returns_zero,
-        ]),
-
-        ("FOODMENU TESTS", [
-            test_foodmenu_inherits_from_food,
-        ]),
-
-        ("MENU TESTS", [
-            test_menu_add_food_mutates_content,
-            test_menu_hash_allows_use_in_set,
-        ]),
-
-        ("CROSS MODEL TESTS", [
-            test_deepcopy_independence,
-        ]),
+        (
+            "MACRO TESTS",
+            [
+                test_macro_masse_negative_raises_error,
+                test_macro_scaling_affects_all_values,
+                test_macro_zero_masse_creates_zero_values,
+            ],
+        ),
+        (
+            "FOOD TESTS",
+            [
+                test_food_shares_macro_references,
+                test_food_score_with_zero_calories_returns_zero,
+            ],
+        ),
+        (
+            "FOODMENU TESTS",
+            [
+                test_foodmenu_inherits_from_food,
+            ],
+        ),
+        (
+            "MENU TESTS",
+            [
+                test_menu_add_food_mutates_content,
+                test_menu_hash_allows_use_in_set,
+            ],
+        ),
+        (
+            "CROSS MODEL TESTS",
+            [
+                test_deepcopy_independence,
+            ],
+        ),
     ]
 
     total_tests = 0
@@ -253,7 +268,7 @@ def run_all_tests():
     print(f"Réussis: {passed_tests}")
     print(f"Échoués: {total_tests - passed_tests}")
 
-    percentage = (passed_tests / total_tests * 100)
+    percentage = passed_tests / total_tests * 100
 
     print(f"Taux de réussite: {percentage:.1f}%\n")
 
@@ -263,4 +278,3 @@ def run_all_tests():
 if __name__ == "__main__":
     success = run_all_tests()
     exit(0 if success else 1)
-
