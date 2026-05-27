@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import datetime
 import math
 import matplotlib.dates as mdates
+from src.models.mesures_corporelles import MesuresCorporelles
 
 plt.rcParams.update(
     {
@@ -362,22 +363,16 @@ class StatsPage(ctk.CTkFrame):
 
     
     def ajouter_mesure(self,event):
-        mesure = {
-            "date": self.controller.current_date.strftime("%Y-%m-%d"),
-            "poids": self.poids_entry.get(),
-            "taille": self.taille_entry.get(),
-            "bras": self.bras_entry.get(),
-            "graisse": self.graisse_entry.get()
-        }
-
+        mesure = MesuresCorporelles(self.controller.current_date.strftime("%Y-%m-%d") , self.poids_entry.get(), self.taille_entry.get() , self.bras_entry.get(), self.graisse_entry.get())
+    
 
         self.controller.ajouter_mesure(mesure)
         self.ajouter_ligne_mesure(mesure)
 
 
     def ajouter_ligne_mesure(self, mesure):
-        values = [mesure["date"], mesure["poids"], mesure["taille"], mesure["bras"], mesure["graisse"]]
-        mesure_date = mesure["date"]
+        values = [mesure.date, mesure.poids, mesure.tour_de_taille, mesure.tour_de_bras, mesure.masse_grasse]
+        mesure_date = mesure.date
         
         # Trouver la bonne position pour insérer la mesure (ordre décroissant par date)
         insert_position = 0
