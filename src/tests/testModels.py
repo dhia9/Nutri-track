@@ -3,7 +3,9 @@ from src.models.food import Food
 from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
-
+"""
+pour run depuis terminal au niveau de la racnie exécuter python -m src.tests.testModels
+"""
 
 def print_test(test_name, status):
     symbol = "✓" if status else "✗"
