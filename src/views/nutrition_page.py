@@ -166,7 +166,7 @@ class NutritionPage(ctk.CTkFrame):
             pagination_frame,
             text="◀ Précédent",
             width=100,
-            font=ctk.CTkFont(size=10),
+            font=ctk.CTkFont(size=12),
             fg_color="#4CAF50",
             hover_color="#45a049",
             command=self.controller.previous_page
