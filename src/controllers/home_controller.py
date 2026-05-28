@@ -24,31 +24,7 @@ class HomeController:
                 return True
         return False
 
-    def validate_int(self, char):
-        """Accepte uniquement les chiffres entiers.
 
-        Args:
-            char: Le caractère saisi.
-
-        Returns:
-            True si le caractère est valide (vide ou chiffre), False sinon.
-        """
-        if char == "":
-            return True
-        return char.isdigit()
-
-    def validate_float(self, char):
-        """Accepte uniquement les chiffres et virgule/point à la saisie.
-
-        Args:
-            char: Le caractère saisi.
-
-        Returns:
-            True si le caractère est valide, False sinon.
-        """
-        if char == "":
-            return True
-        return char.isdigit() or char == "."
 
     def create_profile(self):
         """Crée un nouveau profil avec les données du formulaire.

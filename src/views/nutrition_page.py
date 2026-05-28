@@ -56,6 +56,7 @@ class NutritionPage(ctk.CTkFrame):
             date_frame,
             text="◀",
             width=30,
+            text_color=self.main_controller.theme_colors.get("text", "#2A2D30"),
             fg_color=self.main_controller.theme_colors["frame"],
             font=ctk.CTkFont(size=14),
             hover_color=self.main_controller.theme_colors["button_hover"],
@@ -77,6 +78,7 @@ class NutritionPage(ctk.CTkFrame):
             date_frame,
             text="▶",
             width=30,
+            text_color=self.main_controller.theme_colors.get("text", "#2A2D30"),
             fg_color=self.main_controller.theme_colors["frame"],
             font=ctk.CTkFont(size=14, weight="bold"),
             hover_color=self.main_controller.theme_colors["button_hover"],
@@ -104,7 +106,7 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_ajout,
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
-            text_color=self.main_controller.theme_colors["text"],
+            text_color=self.main_controller.theme_colors["button"],
             command=self.controller.add_menu,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
@@ -170,6 +172,7 @@ class NutritionPage(ctk.CTkFrame):
                 text_color=self.main_controller.theme_colors["text"],
                 fg_color=self.main_controller.settings.theme,
                 checkmark_color=self.main_controller.theme_colors["frame"],
+                hover_color=self.main_controller.darken_color(self.main_controller.settings.theme),
             )
             checkbox.pack(side="left", padx=10, pady=10, fill="x", expand=True)
 
@@ -332,7 +335,9 @@ class NutritionPage(ctk.CTkFrame):
             corner_radius=10,
             height=120,
         )
-        self.suggestion_card.pack(fill="x", padx=5, pady=(5, 10))
+        self.suggestion_card.pack(
+            fill="x", padx=5, pady=(5, 10), before=self.menus_container
+        )
         self.suggestion_card.pack_propagate(False)
 
         self.suggestion_card.grid_columnconfigure(0, weight=1)
@@ -366,6 +371,8 @@ class NutritionPage(ctk.CTkFrame):
             border_width=1,
             text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11),
+            validate="key",
+            validatecommand=(self.register(self.main_controller.validate_float), "%P"),
         )
         self.input_nap.insert(
             0, str(self.controller.current_profile.suggestCaracteristics["nap"])
@@ -391,6 +398,8 @@ class NutritionPage(ctk.CTkFrame):
             border_width=1,
             text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11),
+            validate="key",
+            validatecommand=(self.register(self.main_controller.validate_int), "%P"),
         )
 
         self.input_mealPerD.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=(0, 8))

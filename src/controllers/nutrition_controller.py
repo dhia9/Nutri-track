@@ -283,7 +283,7 @@ class NutritionController:
                 header_frame,
                 text=menu_time.split(" ")[1],  # Extraire l'heure (HH:MM:SS)
                 font=ctk.CTkFont(size=11, weight="bold"),
-                text_color="#4CAF50",
+                text_color=self.main_controller.settings.theme,  # Utiliser la couleur du thème pour l'heure
             )
             time_label.pack(side="left")
 
@@ -337,7 +337,7 @@ class NutritionController:
                     menu_frame,
                     text=f"• {food_menu.name} ({food_menu.quantity}g)",
                     font=ctk.CTkFont(size=11),
-                    text_color="#FFFFFF",
+                    text_color=self.main_controller.theme_colors.get("text", "#F1F1F1"),
                 )
                 food_label.pack(anchor="w", padx=20, pady=2)
 

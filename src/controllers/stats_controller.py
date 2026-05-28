@@ -225,3 +225,4 @@ class StatsController:
             row_widget.append(label)
 
         self.view.table_rows.append(row_widget)
+

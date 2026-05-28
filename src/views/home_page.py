@@ -91,12 +91,8 @@ class HomePage(ctk.CTkFrame):
         )
         self.nom_entry.grid(row=1, column=0, sticky="ew", padx=20)
 
-        # Créer les validateurs
-        int_vcmd = (self.register(self.controlleur.validate_int), "%S")
-        float_vcmd = (
-            self.register(self.controlleur.validate_float),
-            "%S",
-        )
+        int_vcmd = (self.register(self.main_controller.validate_int), "%P")
+        float_vcmd = (self.register(self.main_controller.validate_float), "%P")
 
         # Âge
         self.age_label = ctk.CTkLabel(
@@ -124,7 +120,7 @@ class HomePage(ctk.CTkFrame):
         self.taille_entry = ctk.CTkEntry(
             frame_carre_noir,
             validate="key",
-            validatecommand=int_vcmd,
+            validatecommand=float_vcmd,
             fg_color=self.main_controller.theme_colors["frame_dark"],
             border_color=self.main_controller.theme_colors["button"],
         )

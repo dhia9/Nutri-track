@@ -221,3 +221,35 @@ class MainController:
         h, s, v = rgb_to_hsv(r, g, b)
         r2, g2, b2 = hsv_to_rgb(h, s, v * factor)
         return f"#{int(r2*255):02x}{int(g2*255):02x}{int(b2*255):02x}"
+
+            
+    
+    def validate_float(self, proposed_value: str) -> bool:
+        """Valide la valeur proposée comme float (utiliser avec %P).
+
+        Args:
+            proposed_value: la valeur complète proposée après la frappe.
+
+        Returns:
+            True si la valeur est vide ou convertible en float, False sinon.
+        """
+        if proposed_value == "":
+            return True
+        try:
+            float(proposed_value)
+            return True
+        except Exception:
+            return False
+
+    def validate_int(self, proposed_value: str) -> bool:
+        """Valide la valeur proposée comme entier (utiliser avec %P).
+
+        Args:
+            proposed_value: la valeur complète proposée après la frappe.
+
+        Returns:
+            True si la valeur est vide ou contient seulement des chiffres, False sinon.
+        """
+        if proposed_value == "":
+            return True
+        return proposed_value.isdigit()

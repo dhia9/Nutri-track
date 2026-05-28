@@ -132,7 +132,6 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             corner_radius=6,
             fg_color=self.main_controller.theme_colors["error"],
             hover_color=self.main_controller.theme_colors["error_hover"],
-            text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11, weight="bold"),
             command=lambda m=menu: self.on_delete_menu(m),
         )
@@ -149,14 +148,15 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
-            text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=11, weight="bold"),
             command=lambda m=menu: self.on_add_menu(m),
         )
         add_button.grid(row=0, column=2, sticky="e", padx=(10, 0))
 
         # Liste des aliments
-        foods_frame = ctk.CTkFrame(menu_frame, fg_color="#2A2A4A")
+        foods_frame = ctk.CTkFrame(
+            menu_frame, fg_color=self.main_controller.theme_colors["frame_dark"]
+        )
         foods_frame.pack(fill="x", padx=15, pady=(0, 5))
 
         # Afficher chaque aliment du menu

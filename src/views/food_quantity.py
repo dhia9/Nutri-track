@@ -67,8 +67,10 @@ class FoodQuantity(ctk.CTkToplevel):
                 food_frame,
                 placeholder_text="0",
                 fg_color=theme_colors.get("frame_dark", "#2A2A4A"),
-                border_color=theme_colors.get("primary_accent", "#4CAF50"),
+                border_color=theme_colors.get("primary_accent", self.main_controller.settings.theme),
                 border_width=1,
+                validate="key",
+                validatecommand=(self.register(self.main_controller.validate_float), "%P"),
                 text_color=theme_colors.get("text", "#FFFFFF"),
                 width=60,
             )
