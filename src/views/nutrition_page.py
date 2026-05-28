@@ -106,8 +106,7 @@ class NutritionPage(ctk.CTkFrame):
         self.bouton_aliment = ctk.CTkButton(
             self.frame_ajout,
             text="✚ Ajouter un menu",
-            font=ctk.CTkFont(size=12, weight="bold"),
-            text_color="#A8AFB6",
+            font=ctk.CTkFont(size=10, weight="bold"),
             fg_color="#4CAF50",
             hover_color="#45a049",
             command=self.controller.add_menu,
