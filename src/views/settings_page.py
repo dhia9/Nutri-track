@@ -180,6 +180,8 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.boutton_modifier.grid(
             row=12, column=0, sticky="ew", padx=20, pady=(16, 20)
@@ -192,6 +194,8 @@ class SettingsPage(ctk.CTkFrame):
             fg_color=self.main_controller.theme_colors["error"],
             hover_color=self.main_controller.theme_colors["error_hover"],
             command=self.delete_profile,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.boutton_supprimer.grid(
             row=12, column=1, sticky="w", padx=20, pady=(16, 20)

@@ -103,7 +103,8 @@ class FoodQuantity(ctk.CTkToplevel):
                 self.main_controller.settings.theme
             ),
             text_color=theme_colors.get("text", "#FFFFFF"),
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.submit_btn.grid(row=0, column=0, sticky="ew", padx=(0, 5))
 
@@ -117,7 +118,8 @@ class FoodQuantity(ctk.CTkToplevel):
                 theme_colors.get("frame", "#35393D")
             ),
             text_color=theme_colors.get("text", "#FFFFFF"),
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.cancel_btn.grid(row=0, column=1, sticky="ew", padx=(5, 0))
 

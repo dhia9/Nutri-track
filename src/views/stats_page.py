@@ -331,7 +331,7 @@ class StatsPage(ctk.CTkFrame):
             width=30,
             text_color=self.theme_colors.get("text", "#2A2D30"),
             fg_color=self.theme_colors.get("frame", "#2A2D30"),
-            font=ctk.CTkFont(size=14),
+            font=ctk.CTkFont(size=12, weight="bold"),
             hover_color=self.theme_colors.get("button_hover", "#35393D"),
             corner_radius=10,
         )
@@ -352,7 +352,7 @@ class StatsPage(ctk.CTkFrame):
             width=30,
             text_color=self.theme_colors.get("text", "#2A2D30"),
             fg_color=self.theme_colors.get("frame", "#2A2D30"),
-            font=ctk.CTkFont(size=14),
+            font=ctk.CTkFont(size=12, weight="bold"),
             hover_color=self.theme_colors.get("button_hover", "#35393D"),
             corner_radius=10,
         )
@@ -360,12 +360,17 @@ class StatsPage(ctk.CTkFrame):
         self.button_next.bind("<Button-1>", self.controller.next_day)
 
         # Boutton ajouter
-        boutton_ajouter = ctk.CTkButton(top_row, text="Ajouter une mesure corporelle",
-                                        font=ctk.CTkFont(size=12, weight="bold"),
-                                        text_color=self.main_controller.theme_colors["button"],
-                                        fg_color=self.main_controller.settings.theme,
-                                        hover_color=self.main_controller.darken_color(
-                                        self.main_controller.settings.theme))
+        boutton_ajouter = ctk.CTkButton(
+            top_row,
+            text="Ajouter une mesure corporelle",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
+            text_color=self.main_controller.theme_colors["text"],
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+        )
         boutton_ajouter.pack(side="left")
         boutton_ajouter.bind("<Button-1>", self._on_add_mesure)
 

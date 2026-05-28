@@ -322,11 +322,11 @@ class NutritionController:
                 text="Supprimer",
                 width=80,
                 height=24,
-                corner_radius=6,
+                corner_radius=10,
                 fg_color=self.main_controller.theme_colors["error"],
                 hover_color=self.main_controller.theme_colors["error_hover"],
                 text_color=self.main_controller.theme_colors["text"],
-                font=ctk.CTkFont(size=9),
+                font=ctk.CTkFont(size=12, weight="bold"),
                 command=lambda mt=menu_time: self.delete_menu(mt),
             )
             delete_button.pack()

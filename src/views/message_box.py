@@ -33,6 +33,8 @@ class CTkMessageBox(ctk.CTkToplevel):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         button.pack(pady=10)
 

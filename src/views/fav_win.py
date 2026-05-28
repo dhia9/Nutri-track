@@ -129,10 +129,10 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             text="🗑 Supprimer",
             width=100,
             height=28,
-            corner_radius=6,
+            corner_radius=10,
             fg_color=self.main_controller.theme_colors["error"],
             hover_color=self.main_controller.theme_colors["error_hover"],
-            font=ctk.CTkFont(size=11, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             command=lambda m=menu: self.on_delete_menu(m),
         )
         delete_button.grid(row=0, column=0, sticky="w", padx=(0, 10))
@@ -143,12 +143,12 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             text="+ Ajouter",
             width=100,
             height=28,
-            corner_radius=6,
+            corner_radius=10,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
-            font=ctk.CTkFont(size=11, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             command=lambda m=menu: self.on_add_menu(m),
         )
         add_button.grid(row=0, column=2, sticky="e", padx=(10, 0))

@@ -58,7 +58,7 @@ class NutritionPage(ctk.CTkFrame):
             width=30,
             text_color=self.main_controller.theme_colors.get("text", "#2A2D30"),
             fg_color=self.main_controller.theme_colors["frame"],
-            font=ctk.CTkFont(size=14),
+            font=ctk.CTkFont(size=12, weight="bold"),
             hover_color=self.main_controller.theme_colors["button_hover"],
             corner_radius=10,
         )
@@ -80,7 +80,7 @@ class NutritionPage(ctk.CTkFrame):
             width=30,
             text_color=self.main_controller.theme_colors.get("text", "#2A2D30"),
             fg_color=self.main_controller.theme_colors["frame"],
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             hover_color=self.main_controller.theme_colors["button_hover"],
             corner_radius=10,
         )
@@ -106,7 +106,8 @@ class NutritionPage(ctk.CTkFrame):
             self.frame_ajout,
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
-            text_color=self.main_controller.theme_colors["button"],
+            corner_radius=10,
+            text_color=self.main_controller.theme_colors["text"],
             command=self.controller.add_menu,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
@@ -314,7 +315,7 @@ class NutritionPage(ctk.CTkFrame):
         self.bouton_menu = ctk.CTkButton(
             self.frame_ajout,
             text="Menu Favoris",
-            font=ctk.CTkFont(size=10, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
@@ -412,8 +413,8 @@ class NutritionPage(ctk.CTkFrame):
             self.suggestion_card,
             text="Suggérer",
             height=30,
-            corner_radius=8,
-            font=ctk.CTkFont(size=11, weight="bold"),
+            corner_radius=10,
+            font=ctk.CTkFont(size=12, weight="bold"),
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme

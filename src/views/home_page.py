@@ -51,7 +51,7 @@ class HomePage(ctk.CTkFrame):
         self.profiles_container = ctk.CTkScrollableFrame(
             self,
             fg_color=self.main_controller.theme_colors["content"],
-            corner_radius=12,
+            corner_radius=10,
             height=170,
         )
         self.profiles_container.grid(
@@ -203,6 +203,8 @@ class HomePage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.boutton_valider.grid(row=5, column=2, sticky="e", padx=20, pady=(0, 20))
         self.boutton_valider.bind("<Button-1>", lambda event: self.create_profile())
@@ -266,6 +268,8 @@ class HomePage(ctk.CTkFrame):
                 card,
                 text="Profil Sélectionné" if is_selected else "Sélectionner",
                 height=34,
+                font=ctk.CTkFont(size=12, weight="bold"),
+                corner_radius=10,
                 fg_color=(
                     self.PROFILE_BTN_SELECTED
                     if is_selected

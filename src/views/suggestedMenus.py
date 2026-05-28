@@ -95,6 +95,8 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         add_button = ctk.CTkButton(
             menu_frame,
             text="Ajouter Menu",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
