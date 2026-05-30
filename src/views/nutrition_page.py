@@ -117,7 +117,7 @@ class NutritionPage(ctk.CTkFrame):
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
-            text_color=self.main_controller.theme_colors["text"],
+            text_color="#FFFFFF",
             command=self.controller.add_menu,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
@@ -487,7 +487,9 @@ class NutritionPage(ctk.CTkFrame):
         # Créer les checkboxes pour les aliments de cette page
         for food in page_foods:
             item_frame = ctk.CTkFrame(
-                self.items_frame, fg_color="#2A2A4A", corner_radius=8
+                self.items_frame,
+                fg_color=self.main_controller.theme_colors["frame_dark"],
+                corner_radius=8,
             )
             item_frame.pack(fill="x", padx=5, pady=5)
 
@@ -508,9 +510,15 @@ class NutritionPage(ctk.CTkFrame):
                 variable=var,
                 onvalue="on",
                 offvalue="off",
-                text_color="#FFFFFF",
-                fg_color="#4CAF50",
-                checkmark_color="#35393D",
+                text_color=self.main_controller.theme_colors["text"],
+                fg_color=self.main_controller.settings.theme,
+                checkmark_color=self.main_controller.theme_colors["text"],
+                # Forcer la couleur de survol pour suivre la couleur d'accent (theme)
+                hover_color=self.main_controller.darken_color(
+                    self.main_controller.settings.theme
+                ),
+                # Utiliser la couleur d'accent comme bordure du checkbox pour meilleure cohérence
+                border_color=self.main_controller.settings.theme,
                 command=make_callback(food, var),
             )
             checkbox.pack(side="left", padx=10, pady=10, fill="x", expand=True)
@@ -532,14 +540,24 @@ class NutritionPage(ctk.CTkFrame):
 
         # Gérer l'état des boutons
         if self.current_page > 0:
-            self.btn_prev_page.configure(state="normal", fg_color="#4CAF50")
+            self.btn_prev_page.configure(
+                state="normal", fg_color=self.main_controller.settings.theme
+            )
         else:
-            self.btn_prev_page.configure(state="disabled", fg_color="#777777")
+            self.btn_prev_page.configure(
+                state="disabled",
+                fg_color=self.main_controller.theme_colors["frame_dark"],
+            )
 
         if self.current_page < total_pages - 1:
-            self.btn_next_page.configure(state="normal", fg_color="#4CAF50")
+            self.btn_next_page.configure(
+                state="normal", fg_color=self.main_controller.settings.theme
+            )
         else:
-            self.btn_next_page.configure(state="disabled", fg_color="#777777")
+            self.btn_next_page.configure(
+                state="disabled",
+                fg_color=self.main_controller.theme_colors["frame_dark"],
+            )
 
     def _update_pagination(self, foods_list):
         """Met à jour la pagination après une recherche"""
