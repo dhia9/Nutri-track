@@ -13,15 +13,6 @@ from src.views.settings_page import SettingsPage
 class MainPage(ctk.CTk):
     """Fenêtre principale avec navigation verticale et zone de contenu."""
 
-    COLOR_BG = "#121212"
-    COLOR_SIDEBAR = "#1D1F21"
-    COLOR_CONTENT = "#17191B"
-    COLOR_ACCENT = "#2DBA7F"
-    COLOR_BUTTON = "#2A2D30"
-    COLOR_BUTTON_HOVER = "#35393D"
-    COLOR_TEXT = "#F1F1F1"
-    COLOR_TEXT_SECONDARY = "#A8AFB6"
-
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
@@ -58,10 +49,11 @@ class MainPage(ctk.CTk):
         y = (screen_height // 2) - (760 // 2)
         self.geometry(f"+{x}+{y}")
 
-        ctk.set_appearance_mode("dark")
+        # Appliquer le mode d'apparence sauvegardé
+        ctk.set_appearance_mode(self.controller.settings.appearance_mode)
         ctk.set_default_color_theme("green")
 
-        self.configure(fg_color=self.COLOR_BG)
+        self.configure(fg_color=self.controller.theme_colors["bg"])
 
         # Grille principale: colonne gauche = navigation, colonne droite = contenu
         self.grid_rowconfigure(0, weight=1)
@@ -101,7 +93,7 @@ class MainPage(ctk.CTk):
         """Crée la barre de navigation en colonne à gauche."""
         self.sidebar = ctk.CTkFrame(
             self,
-            fg_color=self.COLOR_SIDEBAR,
+            fg_color=self.controller.theme_colors["sidebar"],
             width=260,
             corner_radius=0,
         )
@@ -121,7 +113,7 @@ class MainPage(ctk.CTk):
                 self.sidebar,
                 text="NUTRITRACK",
                 font=ctk.CTkFont(size=26, weight="bold"),
-                text_color=self.COLOR_TEXT,
+                text_color=self.controller.theme_colors["text"],
             )
             title_label.grid(row=0, column=0, sticky="w", padx=20, pady=(24, 2))
 
@@ -129,11 +121,13 @@ class MainPage(ctk.CTk):
             self.sidebar,
             text="NAVIGATION",
             font=ctk.CTkFont(size=11, weight="bold"),
-            text_color=self.COLOR_TEXT_SECONDARY,
+            text_color=self.controller.theme_colors["text_secondary"],
         )
         nav_label.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
 
-        self.nav_container = ctk.CTkFrame(self.sidebar, fg_color=self.COLOR_SIDEBAR)
+        self.nav_container = ctk.CTkFrame(
+            self.sidebar, fg_color=self.controller.theme_colors["sidebar"]
+        )
         self.nav_container.grid(row=2, column=0, sticky="ew", padx=14)
         self.nav_container.grid_columnconfigure(0, weight=1)
 
@@ -147,7 +141,7 @@ class MainPage(ctk.CTk):
             self.sidebar,
             text="Nutritrack v0.1",
             font=ctk.CTkFont(size=11),
-            text_color=self.COLOR_TEXT_SECONDARY,
+            text_color=self.controller.theme_colors["text_secondary"],
         )
         footer_label.grid(row=5, column=0, sticky="sw", padx=20, pady=(0, 20))
 
@@ -165,11 +159,11 @@ class MainPage(ctk.CTk):
             parent,
             text=page_name,
             font=ctk.CTkFont(size=14, weight="bold"),
-            fg_color=self.COLOR_BUTTON,
-            text_color=self.COLOR_TEXT,
-            hover_color=self.COLOR_BUTTON_HOVER,
+            fg_color=self.controller.theme_colors["button"],
+            text_color=self.controller.theme_colors["text"],
+            hover_color=self.controller.theme_colors["button_hover"],
             border_width=2,
-            border_color=self.COLOR_BUTTON,
+            border_color=self.controller.theme_colors["button"],
             corner_radius=10,
             height=42,
             command=lambda: self.controller.show_page(page_name),
@@ -185,7 +179,7 @@ class MainPage(ctk.CTk):
         """
         self.pages_container = ctk.CTkFrame(
             self,
-            fg_color=self.COLOR_CONTENT,
+            fg_color=self.controller.theme_colors["content"],
             corner_radius=0,
         )
         self.pages_container.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
@@ -254,3 +248,68 @@ class MainPage(ctk.CTk):
         self, page_name
     ):  # Permet de changer de page et d'afficher la page d'accueil par défaut
         self.controller.show_page(page_name)
+
+    def recreate_all_pages_and_ui(self):
+        """Recréé toutes les pages et remet à jour le sidebar quand le thème change."""
+        # Détruire toutes les pages existantes
+        if self.home_page is not None and self.home_page.winfo_exists():
+            self.home_page.destroy()
+        if self.nutrition_page is not None and self.nutrition_page.winfo_exists():
+            self.nutrition_page.destroy()
+        if self.stats_page is not None and self.stats_page.winfo_exists():
+            self.stats_page.destroy()
+        if self.settings_page is not None and self.settings_page.winfo_exists():
+            self.settings_page.destroy()
+
+        # Recréer toutes les pages
+        self.home_page = home_page.HomePage(
+            self.pages_container, main_controller=self.controller
+        )
+        self.settings_page = SettingsPage(
+            self.pages_container, main_controller=self.controller
+        )
+        self.nutrition_page = None
+        self.stats_page = None
+
+        pages = {"Accueil": self.home_page, "Paramètres": self.settings_page}
+        if self.controller.current_profile is not None:
+            self.nutrition_page = NutritionPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Nutrition"] = self.nutrition_page
+            self.stats_page = StatsPage(
+                self.pages_container, main_controller=self.controller
+            )
+            pages["Statistiques"] = self.stats_page
+
+        self.controller.set_existing_pages(pages)
+
+        # Mettre à jour la couleur du container et du page_container
+        self.configure(fg_color=self.controller.theme_colors["bg"])
+        self.pages_container.configure(fg_color=self.controller.theme_colors["content"])
+
+        # Mettre à jour le sidebar et ses boutons
+        self.sidebar.configure(fg_color=self.controller.theme_colors["sidebar"])
+        self.nav_container.configure(fg_color=self.controller.theme_colors["sidebar"])
+
+        # Mettre à jour tous les labels et le nav_container
+        for widget in self.sidebar.winfo_children():
+            if isinstance(widget, ctk.CTkLabel):
+                widget.configure(
+                    text_color=self.controller.theme_colors["text_secondary"]
+                )
+
+        for name, btn in self.nav_buttons.items():
+            btn.configure(
+                fg_color=self.controller.theme_colors["button"],
+                text_color=self.controller.theme_colors["text"],
+                hover_color=self.controller.theme_colors["button_hover"],
+                border_color=self.controller.theme_colors["button"],
+            )
+
+        # Réafficher la page courante
+        target_page = self.controller.current_page
+        if target_page not in pages:
+            target_page = "Accueil"
+        self.controller.show_page(target_page)
+        self.controller.update_nav_buttons()

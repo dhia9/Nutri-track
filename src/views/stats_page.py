@@ -6,22 +6,7 @@ import math
 import matplotlib.dates as mdates
 from src.models.mesures_corporelles import MesuresCorporelles
 
-plt.rcParams.update(
-    {
-        "figure.facecolor": "#1D1F21",
-        "axes.facecolor": "#1D1F21",
-        "axes.edgecolor": "#2A2D30",
-        "axes.labelcolor": "#A8AFB6",
-        "xtick.color": "#A8AFB6",
-        "ytick.color": "#A8AFB6",
-        "grid.color": "#2A2D30",
-        "grid.alpha": 0.5,
-        "text.color": "#F1F1F1",
-        "legend.facecolor": "#1D1F21",
-        "legend.edgecolor": "#2A2D30",
-    }
-)
-C_CARD = "#1D1F21"
+# Constantes pour les couleurs des macros
 C_GREEN = "#2DBA7F"
 C_ORANGE = "#F59E0B"
 C_RED = "#EF4444"
@@ -47,7 +32,35 @@ class StatsPage(ctk.CTkFrame):
         self.macrosToday = self.controller.macros_today(datetime.date.today())
         self.table_rows = []
 
+        # Récupérer les couleurs du thème
+        self.theme_colors = self.main_controller.theme_colors
+        self.update_matplotlib_colors()
+
         self._build()
+
+    def update_matplotlib_colors(self):
+        """Met à jour les couleurs matplotlib selon le thème actuel."""
+        bg_color = self.theme_colors.get("bg", "#1D1F21")
+        content_color = self.theme_colors.get("content", "#17191B")
+        frame_color = self.theme_colors.get("frame", "#2A2D30")
+        text_color = self.theme_colors.get("text", "#F1F1F1")
+        text_secondary = self.theme_colors.get("text_secondary", "#A8AFB6")
+
+        plt.rcParams.update(
+            {
+                "figure.facecolor": bg_color,
+                "axes.facecolor": bg_color,
+                "axes.edgecolor": frame_color,
+                "axes.labelcolor": text_secondary,
+                "xtick.color": text_secondary,
+                "ytick.color": text_secondary,
+                "grid.color": frame_color,
+                "grid.alpha": 0.5,
+                "text.color": text_color,
+                "legend.facecolor": bg_color,
+                "legend.edgecolor": frame_color,
+            }
+        )
 
     def refresh(self):
         """Rafraîchit l'affichage des statistiques avec les données actuelles.
@@ -62,6 +75,11 @@ class StatsPage(ctk.CTkFrame):
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
         self.table_rows = []
+
+        # Mettre à jour les couleurs du thème
+        self.theme_colors = self.main_controller.theme_colors
+        self.update_matplotlib_colors()
+
         self._build()
 
     def _create_card(self, parent, title):
@@ -74,7 +92,9 @@ class StatsPage(ctk.CTkFrame):
         Returns:
             Un frame CTkFrame formatté comme carte.
         """
-        card = ctk.CTkFrame(parent, fg_color=C_CARD, corner_radius=14)
+        card = ctk.CTkFrame(
+            parent, fg_color=self.theme_colors.get("frame", "#2A2D30"), corner_radius=14
+        )
         card.pack(fill="x", pady=10)
         header = ctk.CTkFrame(card, fg_color="transparent")
         header.pack(fill="x", padx=14, pady=(12, 5))
@@ -82,7 +102,7 @@ class StatsPage(ctk.CTkFrame):
             header,
             text=title,
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#F1F1F1",
+            text_color=self.theme_colors.get("text", "#F1F1F1"),
         ).pack(anchor="w")
         return card
 
@@ -93,13 +113,14 @@ class StatsPage(ctk.CTkFrame):
             fig: La figure matplotlib à insérer.
             parent: Le widget parent où ajouter le graphique.
         """
-        fig.patch.set_facecolor("#1D1F21")
+        bg_color = self.theme_colors.get("bg", "#1D1F21")
+        fig.patch.set_facecolor(bg_color)
         fig.tight_layout()
         fig.subplots_adjust(bottom=0.25)
         canvas = FigureCanvasTkAgg(fig, master=parent)
         canvas.draw()
         widget = canvas.get_tk_widget()
-        widget.configure(bg="#1D1F21", highlightthickness=0)
+        widget.configure(bg=bg_color, highlightthickness=0)
         widget.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         plt.close(fig)
 
@@ -158,8 +179,16 @@ class StatsPage(ctk.CTkFrame):
         else:
             dates = [d for d in data.keys()]
             calories = list(data.values())
-            ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
-            ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
+            ax.plot(
+                dates,
+                calories,
+                color=self.main_controller.settings.theme,
+                linewidth=2.5,
+                label="Calories",
+            )
+            ax.fill_between(
+                dates, calories, alpha=0.15, color=self.main_controller.settings.theme
+            )
             ax.set_xlabel("Date", labelpad=12)
             ax.set_ylabel("Calories", labelpad=10)
             ax.legend()
@@ -295,16 +324,21 @@ class StatsPage(ctk.CTkFrame):
         top_row.pack(fill="x", padx=15, pady=10)
 
         # Ajout de la date
-        date_frame = ctk.CTkFrame(top_row, fg_color="#000000", corner_radius=10)
+        date_frame = ctk.CTkFrame(
+            top_row,
+            fg_color=self.theme_colors.get("frame", "#2A2D30"),
+            corner_radius=10,
+        )
         date_frame.pack(side="right")
 
         self.button_previous = ctk.CTkButton(
             date_frame,
             text="◀",
             width=30,
-            fg_color="#000000",
-            font=ctk.CTkFont(size=14),
-            hover_color="#F1F1F1",
+            text_color=self.theme_colors.get("text", "#2A2D30"),
+            fg_color=self.theme_colors.get("frame", "#2A2D30"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            hover_color=self.theme_colors.get("button_hover", "#35393D"),
             corner_radius=10,
         )
         self.button_previous.pack(side="left", padx=6, pady=4)
@@ -313,7 +347,7 @@ class StatsPage(ctk.CTkFrame):
         self.date_label = ctk.CTkLabel(
             date_frame,
             text=self.controller.current_date.strftime("  %A %d %B %Y  ").capitalize(),
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
         )
         self.date_label.pack(side="left", padx=18, pady=4)
@@ -322,16 +356,27 @@ class StatsPage(ctk.CTkFrame):
             date_frame,
             text="▶",
             width=30,
-            fg_color="#0F0A0A",
-            font=ctk.CTkFont(size=14),
-            hover_color="#F1F1F1",
+            text_color=self.theme_colors.get("text", "#2A2D30"),
+            fg_color=self.theme_colors.get("frame", "#2A2D30"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            hover_color=self.theme_colors.get("button_hover", "#35393D"),
             corner_radius=10,
         )
         self.button_next.pack(side="left", padx=6, pady=4)
         self.button_next.bind("<Button-1>", self.controller.next_day)
 
         # Boutton ajouter
-        boutton_ajouter = ctk.CTkButton(top_row, text="Ajouter une mesure corporelle")
+        boutton_ajouter = ctk.CTkButton(
+            top_row,
+            text="Ajouter une mesure corporelle",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
+            text_color=self.main_controller.theme_colors["text"],
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+        )
         boutton_ajouter.pack(side="left")
         boutton_ajouter.bind("<Button-1>", self._on_add_mesure)
 
@@ -356,34 +401,55 @@ class StatsPage(ctk.CTkFrame):
         entries_frame = ctk.CTkFrame(card, fg_color="transparent")
         entries_frame.pack(fill="x", padx=15, pady=(5, 15))
 
-        self.poids_entry = ctk.CTkEntry(entries_frame, placeholder_text="Poids en kg")
+        # Création des validateurs (pour n'entrer que des floats)
+        float_vcmd = (self.register(self.main_controller.validate_float), "%P")
+
+        self.poids_entry = ctk.CTkEntry(
+            entries_frame,
+            placeholder_text="Poids en kg",
+            validate="key",
+            validatecommand=float_vcmd,
+        )
         self.poids_entry.pack(side="left", expand=True, padx=5)
 
         self.taille_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Tour de taille en cm"
+            entries_frame,
+            placeholder_text="Tour de taille en cm",
+            validate="key",
+            validatecommand=float_vcmd,
         )
         self.taille_entry.pack(side="left", expand=True, padx=5)
 
         self.bras_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Tour de bras en cm"
+            entries_frame,
+            placeholder_text="Tour de bras en cm",
+            validate="key",
+            validatecommand=float_vcmd,
         )
         self.bras_entry.pack(side="left", expand=True, padx=5)
 
         self.graisse_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Masse grasse en %"
+            entries_frame,
+            placeholder_text="Masse grasse en %",
+            validate="key",
+            validatecommand=float_vcmd,
         )
         self.graisse_entry.pack(side="left", expand=True, padx=5)
 
         # Label historique
+        historique_header = ctk.CTkFrame(card, fg_color="transparent")
+        historique_header.pack(fill="x", padx=14, pady=(10, 0))
         ctk.CTkLabel(
-            card,
+            historique_header,
             text="Historique des mesures corporelles",
             font=ctk.CTkFont(size=16, weight="bold"),
-            text_color="#F1F1F1",
+            text_color=self.theme_colors.get("text", "#F1F1F1"),
         ).pack(anchor="w")
 
         # Tableau de l'historique
-        self.tableau_frame = ctk.CTkFrame(card, fg_color="#000000", corner_radius=10)
+        self.tableau_frame = ctk.CTkFrame(
+            card, fg_color=self.theme_colors.get("frame", "#2A2D30"), corner_radius=10
+        )
         self.tableau_frame.pack(fill="x", padx=15, pady=10)
         self.ligne_tableau = 1
         headers = [
@@ -488,18 +554,25 @@ class StatsPage(ctk.CTkFrame):
 
         for m in mesures:
             try:
-                dates.append(m.date)
-
-                poids.append(float(m.poids) if m.poids not in (None, "") else 0)
-                taille.append(
+                # Vérifier et convertir tous les éléments avant d'ajouter à la liste
+                date_val = m.date
+                poids_val = float(m.poids) if m.poids not in (None, "") else 0
+                taille_val = (
                     float(m.tour_de_taille) if m.tour_de_taille not in (None, "") else 0
                 )
-                bras.append(
+                bras_val = (
                     float(m.tour_de_bras) if m.tour_de_bras not in (None, "") else 0
                 )
-                masse_grasse.append(
+                masse_grasse_val = (
                     float(m.masse_grasse) if m.masse_grasse not in (None, "") else 0
                 )
+
+                # Ajouter à la liste seulement si tout est valide
+                dates.append(date_val)
+                poids.append(poids_val)
+                taille.append(taille_val)
+                bras.append(bras_val)
+                masse_grasse.append(masse_grasse_val)
 
             except Exception:
                 continue

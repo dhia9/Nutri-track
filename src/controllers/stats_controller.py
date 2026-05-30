@@ -126,7 +126,7 @@ class StatsController:
                     "date": date.strftime("%Y-%m-%d"),
                     "calories": random.randint(1800, 2600),
                     "proteins": random.randint(70, 140),
-                    "carbs": random.randint(150, 300),
+                    "carbohydrate": random.randint(150, 300),
                     "fats": random.randint(40, 90),
                     "salt": round(random.uniform(3, 9), 1),
                     "sugar": round(random.uniform(20, 70), 1),

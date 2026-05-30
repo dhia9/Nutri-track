@@ -9,11 +9,20 @@ NutriTrack est une application desktop développée en Python, permettant à cha
 - Être alerté en cas de dépassement de seuils critiques (sel, sucre, lipides saturés, etc.)
 
 ## Installation
-
-```
+### Avec pip
+```shell
 py -m venv venv
 venv\Scripts\activate # Pour Windows, sur Linux/Mac : source venv/bin/activate
 pip install -r requirements.txt
+python main.py # lancer l'application
+```
+
+### Avec uv
+```shell
+uv venv
+.venv\Scripts\activate # Pour Windows, sur Linux/Mac : source .venv/bin/activate
+uv add -r requirements.txt
+uv run main.py # lancer l'application
 ```
 
 ## Base de données

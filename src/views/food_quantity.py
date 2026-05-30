@@ -2,16 +2,14 @@ import customtkinter as ctk
 
 
 class FoodQuantity(ctk.CTkToplevel):
-    def __init__(self, food_list, parent=None):
-        """Initialise la fenêtre de saisie des quantités d'aliments.
-
-        Args:
-            food_list: Liste des noms d'aliments pour lesquels saisir les quantités.
-            parent: Widget parent (optionnel).
-        """
+    def __init__(self, food_list, parent=None, main_controller=None):
         super().__init__(parent)
         self.food_list = food_list
         self.quantities = {}  # Dictionnaire pour stocker les valeurs des entries
+        self.main_controller = main_controller
+
+        # Obtenir les couleurs du thème
+        theme_colors = main_controller.theme_colors if main_controller else {}
 
         # Configuration de la fenêtre
         self.title("Quantités des aliments")
@@ -45,7 +43,7 @@ class FoodQuantity(ctk.CTkToplevel):
 
         # Frame scrollable pour la liste des aliments
         self.scroll_frame = ctk.CTkScrollableFrame(
-            self, fg_color="#35393D", corner_radius=10
+            self, fg_color=theme_colors.get("frame", "#35393D"), corner_radius=10
         )
         self.scroll_frame.grid(row=1, column=0, sticky="nsew", padx=15, pady=(0, 15))
 
@@ -57,7 +55,10 @@ class FoodQuantity(ctk.CTkToplevel):
 
             # Label de l'aliment
             food_name_label = ctk.CTkLabel(
-                food_frame, text=food, font=ctk.CTkFont(size=12), text_color="#FFFFFF"
+                food_frame,
+                text=food,
+                font=ctk.CTkFont(size=12),
+                text_color=theme_colors.get("text", "#FFFFFF"),
             )
             food_name_label.pack(side="left", padx=(0, 10), fill="x", expand=True)
 
@@ -65,17 +66,27 @@ class FoodQuantity(ctk.CTkToplevel):
             quantity_entry = ctk.CTkEntry(
                 food_frame,
                 placeholder_text="0",
-                fg_color="#2A2A4A",
-                border_color="#4CAF50",
+                fg_color=theme_colors.get("frame_dark", "#2A2A4A"),
+                border_color=theme_colors.get(
+                    "primary_accent", self.main_controller.settings.theme
+                ),
                 border_width=1,
-                text_color="#FFFFFF",
+                validate="key",
+                validatecommand=(
+                    self.register(self.main_controller.validate_float),
+                    "%P",
+                ),
+                text_color=theme_colors.get("text", "#FFFFFF"),
                 width=60,
             )
             quantity_entry.pack(side="left", padx=5)
 
             # Label "grammes"
             grammes_label = ctk.CTkLabel(
-                food_frame, text="g", font=ctk.CTkFont(size=12), text_color="#A8AFB6"
+                food_frame,
+                text="g",
+                font=ctk.CTkFont(size=12),
+                text_color=theme_colors.get("text_secondary", "#A8AFB6"),
             )
             grammes_label.pack(side="left", padx=(0, 5))
 
@@ -92,9 +103,13 @@ class FoodQuantity(ctk.CTkToplevel):
             button_frame,
             text="✓ Valider",
             command=self.on_submit,
-            fg_color="#2DBA7F",
-            text_color="#FFFFFF",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=theme_colors.get("text", "#FFFFFF"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.submit_btn.grid(row=0, column=0, sticky="ew", padx=(0, 5))
 
@@ -103,18 +118,18 @@ class FoodQuantity(ctk.CTkToplevel):
             button_frame,
             text="✗ Annuler",
             command=self.on_cancel,
-            fg_color="#35393D",
-            text_color="#FFFFFF",
-            font=ctk.CTkFont(size=14, weight="bold"),
+            fg_color=theme_colors.get("frame", "#35393D"),
+            hover_color=self.main_controller.darken_color(
+                theme_colors.get("frame", "#35393D")
+            ),
+            text_color=theme_colors.get("text", "#FFFFFF"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.cancel_btn.grid(row=0, column=1, sticky="ew", padx=(5, 0))
 
     def get_quantities(self):
-        """Retourne un dictionnaire avec les quantités saisies.
-
-        Returns:
-            Dictionnaire {nom_aliment: quantité}.
-        """
+        """Retourne un dictionnaire avec les quantités saisies"""
         result = {}
         for food, entry in self.quantities.items():
             try:
@@ -125,10 +140,7 @@ class FoodQuantity(ctk.CTkToplevel):
         return result
 
     def on_submit(self):
-        """Valider et fermer la fenêtre.
-
-        Enregistre les quantités saisies et ferme la fenêtre.
-        """
+        """Valider et fermer la fenêtre"""
         self.quantities = (
             self.get_quantities()
         )  # Mettre à jour les quantités avec les valeurs saisies
