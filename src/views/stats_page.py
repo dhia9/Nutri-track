@@ -437,8 +437,10 @@ class StatsPage(ctk.CTkFrame):
         self.graisse_entry.pack(side="left", expand=True, padx=5)
 
         # Label historique
+        historique_header = ctk.CTkFrame(card, fg_color="transparent")
+        historique_header.pack(fill="x", padx=14, pady=(10, 0))
         ctk.CTkLabel(
-            card,
+            historique_header,
             text="Historique des mesures corporelles",
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color=self.theme_colors.get("text", "#F1F1F1"),
