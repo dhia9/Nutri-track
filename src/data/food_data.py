@@ -7,11 +7,21 @@ from src.utils.json_serializable import JsonSerializable
 
 class FoodData(JsonSerializable):
     def __init__(self, content: list = None):
+        """Initialise la base de données d'aliments.
+
+        Args:
+            content: Liste initiale des aliments (optionnel).
+        """
         if content is None:
             content = []
         self.content = content
 
     def deserialize(self, path):
+        """Désérialise les aliments depuis un fichier JSON.
+
+        Args:
+            path: Chemin du fichier JSON contenant les aliments.
+        """
         try:
             # Lire les fichiers depuis le JSON
             with open(path, "r", encoding="utf-8") as f:

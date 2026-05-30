@@ -6,6 +6,7 @@ from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
 from src.models.profile import Profile
+from src.models.mesures_corporelles import MesuresCorporelles
 from src.utils.json_serializable import JsonSerializable
 
 SETTINGS_PATH = os.path.join(appdirs.user_data_dir("Nutritrack"), "settings.json")
@@ -25,13 +26,33 @@ class Settings(JsonSerializable):
         self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
     def create_profile(self, name, age, height, weight, sex, target_weight):
+        """Crée un nouveau profil et le sauvegarde.
 
+        Args:
+            name: Nom du profil.
+            age: Âge du profil.
+            height: Taille en cm.
+            weight: Poids en kg.
+            sex: Sexe (Homme/Femme).
+            target_weight: Objectif de poids en kg.
+        """
         new_profile = Profile(name, age, height, weight, sex, target_weight)
         self.profiles.append(new_profile)
 
         self.serialize(SETTINGS_PATH)  # Sauvegarder le profil après sa création
 
     def update_profile(self, profile, name, age, height, weight, sex, target_weight):
+        """Met à jour les données d'un profil et les sauvegarde.
+
+        Args:
+            profile: Le profil à mettre à jour.
+            name: Nouveau nom.
+            age: Nouvel âge.
+            height: Nouvelle taille en cm.
+            weight: Nouveau poids en kg.
+            sex: Nouveau sexe.
+            target_weight: Nouvel objectif de poids.
+        """
         profile.name = name
         profile.age = age
         profile.height = height
@@ -42,6 +63,11 @@ class Settings(JsonSerializable):
         self.serialize(SETTINGS_PATH)
 
     def delete_profile(self, name):
+        """Supprime un profil par son nom et sauvegarde.
+
+        Args:
+            name: Nom du profil à supprimer.
+        """
         for profile in self.profiles:
             if profile.name == name:
                 self.profiles.remove(profile)
@@ -50,6 +76,13 @@ class Settings(JsonSerializable):
 
     # charger le dico Settings stocké dans le fichier
     def deserialize(self, path):
+        """Désérialise les données depuis un fichier JSON.
+
+        Charge tous les profils, leurs menus et les menus favoris.
+
+        Args:
+            path: Chemin du fichier JSON.
+        """
         try:
             # Lire le fichier json
             with open(path, "r", encoding="utf-8") as file:
@@ -94,6 +127,18 @@ class Settings(JsonSerializable):
 
                     # Ajouter le menu à la liste des habitudes alimentaires du profil
                     profile.eating_habits.append(menu)
+
+                # Charger les mesures corporelles si elles existent
+                if "mesures_corporelles" in data_profile:
+                    for data_mesure in data_profile["mesures_corporelles"]:
+                        mesure = MesuresCorporelles(
+                            data_mesure["date"],
+                            data_mesure["poids"],
+                            data_mesure["tour_de_taille"],
+                            data_mesure["tour_de_bras"],
+                            data_mesure["masse_grasse"],
+                        )
+                        profile.mesures_corporelles.append(mesure)
 
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)

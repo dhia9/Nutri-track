@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import unicodedata
-
 import appdirs
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
@@ -30,15 +29,22 @@ class NutritionController:
         self.suggested_menus = None
 
     def set_current_profile(self, profile):
+        """Définit le profil actuel.
+
+        Args:
+            profile: Le profil à définir comme profil actuel.
+        """
         self.current_profile = profile
 
-    def fill_food_list(
-        self, food_list
-    ):  # Remplir la liste des aliments selon le fichier JSON
+    def fill_food_list(self, food_list):
+        """Remplit une liste avec tous les aliments disponibles.
+
+        Args:
+            food_list: La liste à remplir avec les noms des aliments.
+        """
         for food in self.food_data.content:
             food_list.append(food.name)
-    
-    import unicodedata
+
 
     def format_text(self, texte):
         texte = unicodedata.normalize("NFD", texte)
@@ -50,10 +56,17 @@ class NutritionController:
 
 
     def search_foods(self, query: str):
-        """Filtre les aliments selon la query de recherche (insensible à la casse)"""
+        """Filtre les aliments selon la requête de recherche.
+
+        La recherche est insensible à la case. Affiche/masque les aliments
+        qui correspondent dans l'interface.
+
+        Args:
+            query: La chaîne de recherche.
+        """
         query = self.format_text(query)
 
-        # Si la query est vide, afficher tous les aliments
+    # Si la query est vide, afficher tous les aliments
         if not query:
             self.view.is_filtered = False
             self.view.current_page = 0
@@ -65,16 +78,26 @@ class NutritionController:
             food for food in self.view.all_foods
             if query in self.format_text(food)
         ]
-        
+
         # Mettre à jour la pagination
         self.view._update_pagination(filtered_foods)
 
     def previous_day(self, event):
+        """Affiche le jour précédent et met à jour l'affichage.
+
+        Args:
+            event: L'événement lié au clic du bouton.
+        """
         # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
         self.current_date -= timedelta(days=1)
         self.update_date()
 
     def next_day(self, event):
+        """Affiche le jour suivant et met à jour l'affichage.
+
+        Args:
+            event: L'événement lié au clic du bouton.
+        """
         # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
         self.current_date += timedelta(days=1)
         self.update_date()
@@ -89,24 +112,34 @@ class NutritionController:
         """Aller à la page suivante"""
         foods_to_display = self.view.filtered_foods if self.view.is_filtered else self.view.all_foods
         total_pages = (len(foods_to_display) + self.view.items_per_page - 1) // self.view.items_per_page
-        
+
         if self.view.current_page < total_pages - 1:
             self.view.current_page += 1
             self.view._display_current_page()
 
     def food_by_name(self, name):
-        """Retourne un objet Food de la base de données selon son nom"""
+        """Retourne un objet Food de la base de données selon son nom.
+
+        Args:
+            name: Le nom de l'aliment.
+
+        Returns:
+            L'objet Food correspondant ou None si non trouvé.
+        """
         for food in self.food_data.content:
             if food.name == name:
                 return food
         return None  # Si aucun aliment ne correspond au nom donné
 
     def add_menu(self):
-        """Ouvre une nouvelle fenêtre pour ajouter un aliment avec sa quantité et l'ajoute à la liste de l'utilisateur une fois validé"""
-        # Récupérer les aliments sélectionnés depuis selected_foods (persiste sur toutes les pages)
+        """Ouvre une fenetre pour ajouter un aliment avec sa quantité.
+
+        Sélectionne les aliments cochés, ouvre une fenêtre de quantités,
+        et ajoute le menu aux habitudes alimentaires du profil.
+        """
         selected_foods = [
-            food_name 
-            for food_name, is_selected in self.view.selected_foods.items() 
+            food_name
+            for food_name, is_selected in self.view.selected_foods.items()
             if is_selected
         ]
 
@@ -161,7 +194,14 @@ class NutritionController:
         self.display_menus()  # Mettre à jour l'affichage des menus après l'ajout
 
     def menus_today(self, date: datetime.date):
-        """Retourne les menus consommés par l'utilisateur à un jour donné"""
+        """Retourne les menus consommés par l'utilisateur à un jour donné.
+
+        Args:
+            date: La date pour laquelle récupérer les menus.
+
+        Returns:
+            Liste des menus du jour spécifié.
+        """
         profile_menus = []
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
 
@@ -173,7 +213,14 @@ class NutritionController:
         return profile_menus
 
     def macros_today(self, date: datetime.date):
-        """Retourne les macros consommés par l'utilisateur à un jour donné"""
+        """Retourne les macros consommés par l'utilisateur à un jour donné.
+
+        Args:
+            date: La date pour laquelle récupérer les macros.
+
+        Returns:
+            Dictionnaire avec les totaux de calories, protéines, glucides et lipides.
+        """
         total_macros = {"calories": 0, "carbohydrate": 0, "proteins": 0, "fats": 0}
         menus = self.menus_today(date)
 
@@ -189,7 +236,11 @@ class NutritionController:
         return total_macros
 
     def delete_menu(self, menu_time: str):
-        """Supprime un menu par sa date (timestamp) et met à jour l'affichage."""
+        """Supprime un menu par sa date (timestamp) et met à jour l'affichage.
+
+        Args:
+            menu_time: La date/heure du menu à supprimer.
+        """
         if self.current_profile is None:
             return
         self.current_profile.eating_habits = [
@@ -203,7 +254,11 @@ class NutritionController:
         self.display_menus()
 
     def toggle_favorite(self, menu: Menu.Menu):
-        """Ajoute ou retire un menu des favoris et met à jour l'affichage."""
+        """Ajoute ou retire un menu des favoris et met à jour l'affichage.
+
+        Args:
+            menu: Le menu à ajouter/retirer des favoris.
+        """
         if menu in self.favorite_menus:
             self.favorite_menus.remove(menu)
         else:
@@ -216,7 +271,10 @@ class NutritionController:
         )
 
     def display_menus(self):
-        """Affiche les menus consommés pour la date courante"""
+        """Affiche les menus consommés pour la date courante.
+
+        Nettoie et recrée l'affichage des menus, avec les totaux de macros.
+        """
         # Nettoyer la scrollable frame
         for widget in self.view.menus_container.winfo_children():
             widget.destroy()

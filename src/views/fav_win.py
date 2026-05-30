@@ -5,6 +5,12 @@ from src.models.menu import Menu
 
 class FavorieMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
+        """Initialise la fenêtre des menus favoris.
+
+        Args:
+            parent: Widget parent (fenêtre principale).
+            main_controller: Le contrôleur principal de l'application.
+        """
         super().__init__(parent)
         self.list_menus_fav = main_controller.settings.favorites_menus
         self.main_controller = main_controller
@@ -42,7 +48,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         self.grab_set()  # Rendre la fenêtre modale
 
     def display_favorite_menus(self):
-        """Affiche la liste des menus favoris avec leur composition"""
+        """Affiche la liste des menus favoris avec leur composition."""
         # Récupérer les menus favoris du profil actuel (actualiser depuis les settings)
         self.list_menus_fav = self.main_controller.settings.favorites_menus
         favorite_menus_data = list(
@@ -69,7 +75,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             self.create_menu_frame(menu)
 
     def create_menu_frame(self, menu):
-        """Crée un frame pour afficher un menu avec sa composition"""
+        """Crée un frame pour afficher un menu avec sa composition.
+
+        Args:
+            menu: Le menu à afficher.
+        """
         # Frame principal du menu
         menu_frame = ctk.CTkFrame(
             self.scrollable_frame,
@@ -126,7 +136,12 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         self._create_macros_summary(menu_frame, menu)
 
     def create_food_item(self, parent_frame, food_menu):
-        """Crée un item pour afficher un aliment avec ses macros"""
+        """Crée un item pour afficher un aliment avec ses macros.
+
+        Args:
+            parent_frame: Le frame parent où ajouter l'item.
+            food_menu: L'aliment à afficher.
+        """
         item_frame = ctk.CTkFrame(parent_frame, fg_color="#35393D", corner_radius=6)
         item_frame.pack(fill="x", pady=3)
         item_frame.grid_columnconfigure(0, weight=1)
@@ -167,7 +182,12 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             macros_label.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 5))
 
     def _create_macros_summary(self, parent_frame, menu):
-        """Affiche le résumé des macros totales du menu"""
+        """Affiche le résumé des macros totales du menu.
+
+        Args:
+            parent_frame: Le frame parent où ajouter le résumé.
+            menu: Le menu dont afficher le résumé.
+        """
         # Calculer les totaux
         total_calories = 0
         total_proteins = 0
@@ -206,8 +226,13 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         summary_label.pack(padx=10, pady=8)
 
     def on_add_menu(self, menu):
-        """Callback pour le bouton Ajouter"""
+        """Callback pour le bouton Ajouter.
 
+        Ajoute le menu favori aux habitudes alimentaires du profil à la date courante.
+
+        Args:
+            menu: Le menu à ajouter.
+        """
         # Ajouter le menu à la date courante dans les habitudes alimentaires du profil
         current_datetime = self.nutrition_controller.current_date.strftime(
             "%Y-%m-%d %H:%M:%S"
@@ -222,7 +247,13 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         self.nutrition_controller.display_menus()  # Rafraîchir la page Nutrition si ouverte
 
     def on_delete_menu(self, menu):
-        """Callback pour le bouton Supprimer"""
+        """Callback pour le bouton Supprimer.
+
+        Supprime le menu des favoris et rafraîchit l'affichage.
+
+        Args:
+            menu: Le menu à supprimer.
+        """
         self.main_controller.settings.favorites_menus.discard(
             menu
         )  # Supprimer du set des favoris

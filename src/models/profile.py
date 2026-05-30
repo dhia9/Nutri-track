@@ -26,9 +26,15 @@ class Profile(Model):
         self.sex = sex
         self.target_weight = target_weight
         self.eating_habits = []
+        self.mesures_corporelles = []
         self.suggestCaracteristics = {"nap": 1.55, "meals_per_day": 3}
 
     def get_imc(self):
+        """Calcule l'Indice de Masse Corporelle (IMC) du profil.
+
+        Returns:
+            L'IMC calculé ou 0 si la taille est 0.
+        """
         if self.height > 0:
             return self.weight / (self.height**2)
         else:
