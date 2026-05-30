@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+import unicodedata
 import appdirs
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
@@ -38,37 +38,41 @@ class NutritionController:
         for food in self.main_controller.food_data.content:
             food_list.append(food.name)
 
+    def format_text(self, texte):
+        texte = unicodedata.normalize("NFD", texte)
+        resultat = ""
+        for c in texte:
+            if unicodedata.combining(c) == 0:
+                resultat += c
+        return (
+            resultat.strip().lower()
+        )  # Enlever les accents, les espaces en début et fin, et mettre en minuscules
+
     def search_foods(self, query: str):
         """Filtre les aliments selon la requête de recherche.
 
-        La recherche est insensible à la casse. Affiche/masque les aliments
+        La recherche est insensible à la case. Affiche/masque les aliments
         qui correspondent dans l'interface.
 
         Args:
             query: La chaîne de recherche.
         """
-        query = query.strip().lower()
+        query = self.format_text(query)
 
         # Si la query est vide, afficher tous les aliments
         if not query:
-            for food_name, food_data in self.view.food_items.items():
-                food_data["checkbox"].pack(
-                    side="left", padx=10, pady=10, fill="x", expand=True
-                )
-                food_data["frame"].pack(fill="x", padx=5, pady=5)
+            self.view.is_filtered = False
+            self.view.current_page = 0
+            self.view._display_current_page()
             return
 
-        # Filtrer et afficher seulement les aliments qui correspondent
-        for food_name, food_data in self.view.food_items.items():
-            if query in food_name.lower():
-                # Afficher l'aliment
-                food_data["checkbox"].pack(
-                    side="left", padx=10, pady=10, fill="x", expand=True
-                )
-                food_data["frame"].pack(fill="x", padx=5, pady=5)
-            else:
-                # Cacher l'aliment
-                food_data["frame"].pack_forget()
+        # Filtrer les aliments
+        filtered_foods = [
+            food for food in self.view.all_foods if query in self.format_text(food)
+        ]
+
+        # Mettre à jour la pagination
+        self.view._update_pagination(filtered_foods)
 
     def previous_day(self, event):
         """Affiche le jour précédent et met à jour l'affichage.
@@ -95,6 +99,25 @@ class NutritionController:
         self.current_date = datetime.now()
         self.update_date()
 
+    def previous_page(self):
+        """Aller à la page précédente"""
+        if self.view.current_page > 0:
+            self.view.current_page -= 1
+            self.view._display_current_page()
+
+    def next_page(self):
+        """Aller à la page suivante"""
+        foods_to_display = (
+            self.view.filtered_foods if self.view.is_filtered else self.view.all_foods
+        )
+        total_pages = (
+            len(foods_to_display) + self.view.items_per_page - 1
+        ) // self.view.items_per_page
+
+        if self.view.current_page < total_pages - 1:
+            self.view.current_page += 1
+            self.view._display_current_page()
+
     def food_by_name(self, name):
         """Retourne un objet Food de la base de données selon son nom.
 
@@ -113,8 +136,8 @@ class NutritionController:
         """Ouvre une nouvelle fenêtre pour ajouter un aliment avec sa quantité et l'ajoute à la liste de l'utilisateur une fois validé"""
         selected_foods = [
             food_name
-            for food_name, data in self.view.food_items.items()
-            if data["var"].get() == "on"
+            for food_name, is_selected in self.view.selected_foods.items()
+            if is_selected
         ]
 
         if not selected_foods:
@@ -165,8 +188,8 @@ class NutritionController:
         )  # Sauvegarder les données après l'ajout du menu
 
         # Décocher toutes les cases
-        for food_name, data in self.view.food_items.items():
-            data["var"].set("off")
+        self.view.selected_foods.clear()  # Vider le dictionnaire de sélections
+        self.view._display_current_page()  # Rafraîchir l'affichage
 
         self.display_menus()  # Mettre à jour l'affichage des menus après l'ajout
 
