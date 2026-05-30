@@ -222,8 +222,6 @@ class MainController:
         r2, g2, b2 = hsv_to_rgb(h, s, v * factor)
         return f"#{int(r2*255):02x}{int(g2*255):02x}{int(b2*255):02x}"
 
-            
-    
     def validate_float(self, proposed_value: str) -> bool:
         """Valide la valeur proposée comme float (utiliser avec %P).
 

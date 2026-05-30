@@ -24,8 +24,6 @@ class HomeController:
                 return True
         return False
 
-
-
     def create_profile(self):
         """Crée un nouveau profil avec les données du formulaire.
 

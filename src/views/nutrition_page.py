@@ -169,7 +169,9 @@ class NutritionPage(ctk.CTkFrame):
 
         # Frame pour la pagination (créer AVANT d'afficher la première page)
         pagination_frame = ctk.CTkFrame(
-            self.frame_ajout, fg_color=self.main_controller.theme_colors["frame"], corner_radius=10
+            self.frame_ajout,
+            fg_color=self.main_controller.theme_colors["frame"],
+            corner_radius=10,
         )
         pagination_frame.grid(
             row=9,

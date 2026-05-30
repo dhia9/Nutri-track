@@ -67,7 +67,10 @@ class SettingsPage(ctk.CTkFrame):
             self.age_entry = ctk.CTkEntry(
                 self.frame_carre_noir,
                 validate="key",
-                validatecommand=(self.register(self.main_controller.validate_int), "%P"),
+                validatecommand=(
+                    self.register(self.main_controller.validate_int),
+                    "%P",
+                ),
             )
             self.age_entry.insert(0, f"{self.profile.age}")
             self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0, 10))
@@ -77,7 +80,10 @@ class SettingsPage(ctk.CTkFrame):
             self.taille_entry = ctk.CTkEntry(
                 self.frame_carre_noir,
                 validate="key",
-                validatecommand=(self.register(self.main_controller.validate_int), "%P"),
+                validatecommand=(
+                    self.register(self.main_controller.validate_int),
+                    "%P",
+                ),
             )
             self.taille_entry.insert(0, f"{self.profile.height}")
             self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0, 10))
@@ -87,7 +93,10 @@ class SettingsPage(ctk.CTkFrame):
             self.poids_entry = ctk.CTkEntry(
                 self.frame_carre_noir,
                 validate="key",
-                validatecommand=(self.register(self.main_controller.validate_float), "%P"),
+                validatecommand=(
+                    self.register(self.main_controller.validate_float),
+                    "%P",
+                ),
             )
             self.poids_entry.insert(0, f"{self.profile.weight}")
             self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0, 10))
@@ -101,7 +110,10 @@ class SettingsPage(ctk.CTkFrame):
             self.objectif_entry = ctk.CTkEntry(
                 self.frame_carre_noir,
                 validate="key",
-                validatecommand=(self.register(self.main_controller.validate_float), "%P"),
+                validatecommand=(
+                    self.register(self.main_controller.validate_float),
+                    "%P",
+                ),
             )
             self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0, 10))
             self.objectif_entry.insert(0, f"{self.profile.target_weight}")
