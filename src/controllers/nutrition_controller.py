@@ -45,15 +45,15 @@ class NutritionController:
         for food in self.food_data.content:
             food_list.append(food.name)
 
-
     def format_text(self, texte):
         texte = unicodedata.normalize("NFD", texte)
         resultat = ""
         for c in texte:
             if unicodedata.combining(c) == 0:
                 resultat += c
-        return resultat.strip().lower()  # Enlever les accents, les espaces en début et fin, et mettre en minuscules
-
+        return (
+            resultat.strip().lower()
+        )  # Enlever les accents, les espaces en début et fin, et mettre en minuscules
 
     def search_foods(self, query: str):
         """Filtre les aliments selon la requête de recherche.
@@ -66,7 +66,7 @@ class NutritionController:
         """
         query = self.format_text(query)
 
-    # Si la query est vide, afficher tous les aliments
+        # Si la query est vide, afficher tous les aliments
         if not query:
             self.view.is_filtered = False
             self.view.current_page = 0
@@ -75,8 +75,7 @@ class NutritionController:
 
         # Filtrer les aliments
         filtered_foods = [
-            food for food in self.view.all_foods
-            if query in self.format_text(food)
+            food for food in self.view.all_foods if query in self.format_text(food)
         ]
 
         # Mettre à jour la pagination
@@ -110,8 +109,12 @@ class NutritionController:
 
     def next_page(self):
         """Aller à la page suivante"""
-        foods_to_display = self.view.filtered_foods if self.view.is_filtered else self.view.all_foods
-        total_pages = (len(foods_to_display) + self.view.items_per_page - 1) // self.view.items_per_page
+        foods_to_display = (
+            self.view.filtered_foods if self.view.is_filtered else self.view.all_foods
+        )
+        total_pages = (
+            len(foods_to_display) + self.view.items_per_page - 1
+        ) // self.view.items_per_page
 
         if self.view.current_page < total_pages - 1:
             self.view.current_page += 1

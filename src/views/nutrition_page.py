@@ -12,14 +12,16 @@ class NutritionPage(ctk.CTkFrame):
         self.controller.view = self  # Assigner la view au contrôleur
 
         self.liste_aliments = []
-        
+
         # Variables de pagination
         self.items_per_page = 20
         self.current_page = 0
         self.all_foods = []  # Liste complète des aliments
         self.filtered_foods = []  # Aliments filtrés par recherche
         self.is_filtered = False
-        self.selected_foods = {}  # Garder track des aliments sélectionnés même hors page
+        self.selected_foods = (
+            {}
+        )  # Garder track des aliments sélectionnés même hors page
 
         # Configuration du grid principal
         for i in range(10):
@@ -149,9 +151,11 @@ class NutritionPage(ctk.CTkFrame):
         self.controller.fill_food_list(list_food)
         self.all_foods = list_food
         self.filtered_foods = list_food
-        
+
         # Frame pour la pagination (créer AVANT d'afficher la première page)
-        pagination_frame = ctk.CTkFrame(self.frame_ajout, fg_color="#35393D", corner_radius=10)
+        pagination_frame = ctk.CTkFrame(
+            self.frame_ajout, fg_color="#35393D", corner_radius=10
+        )
         pagination_frame.grid(
             row=9,
             column=0,
@@ -160,7 +164,7 @@ class NutritionPage(ctk.CTkFrame):
             padx=15,
             pady=(5, 10),
         )
-        
+
         # Bouton Précédent
         self.btn_prev_page = ctk.CTkButton(
             pagination_frame,
@@ -169,10 +173,10 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=12),
             fg_color="#4CAF50",
             hover_color="#45a049",
-            command=self.controller.previous_page
+            command=self.controller.previous_page,
         )
         self.btn_prev_page.pack(side="left", padx=5, pady=5)
-        
+
         # Label pour afficher la page actuelle
         self.page_label = ctk.CTkLabel(
             pagination_frame,
@@ -181,7 +185,7 @@ class NutritionPage(ctk.CTkFrame):
             text_color="#A8AFB6",
         )
         self.page_label.pack(side="left", padx=20, pady=5, expand=True)
-        
+
         # Bouton Suivant
         self.btn_next_page = ctk.CTkButton(
             pagination_frame,
@@ -190,10 +194,10 @@ class NutritionPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=12),
             fg_color="#4CAF50",
             hover_color="#45a049",
-            command=self.controller.next_page
+            command=self.controller.next_page,
         )
         self.btn_next_page.pack(side="right", padx=5, pady=5)
-        
+
         # Afficher la première page (APRES avoir créé les boutons)
         self._display_current_page()
 
@@ -437,15 +441,15 @@ class NutritionPage(ctk.CTkFrame):
         for widget in self.items_frame.winfo_children():
             widget.destroy()
         self.food_items.clear()
-        
+
         # Déterminer la liste à utiliser (filtrée ou complète)
         foods_to_display = self.filtered_foods if self.is_filtered else self.all_foods
-        
+
         # Calculer les indices de début et fin
         start_idx = self.current_page * self.items_per_page
         end_idx = start_idx + self.items_per_page
         page_foods = foods_to_display[start_idx:end_idx]
-        
+
         # Créer les checkboxes pour les aliments de cette page
         for food in page_foods:
             item_frame = ctk.CTkFrame(
@@ -456,13 +460,14 @@ class NutritionPage(ctk.CTkFrame):
             # Restaurer l'état précédent si l'aliment était sélectionné
             initial_state = "on" if self.selected_foods.get(food, False) else "off"
             var = ctk.StringVar(value=initial_state)
-            
+
             # Ajouter un callback pour sauvegarder l'état de sélection
             def make_callback(food_name, var_ref):
                 def on_change():
-                    self.selected_foods[food_name] = (var_ref.get() == "on")
+                    self.selected_foods[food_name] = var_ref.get() == "on"
+
                 return on_change
-            
+
             checkbox = ctk.CTkCheckBox(
                 item_frame,
                 text=food,
@@ -472,7 +477,7 @@ class NutritionPage(ctk.CTkFrame):
                 text_color="#FFFFFF",
                 fg_color="#4CAF50",
                 checkmark_color="#35393D",
-                command=make_callback(food, var)
+                command=make_callback(food, var),
             )
             checkbox.pack(side="left", padx=10, pady=10, fill="x", expand=True)
 
@@ -481,20 +486,22 @@ class NutritionPage(ctk.CTkFrame):
                 "checkbox": checkbox,
                 "frame": item_frame,
             }
-        
+
         # Mettre à jour les labels et boutons de pagination
-        total_pages = (len(foods_to_display) + self.items_per_page - 1) // self.items_per_page
+        total_pages = (
+            len(foods_to_display) + self.items_per_page - 1
+        ) // self.items_per_page
         if total_pages == 0:
             total_pages = 1
-            
+
         self.page_label.configure(text=f"Page {self.current_page + 1} / {total_pages}")
-        
+
         # Gérer l'état des boutons
         if self.current_page > 0:
             self.btn_prev_page.configure(state="normal", fg_color="#4CAF50")
         else:
             self.btn_prev_page.configure(state="disabled", fg_color="#777777")
-            
+
         if self.current_page < total_pages - 1:
             self.btn_next_page.configure(state="normal", fg_color="#4CAF50")
         else:
