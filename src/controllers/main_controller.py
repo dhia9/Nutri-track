@@ -198,16 +198,16 @@ class MainController:
             }
         else:  # dark mode
             self.theme_colors = {
-                "bg": "#121212",
+                "bg": "#1D1F21",
                 "sidebar": "#1D1F21",
                 "content": "#17191B",
                 "button": "#2A2D30",
                 "button_hover": "#35393D",
                 "text": "#F1F1F1",
                 "text_secondary": "#A8AFB6",
-                "frame": "#35393D",  # Gris sombre pour les frames
-                "frame_dark": "#2A2A4A",
-                "frame_darker": "#1A1A2E",
+                "frame": "#35393D",  # Gris sombre pour les cartes et panneaux
+                "frame_dark": "#2A2D30",
+                "frame_darker": "#1F2327",
                 "error": "#D9534F",
                 "error_hover": "#C9302C",
             }

@@ -4,7 +4,7 @@ import customtkinter as ctk
 class HomePage(ctk.CTkFrame):
 
     def __init__(self, parent, main_controller):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="transparent")
         self.main_controller = main_controller
         self.main_controller.controllers["Home"].view = self
         self.controlleur = self.main_controller.controllers["Home"]
@@ -203,6 +203,7 @@ class HomePage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color="#FFFFFF",
             font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
         )
@@ -280,6 +281,7 @@ class HomePage(ctk.CTkFrame):
                     if is_selected
                     else self.PROFILE_BTN_DEFAULT_HOVER
                 ),
+                text_color="#FFFFFF",
                 command=lambda p=profile: self.controlleur.select_profile(p),
             )
             select_button.pack(fill="x", padx=14, pady=(0, 12))

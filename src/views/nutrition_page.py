@@ -4,7 +4,7 @@ from src.controllers.main_controller import MainController
 
 class NutritionPage(ctk.CTkFrame):
     def __init__(self, parent, main_controller: MainController):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="transparent")
         self.parent = parent
         self.main_win = parent.master
         self.main_controller = main_controller
@@ -34,6 +34,7 @@ class NutritionPage(ctk.CTkFrame):
             self,
             text="Gestion nutritionnelle",
             font=ctk.CTkFont(size=26, weight="bold"),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.title.grid(
             row=0, column=0, columnspan=3, sticky="w", padx=20, pady=(10, 0)
@@ -58,7 +59,9 @@ class NutritionPage(ctk.CTkFrame):
         self._create_macro_card("Lipides", "frame_carre_noir4", 2, 8, 2)
 
         date_frame = ctk.CTkFrame(
-            self, fg_color=self.main_controller.theme_colors["frame"], corner_radius=10
+            self,
+            fg_color=self.main_controller.theme_colors["frame"],
+            corner_radius=10,
         )
         date_frame.grid(row=0, column=8, sticky="w", padx=10, pady=5)
 
@@ -98,7 +101,9 @@ class NutritionPage(ctk.CTkFrame):
         self.button_next.bind("<Button-1>", self.controller.next_day)
 
         self.frame_ajout = ctk.CTkFrame(
-            self, corner_radius=15, fg_color=self.main_controller.theme_colors["frame"]
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
         )
         self.frame_ajout.grid(
             row=5,
@@ -117,7 +122,7 @@ class NutritionPage(ctk.CTkFrame):
             text="✚ Ajouter un menu",
             font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
-            text_color="#FFFFFF",
+            text_color=self.main_controller.theme_colors["text"],
             command=self.controller.add_menu,
             fg_color=self.main_controller.settings.theme,
             hover_color=self.main_controller.darken_color(
@@ -192,6 +197,7 @@ class NutritionPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
             command=self.controller.previous_page,
         )
         self.btn_prev_page.pack(side="left", padx=5, pady=5)
@@ -215,6 +221,7 @@ class NutritionPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
             command=self.controller.next_page,
         )
         self.btn_next_page.pack(side="right", padx=5, pady=5)
@@ -223,7 +230,9 @@ class NutritionPage(ctk.CTkFrame):
         self._display_current_page()
 
         self.frame_aliment = ctk.CTkFrame(
-            self, corner_radius=15, fg_color=self.main_controller.theme_colors["frame"]
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
         )
         self.frame_aliment.grid(
             row=5,

@@ -12,7 +12,7 @@ class SettingsPage(ctk.CTkFrame):
     }
 
     def __init__(self, parent, main_controller):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="transparent")
 
         self.main_controller = main_controller
         self.main_controller.controllers["Settings"].view = self
@@ -48,7 +48,9 @@ class SettingsPage(ctk.CTkFrame):
 
         # ===== GRAND CADRE GAUCHE =====
         self.frame_carre_noir = ctk.CTkFrame(
-            self, corner_radius=15, fg_color=self.main_controller.theme_colors["frame"]
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
         )
 
         self.frame_carre_noir.grid(
@@ -169,6 +171,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_sexe1.grid(row=1, column=1, sticky="w", padx=20, pady=(0, 10))
         self.boutton_sexe2 = ctk.CTkRadioButton(
@@ -180,6 +183,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_sexe2.grid(row=2, column=1, sticky="w", padx=20, pady=(0, 10))
 
@@ -192,6 +196,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
             font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
         )
@@ -205,6 +210,7 @@ class SettingsPage(ctk.CTkFrame):
             text="Supprimer le profil",
             fg_color=self.main_controller.theme_colors["error"],
             hover_color=self.main_controller.theme_colors["error_hover"],
+            text_color=self.main_controller.theme_colors["text"],
             command=self.delete_profile,
             font=ctk.CTkFont(size=12, weight="bold"),
             corner_radius=10,
@@ -215,7 +221,9 @@ class SettingsPage(ctk.CTkFrame):
 
         # ===== GRAND CADRE DROIT =====
         self.frame_carre_noir2 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color=self.main_controller.theme_colors["frame"]
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
         )
 
         self.frame_carre_noir2.grid(
@@ -248,6 +256,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_mode.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_mode2 = ctk.CTkRadioButton(
@@ -260,6 +269,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_mode2.grid(row=2, column=0, sticky="w", padx=20, pady=(0, 10))
 
@@ -286,6 +296,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme1.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme2 = ctk.CTkRadioButton(
@@ -298,6 +309,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme2.grid(row=10, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme3 = ctk.CTkRadioButton(
@@ -310,6 +322,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme3.grid(row=11, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme4 = ctk.CTkRadioButton(
@@ -322,6 +335,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme4.grid(row=12, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme5 = ctk.CTkRadioButton(
@@ -334,6 +348,7 @@ class SettingsPage(ctk.CTkFrame):
             hover_color=self.main_controller.darken_color(
                 self.main_controller.settings.theme
             ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0, 10))
 
