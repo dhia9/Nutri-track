@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
-import unicodedata
+
 import appdirs
 import customtkinter as ctk
 import src.controllers.main_controller as main_controller
 import src.models.menu as Menu
 import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
+import unicodedata
 from src.views.fav_win import FavorieMenuWindow
 from src.views.suggestedMenus import SuggestedMenuWindow
 
@@ -260,6 +261,55 @@ class NutritionController:
             appdirs.user_data_dir("Nutritrack") + "/settings.json"
         )
 
+    def update_progress_bars(self):
+        """Met à jour les barres de progression des objectifs journaliers.
+
+        Utilise l'algorithme de calcul des besoins nutritionnels journaliers
+        et les macros consommés pour calculer les pourcentages.
+        """
+        # Récupérer le NAP du profil (facteur d'activité physique)
+        try:
+            nap = float(self.current_profile.suggestCaracteristics["nap"])
+        except (ValueError, KeyError, TypeError):
+            nap = 1.55  # Valeur par défaut
+
+        # Récupérer les besoins nutritionnels journaliers
+        nutritional_needs = self.current_profile.get_nutritional_needs(nap)
+
+        # Récupérer les macros consommés aujourd'hui
+        macros = self.macros_today(self.current_date)
+
+        # Calculer les pourcentages de progression pour chaque macro
+        calories_progress = (
+            min(1.0, macros["calories"] / nutritional_needs["calories"])
+            if nutritional_needs["calories"] > 0
+            else 0.0
+        )
+
+        proteins_progress = (
+            min(1.0, macros["proteins"] / nutritional_needs["proteines_g"])
+            if nutritional_needs["proteines_g"] > 0
+            else 0.0
+        )
+
+        carbs_progress = (
+            min(1.0, macros["carbohydrate"] / nutritional_needs["glucides_g"])
+            if nutritional_needs["glucides_g"] > 0
+            else 0.0
+        )
+
+        fats_progress = (
+            min(1.0, macros["fats"] / nutritional_needs["lipides_g"])
+            if nutritional_needs["lipides_g"] > 0
+            else 0.0
+        )
+
+        # Mettre à jour les barres de progression
+        self.view.progress_calories.set(calories_progress)
+        self.view.progress_proteine.set(proteins_progress)
+        self.view.progress_glucides.set(carbs_progress)
+        self.view.progress_lipides.set(fats_progress)
+
     def display_menus(self):
         """Affiche les menus consommés pour la date courante"""
         # Nettoyer la scrollable frame
@@ -283,6 +333,8 @@ class NutritionController:
             self.view.proteines_value_label.configure(text="0 g")
             self.view.glucides_value_label.configure(text="0 g")
             self.view.lipides_value_label.configure(text="0 g")
+            # Mettre à jour les barres de progression
+            self.update_progress_bars()
             return
 
         # Afficher chaque menu du jour
@@ -373,6 +425,9 @@ class NutritionController:
         )
         self.view.lipides_value_label.configure(text=f"{int(macros['fats'])} g")
 
+        # Mettre à jour les barres de progression
+        self.update_progress_bars()
+
     def update_date(self):
         # Mettre a jour sur la vue la date affiché dans le label
         self.view.date_label.configure(
@@ -398,12 +453,29 @@ class NutritionController:
         Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
 
     def mealPerD_change(self, event=None):
-        self.current_profile.suggestCaracteristics["meals_per_day"] = (
-            self.view.input_mealPerD.get()
-        )
+        """Met à jour le nombre de repas par jour et sauvegarde."""
+        try:
+            meals_per_day = int(self.view.input_mealPerD.get())
+            self.current_profile.suggestCaracteristics["meals_per_day"] = meals_per_day
+            self.main_controller.settings.serialize(
+                appdirs.user_data_dir("Nutritrack") + "/settings.json"
+            )
+        except (ValueError, KeyError):
+            pass  # Ignorer les valeurs invalides
 
     def nap_change(self, event=None):
-        self.current_profile.suggestCaracteristics["nap"] = self.view.input_nap.get()
+        """Met à jour le NAP (facteur d'activité physique) et sauvegarde."""
+        try:
+            nap = float(self.view.input_nap.get())
+            self.current_profile.suggestCaracteristics["nap"] = nap
+            self.main_controller.settings.serialize(
+                appdirs.user_data_dir("Nutritrack") + "/settings.json"
+            )
+            # Mettre à jour les barres de progression si la view existe
+            if self.view:
+                self.update_progress_bars()
+        except (ValueError, KeyError):
+            pass  # Ignorer les valeurs invalides
 
     def add_suggested_menu(self, menu, window):
         menu.date = self.current_date.strftime("%Y-%m-%d %H:%M:%S")
