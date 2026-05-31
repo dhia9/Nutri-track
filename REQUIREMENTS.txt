@@ -10,3 +10,4 @@ platformdirs==4.9.6
 pytokens==0.4.1
 matplotlib==3.10.8
 Pillow==11.0.0
+python-dateutil==2.9.0

@@ -5,6 +5,7 @@ import datetime
 import math
 import matplotlib.dates as mdates
 from src.models.mesures_corporelles import MesuresCorporelles
+from dateutil import parser
 
 # Constantes pour les couleurs des macros
 C_GREEN = "#2DBA7F"
@@ -31,7 +32,6 @@ class StatsPage(ctk.CTkFrame):
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
         self.table_rows = []
-        self.duree = None
         # Récupérer les couleurs du thème
         self.theme_colors = self.main_controller.theme_colors
         self.update_matplotlib_colors()
@@ -138,9 +138,9 @@ class StatsPage(ctk.CTkFrame):
         ).pack(anchor="w")
         self.scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.scroll.pack(fill="both", expand=True, padx=20, pady=10)
-        self._render_all_charts(self.duree)
+        self._render_all_charts()
 
-    def _render_all_charts(self,duree):
+    def _render_all_charts(self):
         """Affiche tous les graphiques de statistiques.
 
         Crée et affiche les graphiques de calories, caractéristiques,
@@ -156,7 +156,7 @@ class StatsPage(ctk.CTkFrame):
         row.pack(fill="x", pady=10)
         self._chart_macros_pie(row)
         self._chart_macros_bar(row)
-        self._chart_mesure_corpo(row,duree)
+        self._chart_mesure_corpo(row)
 
     def _chart_calories(self, data):
         """Crée un graphique d'évolution des calories.
@@ -165,23 +165,23 @@ class StatsPage(ctk.CTkFrame):
             data: Dictionnaire des calories par date.
         """
         card = self._create_card_Version(
-    self.scroll,
-    "Évolution calories",
-    buttons=[
-        {
-            "text": "Tout",
-            "command": lambda: self.change_period(None),
-        },
-        {
-            "text": "30 dernier",
-            "command": lambda: self.change_period(30),
-        },
-        {
-            "text": "7 dernier",
-            "command": lambda: self.change_period(7),
-        }
-    ],
-)
+            self.scroll,
+            "Évolution calories",
+            buttons=[
+                {
+                    "text": "Tout",
+                    "command": lambda: self.controller.change_period(None, "calor"),
+                },
+                {
+                    "text": "30 dernier",
+                    "command": lambda: self.controller.change_period(30, "calor"),
+                },
+                {
+                    "text": "7 dernier",
+                    "command": lambda: self.controller.change_period(7, "calor"),
+                },
+            ],
+        )
         fig, ax = plt.subplots(figsize=(8, 3))
         if not data:
             ax.text(
@@ -194,8 +194,14 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         else:
-            dates = [d for d in data.keys()]
+            dates = [parser.parse(d) for d in data.keys()]
             calories = list(data.values())
+            duree = self.controller.duree["calor"]
+            if duree:
+                combined = list(zip(dates, calories))
+                combined.sort(key=lambda x: x[0])
+                combined = combined[-duree:]
+                dates, calories = map(list, zip(*combined))
             ax.plot(
                 dates,
                 calories,
@@ -297,23 +303,23 @@ class StatsPage(ctk.CTkFrame):
     def _caracteristicsChart(self):
         """Crée un graphique d'évolution des macros (protéines, lipides, glucides)."""
         card = self._create_card_Version(
-    self.scroll,
-    "Évolution macros",
-    buttons=[
-        {
-            "text": "Tout",
-            "command": lambda: self.change_period(7),
-        },
-        {
-            "text": "30 dernier",
-            "command": lambda: self.change_period(30),
-        },
-        {
-            "text": "7 dernier",
-            "command": lambda: self.change_period(30),
-        }
-    ],
-)
+            self.scroll,
+            "Évolution macros",
+            buttons=[
+                {
+                    "text": "Tout",
+                    "command": lambda: self.controller.change_period(None, "macro"),
+                },
+                {
+                    "text": "30 dernier",
+                    "command": lambda: self.controller.change_period(30, "macro"),
+                },
+                {
+                    "text": "7 dernier",
+                    "command": lambda: self.controller.change_period(7, "macro"),
+                },
+            ],
+        )
         fig, ax = plt.subplots(figsize=(8, 3))
         if not self.macrosDated["proteins"]:
             ax.text(
@@ -327,9 +333,17 @@ class StatsPage(ctk.CTkFrame):
             ax.set_axis_off()
         else:
             dates = [d for d in self.macrosDated["proteins"].keys()]
+            dates = [parser.parse(d) for d in dates]
             carbohydrate = list(self.macrosDated["proteins"].values())
             proteins = list(self.macrosDated["proteins"].values())
             fats = list(self.macrosDated["fats"].values())
+            duree = self.controller.duree["macro"]
+            if duree:
+                combined = list(zip(dates, carbohydrate, proteins, fats))
+                combined.sort(key=lambda x: x[0])
+                combined = combined[-duree:]
+                dates, carbohydrate, proteins, fats = map(list, zip(*combined))
+
             ax.plot(
                 dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate"
             )
@@ -560,7 +574,7 @@ class StatsPage(ctk.CTkFrame):
                 widget.destroy()
             self.table_rows.pop()
 
-    def _chart_mesure_corpo(self, parent,duree):
+    def _chart_mesure_corpo(self, parent):
         """
         Génère un graphique multi-axes (4 sous-graphiques) représentant l'évolution
         des mesures corporelles d'un profil.
@@ -571,23 +585,23 @@ class StatsPage(ctk.CTkFrame):
             None
         """
         card = self._create_card_Version(
-    parent,
-    "Évolution des mesures corporelles",
-    buttons=[
-        {
-            "text": "Tout",
-            "command": lambda: self.change_period(None),
-        },
-        {
-            "text": "30 dernier",
-            "command": lambda: self.change_period(30),
-        },
-        {
-            "text": "7 dernier",
-            "command": lambda: self.change_period(7),
-        }
-    ],
-)
+            parent,
+            "Évolution des mesures corporelles",
+            buttons=[
+                {
+                    "text": "Tout",
+                    "command": lambda: self.controller.change_period(None, "corpo"),
+                },
+                {
+                    "text": "30 dernier",
+                    "command": lambda: self.controller.change_period(30, "corpo"),
+                },
+                {
+                    "text": "7 dernier",
+                    "command": lambda: self.controller.change_period(7, "corpo"),
+                },
+            ],
+        )
         fig, axes = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
         fig.subplots_adjust(hspace=0.5)
 
@@ -633,13 +647,18 @@ class StatsPage(ctk.CTkFrame):
                 ax.set_axis_off()
             self._embed(fig, card)
             return
+        duree = self.controller.duree["corpo"]
         if duree:
-            dates = self.last_n_elements(dates,duree)
-            poids= self.last_n_elements(poids,duree)
-            taille= self.last_n_elements(taille,duree)
-            bras= self.last_n_elements(bras,duree)
-            masse_grasse= self.last_n_elements(masse_grasse,duree)
-
+            # méthode utile pour trier les listes de la même manière
+            combined = list(zip(dates, poids, taille, bras, masse_grasse))
+            combined.sort(key=lambda x: x[0])
+            dates, poids, taille, bras, masse_grasse = map(list, zip(*combined))
+            dates = self.controller.last_n_elements(dates, duree)
+            poids = self.controller.last_n_elements(poids, duree)
+            taille = self.controller.last_n_elements(taille, duree)
+            bras = self.controller.last_n_elements(bras, duree)
+            masse_grasse = self.controller.last_n_elements(masse_grasse, duree)
+        dates = [parser.parse(d) for d in dates]
         axes[0].plot(dates, poids, color=C_GREEN, label="Poids corporel")
         axes[0].set_title("Évolution du poids")
         axes[0].set_ylabel("Poids (kg)")
@@ -670,8 +689,6 @@ class StatsPage(ctk.CTkFrame):
         fig.autofmt_xdate()
 
         self._embed(fig, card)
-    def last_n_elements(self,l,n):
-        return l[(-1 * n):]
 
     def _on_add_mesure(self, event):
         """
@@ -687,6 +704,7 @@ class StatsPage(ctk.CTkFrame):
         """
         self.ajouter_mesure()
         self.controller._update_charts_only()
+
     def _create_card_Version(self, parent, title, buttons=None):
         """Crée une carte pour afficher un graphique."""
 
@@ -721,18 +739,14 @@ class StatsPage(ctk.CTkFrame):
                     width=32,
                     height=32,
                     corner_radius=10,
-            text_color=self.main_controller.theme_colors["text"],
+                    text_color=self.main_controller.theme_colors["text"],
                     font=ctk.CTkFont(size=12, weight="bold"),
                     fg_color=self.main_controller.settings.theme,
-            hover_color=self.main_controller.darken_color(
-                self.main_controller.settings.theme
-            ),
+                    hover_color=self.main_controller.darken_color(
+                        self.main_controller.settings.theme
+                    ),
                     command=btn["command"],
                 )
                 button.pack(side="left", padx=4)
 
         return card
-    def change_period(self, days):
-        self.duree = days
-        # refresh complet
-        self.refresh()

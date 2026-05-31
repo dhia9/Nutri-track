@@ -11,6 +11,7 @@ class StatsController:
         self.view = None
         self.current_date = datetime.now()
         self.mesures_corporelles = []
+        self.duree = {"calor": None, "macro": None, "corpo": None}
 
     def macros_by_date(self):
         """Calcule les macros consommés pour chaque jour.
@@ -25,7 +26,7 @@ class StatsController:
         for menu in menus_end_to_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
                 continue
-            date = menu.date[:10]
+            date = menu.date
             for food_menu in menu.content:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
@@ -225,3 +226,11 @@ class StatsController:
             row_widget.append(label)
 
         self.view.table_rows.append(row_widget)
+
+    def change_period(self, days, type):
+        self.duree[type] = days
+        # refresh complet
+        self.view.refresh()
+
+    def last_n_elements(self, l, n):
+        return l[(-1 * n) :]
