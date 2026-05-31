@@ -39,7 +39,11 @@ class StatsPage(ctk.CTkFrame):
         self._build()
 
     def update_matplotlib_colors(self):
-        """Met à jour les couleurs matplotlib selon le thème actuel."""
+        """
+        Met à jour les couleurs matplotlib selon le thème actuel.
+
+        Returns:
+            None"""
         bg_color = self.theme_colors.get("bg", "#1D1F21")
         content_color = self.theme_colors.get("content", "#17191B")
         frame_color = self.theme_colors.get("frame", "#2A2D30")
@@ -66,6 +70,9 @@ class StatsPage(ctk.CTkFrame):
         """Rafraîchit l'affichage des statistiques avec les données actuelles.
 
         Detruit et recrée tous les graphiques et éléments de l'interface.
+
+        Returns:
+            None
         """
         for child in self.winfo_children():
             child.destroy()
@@ -128,6 +135,9 @@ class StatsPage(ctk.CTkFrame):
         """Construit l'interface des statistiques.
 
         Crée l'entête et les graphiques à afficher.
+
+        Returns:
+            None
         """
         header = ctk.CTkFrame(self, fg_color="transparent")
         header.pack(fill="x", padx=20, pady=20)
@@ -145,6 +155,9 @@ class StatsPage(ctk.CTkFrame):
 
         Crée et affiche les graphiques de calories, caractéristiques,
         et macros (pie et bar).
+
+        Returns:
+            None
         """
         data = self.macrosDated
         calories = data["calories"]
@@ -163,6 +176,9 @@ class StatsPage(ctk.CTkFrame):
 
         Args:
             data: Dictionnaire des calories par date.
+
+        Returns:
+            None
         """
         card = self._create_card_Version(
             self.scroll,
@@ -227,6 +243,9 @@ class StatsPage(ctk.CTkFrame):
 
         Args:
             parent: Widget parent où afficher le graphique.
+
+        Returns:
+            None
         """
         card = self._create_card(parent, "Macros du dernier repas")
         avg_p = self.macrosToday["proteins"]
@@ -267,6 +286,9 @@ class StatsPage(ctk.CTkFrame):
 
         Args:
             parent: Widget parent où afficher le graphique.
+
+        Returns:
+            None
         """
         card = self._create_card(parent, "Comparaison pour le dernier repas")
         avg_p = self.macrosToday["proteins"]
@@ -301,7 +323,11 @@ class StatsPage(ctk.CTkFrame):
         self._embed(fig, card)
 
     def _caracteristicsChart(self):
-        """Crée un graphique d'évolution des macros (protéines, lipides, glucides)."""
+        """
+        Crée un graphique d'évolution des macros (protéines, lipides, glucides).
+
+        Retruns:
+            None"""
         card = self._create_card_Version(
             self.scroll,
             "Évolution macros",
@@ -363,6 +389,22 @@ class StatsPage(ctk.CTkFrame):
         self._embed(fig, card)
 
     def _bodyanalys(self):
+        """
+        Construit la section "Mesures corporelles" de l'interface utilisateur.
+
+        Cette méthode crée et organise l'ensemble des composants UI liés au suivi
+        des mesures corporelles :
+        - navigation de date (jour précédent / suivant)
+        - bouton d'ajout de mesure
+        - champs de saisie (poids, taille, tour de bras, masse grasse)
+        - tableau d'historique des mesures
+
+        Elle initialise également les widgets nécessaires et charge les mesures
+        existantes via le contrôleur pour les afficher dans le tableau.
+
+        Returns:
+          None
+        """
 
         # création de la card
         card = self._create_card(self.scroll, "Mesures corporelles")
@@ -519,6 +561,16 @@ class StatsPage(ctk.CTkFrame):
             self.controller._create_ligne_mesure(mesure)
 
     def ajouter_mesure(self):
+        """
+        Crée une nouvelle mesure corporelle à partir des champs de saisie de l'interface,
+        l'ajoute au contrôleur et met à jour l'affichage du tableau.
+
+        La mesure est construite à partir de la date courante et des valeurs saisies
+        dans les champs poids, taille, bras et graisse.
+
+        Returns:
+            None
+        """
         mesure = MesuresCorporelles(
             self.controller.current_date.strftime("%Y-%m-%d"),
             self.poids_entry.get(),
@@ -531,6 +583,24 @@ class StatsPage(ctk.CTkFrame):
         self.ajouter_ligne_mesure(mesure)
 
     def ajouter_ligne_mesure(self, mesure):
+        """
+        Ajoute une nouvelle ligne de mesure dans un tableau sur la vue.
+
+        La méthode insère la nouvelle mesure à la bonne position selon sa date,
+        décale les lignes existantes si nécessaire, puis ajoute les widgets associés.
+
+        Parameters:
+            mesure : object
+                Objet contenant les attributs de mesure :
+                - date : str (ou comparable)
+                - poids : float
+                - tour_de_taille : float
+                - tour_de_bras : float
+                - masse_grasse : float
+
+        Returns:
+            None
+        """
         values = [
             mesure.date,
             mesure.poids,
@@ -706,7 +776,21 @@ class StatsPage(ctk.CTkFrame):
         self.controller._update_charts_only()
 
     def _create_card_Version(self, parent, title, buttons=None):
-        """Crée une carte pour afficher un graphique."""
+        """difference par rapport à create card est l'ajout de 3 boutons.
+                Params:
+                parent : CTk widget
+            Widget parent
+        title : str
+            Titre affiché dans le header de la card.
+        buttons : list[dict], optional
+            Liste de boutons à afficher dans le header.
+            Chaque bouton doit contenir :
+                - "text" : str (texte du bouton)
+                - "command" : callable (fonction appelée au clic)
+
+        Returns:
+        CTkFrame
+            Widget card créé et configuré."""
 
         card = ctk.CTkFrame(
             parent,

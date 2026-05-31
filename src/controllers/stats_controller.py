@@ -151,23 +151,47 @@ class StatsController:
         return total / len(data) if data else 0
 
     def update_date(self):
-        # Mettre a jour sur la vue la date affiché dans le label
+        """
+        Mettre a jour sur la vue la date affiché dans le label
+
+        returns:None
+        """
         self.view.date_label.configure(
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
 
     def previous_day(self, event):
-        # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+        """
+        Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+
+        Parameters
+            event : tk.Event
+            Événement déclenché par le callback (clic sur le bouton).
+        Returns:
+            None"""
         self.current_date -= timedelta(days=1)
         self.update_date()
 
     def next_day(self, event):
-        # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+        """
+        Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+
+        Parameters
+            event : tk.Event
+            Événement déclenché par le callback (clic sur le bouton).
+        Returns:
+            None"""
         self.current_date += timedelta(days=1)
         self.update_date()
 
     def ajouter_mesure(self, mesure):
-        # Ajouter la mesure au profil courant
+        """
+        Ajouter la mesure au profil courant
+
+        Parameters:
+            mesure:Model mesure_coporelles
+        Returns:
+            None"""
         if self.main_controller.current_profile is not None:
             self.main_controller.current_profile.mesures_corporelles.append(mesure)
             # Sauvegarder les modifications dans le fichier JSON
@@ -180,7 +204,12 @@ class StatsController:
         return self.mesures_corporelles
 
     def get_mesures_corporelles(self):
-        """Retourne les mesures corporelles du profil courant"""
+        """
+        Retourne les mesures corporelles du profil courant
+
+        Returns:
+            None
+        """
         if self.main_controller.current_profile is not None:
             return self.main_controller.current_profile.mesures_corporelles
         return []
@@ -228,9 +257,33 @@ class StatsController:
         self.view.table_rows.append(row_widget)
 
     def change_period(self, days, type):
+        """
+        Met à jour la durée , puis rafraîchit la vue.
+        Parameters:
+        days : int
+            Nombre de jours à appliquer pour la période.
+        type : str
+            Clé représentant le type de période à modifier dans self.duree.
+
+        Returns:
+        None
+        """
         self.duree[type] = days
         # refresh complet
         self.view.refresh()
 
     def last_n_elements(self, l, n):
+        """
+        Retourne les n derniers éléments d'une liste.
+        Parameters:
+
+        l : list
+            Liste source.
+        n : int
+            Nombre d'éléments à récupérer depuis la fin de la liste.
+
+        Returns:
+        list
+            Sous-liste contenant les n derniers éléments.
+        """
         return l[(-1 * n) :]
