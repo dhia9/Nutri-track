@@ -2,16 +2,18 @@ import customtkinter as ctk
 
 
 class CTkMessageBox(ctk.CTkToplevel):
-    def __init__(self, parent, title="", message="", button_text="OK"):
+    def __init__(self, parent, main_controller, title="", message="", button_text="OK"):
         """Initialise une boîte de message modale.
 
         Args:
             parent: Widget parent (fenêtre principale).
+            main_controller: Controlleur principal.
             title: Titre de la boîte de message.
             message: Texte du message.
             button_text: Texte du bouton (par défaut "OK").
         """
         super().__init__()
+        self.main_controller = main_controller
         self.title(title)
         self.geometry("300x150")
         self.resizable(False, False)
@@ -23,7 +25,17 @@ class CTkMessageBox(ctk.CTkToplevel):
         label = ctk.CTkLabel(self, text=message, wraplength=250)
         label.pack(pady=20, padx=20)
 
-        button = ctk.CTkButton(self, text=button_text, command=self.destroy)
+        button = ctk.CTkButton(
+            self,
+            text=button_text,
+            command=self.destroy,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
+        )
         button.pack(pady=10)
 
         # Centrer la messagebox sur l'écran

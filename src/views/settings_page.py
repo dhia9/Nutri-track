@@ -1,13 +1,18 @@
 import customtkinter as ctk
-import src.controllers.main_controller as main_controller
-import src.views.home_page as home_page
-import src.controllers.settings_controller as settings_controller
 
 
 class SettingsPage(ctk.CTkFrame):
+    # Mapping des noms de thème aux couleurs hex
+    THEME_COLORS = {
+        "green": "#2DBA7F",
+        "blue": "#3B82F6",
+        "red": "#EF4444",
+        "yellow": "#F59E0B",
+        "pink": "#EC4899",
+    }
 
     def __init__(self, parent, main_controller):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="transparent")
 
         self.main_controller = main_controller
         self.main_controller.controllers["Settings"].view = self
@@ -42,7 +47,11 @@ class SettingsPage(ctk.CTkFrame):
         self.label4.grid(row=1, column=0, columnspan=2, sticky="w", padx=20, pady=10)
 
         # ===== GRAND CADRE GAUCHE =====
-        self.frame_carre_noir = ctk.CTkFrame(self, corner_radius=15, fg_color="#35393D")
+        self.frame_carre_noir = ctk.CTkFrame(
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
+        )
 
         self.frame_carre_noir.grid(
             row=2, rowspan=5, column=0, columnspan=2, padx=20, sticky="nsew"
@@ -57,19 +66,40 @@ class SettingsPage(ctk.CTkFrame):
 
             self.label_age = ctk.CTkLabel(self.frame_carre_noir, text="Âge")
             self.label_age.grid(row=2, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.age_entry = ctk.CTkEntry(self.frame_carre_noir)
+            self.age_entry = ctk.CTkEntry(
+                self.frame_carre_noir,
+                validate="key",
+                validatecommand=(
+                    self.register(self.main_controller.validate_int),
+                    "%P",
+                ),
+            )
             self.age_entry.insert(0, f"{self.profile.age}")
             self.age_entry.grid(row=3, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_taille = ctk.CTkLabel(self.frame_carre_noir, text="Taille (cm)")
             self.label_taille.grid(row=4, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.taille_entry = ctk.CTkEntry(self.frame_carre_noir)
+            self.taille_entry = ctk.CTkEntry(
+                self.frame_carre_noir,
+                validate="key",
+                validatecommand=(
+                    self.register(self.main_controller.validate_int),
+                    "%P",
+                ),
+            )
             self.taille_entry.insert(0, f"{self.profile.height}")
             self.taille_entry.grid(row=5, column=0, sticky="w", padx=20, pady=(0, 10))
 
             self.label_poids = ctk.CTkLabel(self.frame_carre_noir, text="Poids (kg)")
             self.label_poids.grid(row=6, column=0, sticky="w", padx=20, pady=(16, 10))
-            self.poids_entry = ctk.CTkEntry(self.frame_carre_noir)
+            self.poids_entry = ctk.CTkEntry(
+                self.frame_carre_noir,
+                validate="key",
+                validatecommand=(
+                    self.register(self.main_controller.validate_float),
+                    "%P",
+                ),
+            )
             self.poids_entry.insert(0, f"{self.profile.weight}")
             self.poids_entry.grid(row=7, column=0, sticky="w", padx=20, pady=(0, 10))
 
@@ -79,7 +109,14 @@ class SettingsPage(ctk.CTkFrame):
             self.label_objectif.grid(
                 row=3, column=1, sticky="w", padx=20, pady=(16, 10)
             )
-            self.objectif_entry = ctk.CTkEntry(self.frame_carre_noir)
+            self.objectif_entry = ctk.CTkEntry(
+                self.frame_carre_noir,
+                validate="key",
+                validatecommand=(
+                    self.register(self.main_controller.validate_float),
+                    "%P",
+                ),
+            )
             self.objectif_entry.grid(row=4, column=1, sticky="w", padx=20, pady=(0, 10))
             self.objectif_entry.insert(0, f"{self.profile.target_weight}")
         else:
@@ -126,17 +163,42 @@ class SettingsPage(ctk.CTkFrame):
         self.label_sexe.grid(row=0, column=1, sticky="w", padx=20, pady=(16, 10))
         self.sexe_var = ctk.StringVar(value="Homme")
         self.boutton_sexe1 = ctk.CTkRadioButton(
-            self.frame_carre_noir, text="Homme", variable=self.sexe_var, value="Homme"
+            self.frame_carre_noir,
+            text="Homme",
+            variable=self.sexe_var,
+            value="Homme",
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_sexe1.grid(row=1, column=1, sticky="w", padx=20, pady=(0, 10))
         self.boutton_sexe2 = ctk.CTkRadioButton(
-            self.frame_carre_noir, text="Femme", variable=self.sexe_var, value="Femme"
+            self.frame_carre_noir,
+            text="Femme",
+            variable=self.sexe_var,
+            value="Femme",
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_sexe2.grid(row=2, column=1, sticky="w", padx=20, pady=(0, 10))
 
         # Bouton modifier ke profil
         self.boutton_modifier = ctk.CTkButton(
-            self.frame_carre_noir, text="Modifier le profil", command=self.edit_profile
+            self.frame_carre_noir,
+            text="Modifier le profil",
+            command=self.edit_profile,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.boutton_modifier.grid(
             row=12, column=0, sticky="ew", padx=20, pady=(16, 20)
@@ -146,8 +208,12 @@ class SettingsPage(ctk.CTkFrame):
         self.boutton_supprimer = ctk.CTkButton(
             self.frame_carre_noir,
             text="Supprimer le profil",
-            hover_color="#ff4d4d",
+            fg_color=self.main_controller.theme_colors["error"],
+            hover_color=self.main_controller.theme_colors["error_hover"],
+            text_color=self.main_controller.theme_colors["text"],
             command=self.delete_profile,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            corner_radius=10,
         )
         self.boutton_supprimer.grid(
             row=12, column=1, sticky="w", padx=20, pady=(16, 20)
@@ -155,7 +221,9 @@ class SettingsPage(ctk.CTkFrame):
 
         # ===== GRAND CADRE DROIT =====
         self.frame_carre_noir2 = ctk.CTkFrame(
-            self, corner_radius=15, fg_color="#35393D"
+            self,
+            corner_radius=15,
+            fg_color=self.main_controller.theme_colors["frame"],
         )
 
         self.frame_carre_noir2.grid(
@@ -175,13 +243,20 @@ class SettingsPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
         )
         self.mode_app_label.grid(row=0, column=0, sticky="w", padx=20, pady=(20, 10))
-        self.mode_var = ctk.StringVar(value="dark")
+        self.mode_var = ctk.StringVar(
+            value=self.main_controller.settings.appearance_mode
+        )
         self.boutton_mode = ctk.CTkRadioButton(
             self.frame_carre_noir2,
             text="Clair",
             variable=self.mode_var,
             value="light",
             command=self.change_mode,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_mode.grid(row=1, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_mode2 = ctk.CTkRadioButton(
@@ -190,6 +265,11 @@ class SettingsPage(ctk.CTkFrame):
             variable=self.mode_var,
             value="dark",
             command=self.change_mode,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_mode2.grid(row=2, column=0, sticky="w", padx=20, pady=(0, 10))
 
@@ -199,17 +279,50 @@ class SettingsPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
         )
         self.theme_label.grid(row=8, column=0, sticky="w", padx=20, pady=(16, 10))
-        self.theme_var = ctk.StringVar(value="green")
+        # Déterminer le thème actuel par la couleur hex
+        current_theme = "green"  # défaut si non trouvé
+        for theme_name, hex_color in self.THEME_COLORS.items():
+            if hex_color.lower() == self.main_controller.settings.theme.lower():
+                current_theme = theme_name
+                break
+        self.theme_var = ctk.StringVar(value=current_theme)
         self.boutton_theme1 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Bleu", variable=self.theme_var, value="blue"
+            self.frame_carre_noir2,
+            text="Bleu",
+            variable=self.theme_var,
+            value="blue",
+            command=self.change_theme,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme1.grid(row=9, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme2 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Rouge", variable=self.theme_var, value="red"
+            self.frame_carre_noir2,
+            text="Rouge",
+            variable=self.theme_var,
+            value="red",
+            command=self.change_theme,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme2.grid(row=10, column=0, sticky="w", padx=20, pady=(0, 10))
         self.boutton_theme3 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Vert", variable=self.theme_var, value="green"
+            self.frame_carre_noir2,
+            text="Vert",
+            variable=self.theme_var,
+            value="green",
+            command=self.change_theme,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme3.grid(row=11, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme4 = ctk.CTkRadioButton(
@@ -217,18 +330,29 @@ class SettingsPage(ctk.CTkFrame):
             text="Jaune",
             variable=self.theme_var,
             value="yellow",
+            command=self.change_theme,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme4.grid(row=12, column=0, sticky="w ", padx=20, pady=(0, 10))
         self.boutton_theme5 = ctk.CTkRadioButton(
-            self.frame_carre_noir2, text="Rose", variable=self.theme_var, value="pink"
+            self.frame_carre_noir2,
+            text="Rose",
+            variable=self.theme_var,
+            value="pink",
+            command=self.change_theme,
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color=self.main_controller.theme_colors["text"],
         )
         self.boutton_theme5.grid(row=13, column=0, sticky="w ", padx=20, pady=(0, 10))
 
     def edit_profile(self):
-        """Modifie le profil actuel avec les données saisies dans le formulaire.
-
-        Appelle le contrôleur pour valider et enregistrer les modifications.
-        """
         if self.profile is None:
             self.controlleur.edit_profile(None, None, None, None, None, None)
             return
@@ -257,7 +381,6 @@ class SettingsPage(ctk.CTkFrame):
         self.controlleur.edit_profile(name, age, height, weight, target_weight, sex)
 
     def delete_profile(self):
-        """Supprime le profil actuel et nettoie les champs du formulaire."""
         self.controlleur.delete_profile()
         self.nom_entry.delete(0, "end")
         self.age_entry.delete(0, "end")
@@ -266,11 +389,6 @@ class SettingsPage(ctk.CTkFrame):
         self.objectif_entry.delete(0, "end")
 
     def update_profile_details(self, profile):
-        """Met à jour l'affichage avec les détails du profil sélectionné.
-
-        Args:
-            profile: Le profil à afficher (ou None).
-        """
         self.profile = profile
 
         self.nom_entry.delete(0, "end")
@@ -295,10 +413,15 @@ class SettingsPage(ctk.CTkFrame):
             self.sexe_var.set("Homme")
 
     def change_mode(self):
-        """Change le mode d'affichage de l'application (clair/sombre)."""
         mode = self.mode_var.get()
         ctk.set_appearance_mode(mode)
+        self.main_controller.settings.set_appearance_mode(mode)
+        # Recréer l'UI pour appliquer les changements
+        self.main_controller.recreate_ui_for_theme_change()
 
     def change_theme(self):
-        """Change le thème de couleur de l'application."""
-        theme = self.theme_var.get()
+        theme_name = self.theme_var.get()
+        theme_hex = self.THEME_COLORS.get(theme_name, "#2DBA7F")
+        self.main_controller.settings.set_theme_color(theme_hex)
+        # Recréer l'UI pour appliquer les changements
+        self.main_controller.recreate_ui_for_theme_change()

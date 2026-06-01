@@ -2,6 +2,7 @@ import random
 import os
 import appdirs
 from datetime import datetime, timedelta
+import customtkinter as ctk
 
 
 class StatsController:
@@ -125,7 +126,7 @@ class StatsController:
                     "date": date.strftime("%Y-%m-%d"),
                     "calories": random.randint(1800, 2600),
                     "proteins": random.randint(70, 140),
-                    "carbs": random.randint(150, 300),
+                    "carbohydrate": random.randint(150, 300),
                     "fats": random.randint(40, 90),
                     "salt": round(random.uniform(3, 9), 1),
                     "sugar": round(random.uniform(20, 70), 1),
@@ -182,3 +183,45 @@ class StatsController:
         if self.main_controller.current_profile is not None:
             return self.main_controller.current_profile.mesures_corporelles
         return []
+
+    def _update_charts_only(self):
+        """
+        Rafraîchit uniquement la zone des graphiques et du tableau de statistiques.
+        Cette méthode permet une mise à jour partielle de l'interface sans
+        reconstruire entièrement la page.
+        Args:
+            None
+        Returns:
+            None
+
+        """
+        for child in self.view.scroll.winfo_children():
+            child.destroy()
+        self.view.table_rows = []
+        self.view._render_all_charts()
+
+    def _create_ligne_mesure(self, mesure):
+        """
+        Ajoute une nouvelle ligne dans le tableau d'historique des mesures corporelles.
+        Args:
+            mesure (MesuresCorporelles):
+        Returns:
+            None
+
+        """
+        values = [
+            mesure.date,
+            mesure.poids,
+            mesure.tour_de_taille,
+            mesure.tour_de_bras,
+            mesure.masse_grasse,
+        ]
+
+        row_widget = []
+
+        for col, value in enumerate(values):
+            label = ctk.CTkLabel(self.view.tableau_frame, text=value)
+            label.grid(row=len(self.view.table_rows) + 1, column=col, padx=35, pady=5)
+            row_widget.append(label)
+
+        self.view.table_rows.append(row_widget)
