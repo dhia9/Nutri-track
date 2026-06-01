@@ -415,7 +415,9 @@ class StatsPage(ctk.CTkFrame):
         ax.set_position((0.15, 0.1, 0.7, 0.8))
         fig.tight_layout()
         if total > 0:
-            ax.legend(MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5), fontsize=8)
+            ax.legend(
+                MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5), fontsize=8
+            )
         self._embed(fig, card)
 
     def _chart_macros_bar_grid(self, parent, row, col):
@@ -487,13 +489,9 @@ class StatsPage(ctk.CTkFrame):
             carbohydrate = list(self.macrosDated["proteins"].values())
             proteins = list(self.macrosDated["proteins"].values())
             fats = list(self.macrosDated["fats"].values())
-            ax.plot(
-                dates, carbohydrate, color="green", linewidth=2, label="Carbs"
-            )
+            ax.plot(dates, carbohydrate, color="green", linewidth=2, label="Carbs")
             ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
-            ax.plot(
-                dates, proteins, color="blue", linewidth=2, label="Protéines"
-            )
+            ax.plot(dates, proteins, color="blue", linewidth=2, label="Protéines")
             ax.plot(dates, fats, color="red", linewidth=2, label="Lipides")
             ax.set_xlabel("Date", labelpad=10, fontsize=9)
             ax.set_ylabel("Valeurs (g)", labelpad=10, fontsize=9)
@@ -513,6 +511,12 @@ class StatsPage(ctk.CTkFrame):
             parent: Widget parent (grille).
             row: Numéro de ligne dans la grille.
         """
+        button_color = self.theme_colors.get("button", "#2A2D30")
+        button_hover = self.theme_colors.get("button_hover", "#35393D")
+        content_color = self.theme_colors.get("content", "#17191B")
+        text_color = self.theme_colors.get("text", "#F1F1F1")
+        text_secondary = self.theme_colors.get("text_secondary", "#A8AFB6")
+
         # création de la card
         card = self._create_card(parent, "Mesures corporelles")
         card.grid(row=row, column=0, columnspan=2, sticky="nsew", padx=5, pady=5)
@@ -526,16 +530,17 @@ class StatsPage(ctk.CTkFrame):
         top_row.pack(fill="x", pady=(0, 10))
 
         # Date frame
-        date_frame = ctk.CTkFrame(top_row, fg_color="#000000", corner_radius=10)
+        date_frame = ctk.CTkFrame(top_row, fg_color=button_color, corner_radius=10)
         date_frame.pack(side="left", padx=(0, 10))
 
         self.button_previous = ctk.CTkButton(
             date_frame,
             text="◀",
             width=25,
-            fg_color="#000000",
+            fg_color=button_color,
             font=ctk.CTkFont(size=12),
-            hover_color="#F1F1F1",
+            hover_color=button_hover,
+            text_color=text_color,
             corner_radius=10,
         )
         self.button_previous.pack(side="left", padx=4, pady=2)
@@ -545,6 +550,7 @@ class StatsPage(ctk.CTkFrame):
             date_frame,
             text=self.controller.current_date.strftime("%d/%m/%Y").capitalize(),
             font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=text_color,
             corner_radius=10,
         )
         self.date_label.pack(side="left", padx=12, pady=2)
@@ -553,9 +559,10 @@ class StatsPage(ctk.CTkFrame):
             date_frame,
             text="▶",
             width=25,
-            fg_color="#0F0A0A",
+            fg_color=button_color,
             font=ctk.CTkFont(size=12),
-            hover_color="#F1F1F1",
+            hover_color=button_hover,
+            text_color=text_color,
             corner_radius=10,
         )
         self.button_next.pack(side="left", padx=4, pady=2)
@@ -563,7 +570,14 @@ class StatsPage(ctk.CTkFrame):
 
         # Bouton ajouter
         boutton_ajouter = ctk.CTkButton(
-            top_row, text="+ Ajouter mesure", font=ctk.CTkFont(size=10)
+            top_row,
+            text="+ Ajouter mesure",
+            font=ctk.CTkFont(size=10),
+            fg_color=self.main_controller.settings.theme,
+            hover_color=self.main_controller.darken_color(
+                self.main_controller.settings.theme
+            ),
+            text_color="#FFFFFF",
         )
         boutton_ajouter.pack(side="left")
         boutton_ajouter.bind("<Button-1>", self.ajouter_mesure)
@@ -573,22 +587,50 @@ class StatsPage(ctk.CTkFrame):
         entries_frame.pack(fill="x", pady=(0, 10))
 
         self.poids_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Poids (kg)", width=80, font=ctk.CTkFont(size=10)
+            entries_frame,
+            placeholder_text="Poids (kg)",
+            width=80,
+            font=ctk.CTkFont(size=10),
+            fg_color=content_color,
+            border_color=button_color,
+            text_color=text_color,
+            placeholder_text_color=text_secondary,
         )
         self.poids_entry.pack(side="left", padx=3)
 
         self.taille_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Tour taille", width=80, font=ctk.CTkFont(size=10)
+            entries_frame,
+            placeholder_text="Tour taille",
+            width=80,
+            font=ctk.CTkFont(size=10),
+            fg_color=content_color,
+            border_color=button_color,
+            text_color=text_color,
+            placeholder_text_color=text_secondary,
         )
         self.taille_entry.pack(side="left", padx=3)
 
         self.bras_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Tour bras", width=80, font=ctk.CTkFont(size=10)
+            entries_frame,
+            placeholder_text="Tour bras",
+            width=80,
+            font=ctk.CTkFont(size=10),
+            fg_color=content_color,
+            border_color=button_color,
+            text_color=text_color,
+            placeholder_text_color=text_secondary,
         )
         self.bras_entry.pack(side="left", padx=3)
 
         self.graisse_entry = ctk.CTkEntry(
-            entries_frame, placeholder_text="Masse grasse %", width=80, font=ctk.CTkFont(size=10)
+            entries_frame,
+            placeholder_text="Masse grasse %",
+            width=80,
+            font=ctk.CTkFont(size=10),
+            fg_color=content_color,
+            border_color=button_color,
+            text_color=text_color,
+            placeholder_text_color=text_secondary,
         )
         self.graisse_entry.pack(side="left", padx=3)
 
@@ -597,17 +639,22 @@ class StatsPage(ctk.CTkFrame):
             main_container,
             text="Historique (5 dernières)",
             font=ctk.CTkFont(size=11, weight="bold"),
-            text_color="#F1F1F1",
+            text_color=text_color,
         ).pack(anchor="w", pady=(10, 5))
 
         # Tableau mini
-        self.tableau_frame = ctk.CTkFrame(main_container, fg_color="#000000", corner_radius=10)
+        self.tableau_frame = ctk.CTkFrame(
+            main_container, fg_color=content_color, corner_radius=10
+        )
         self.tableau_frame.pack(fill="x")
         self.ligne_tableau = 1
         headers = ["Date", "Poids", "Tour taille", "Tour bras", "Masse grasse"]
         for col, header in enumerate(headers):
             label = ctk.CTkLabel(
-                self.tableau_frame, text=header, font=ctk.CTkFont(size=9, weight="bold")
+                self.tableau_frame,
+                text=header,
+                font=ctk.CTkFont(size=9, weight="bold"),
+                text_color=text_color,
             )
             label.grid(row=0, column=col, padx=8, pady=3)
 
@@ -630,6 +677,7 @@ class StatsPage(ctk.CTkFrame):
         self.ajouter_ligne_mesure(mesure)
 
     def ajouter_ligne_mesure(self, mesure):
+        text_color = self.theme_colors.get("text", "#F1F1F1")
         values = [
             mesure.date,
             mesure.poids,
@@ -661,7 +709,7 @@ class StatsPage(ctk.CTkFrame):
         # Créer la nouvelle ligne à la bonne position
         row_widget = []
         for col, value in enumerate(values):
-            label = ctk.CTkLabel(self.tableau_frame, text=value)
+            label = ctk.CTkLabel(self.tableau_frame, text=value, text_color=text_color)
             label.grid(row=insert_position + 1, column=col, padx=35, pady=5)
             row_widget.append(label)
 
