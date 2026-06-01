@@ -426,7 +426,7 @@ class NutritionPage(ctk.CTkFrame):
         self.input_nap.insert(
             0, str(self.controller.current_profile.suggestCaracteristics["nap"])
         )
-        self.input_nap.bind("<KeyRelease>", self.controller.mealPerD_change)
+        self.input_nap.bind("<KeyRelease>", self.controller.nap_change)
         self.input_nap.grid(row=2, column=0, sticky="w", padx=(10, 5), pady=(0, 8))
 
         self.label_mealPerD = ctk.CTkLabel(
