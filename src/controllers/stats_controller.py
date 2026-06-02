@@ -273,8 +273,46 @@ class StatsController:
         """
         self.duree[type] = days
         # refresh complet
-        self.view.refresh()
+        # self.view.refresh()
+        if type == "macro":
+            self.refresh_macro_only()
 
+        elif type == "calor":
+            self.refresh_calories_only()
+
+        elif type == "corpo":
+            self.refresh_corpo_only()
+
+    def refresh_calories_only(self):
+        self.macrosDated = self.macros_by_date()
+        data = self.macrosDated["calories"]
+        if self.view.calories_canvas:
+            self.view.calories_canvas.get_tk_widget().destroy()
+        if self.view.calories_widget:
+            self.view.calories_widget.destroy()
+            self.view.calories_widget = None
+        self.view._draw_calories_chart(
+            self.view.calories_card,
+            data
+        )
+
+    def refresh_macro_only(self):
+        self.macrosDated = self.macros_by_date()
+        if self.view.macro_widget:
+            self.view.macro_widget.destroy()
+            self.view.macro_widget = None
+        self.view._draw_caracteristics_chart(
+    self.view.macros_card
+)
+    def refresh_corpo_only(self):
+
+        if self.view.corpo_widget:
+            self.view.corpo_widget.destroy()
+            self.view.corpo_widget = None
+
+        self.view._draw_corpo_chart(
+            self.view.corpo_card
+        )
     def last_n_elements(self, l, n):
         """
         Retourne les n derniers éléments d'une liste.

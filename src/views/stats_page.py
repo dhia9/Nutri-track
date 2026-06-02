@@ -35,8 +35,13 @@ class StatsPage(ctk.CTkFrame):
         # Récupérer les couleurs du thème
         self.theme_colors = self.main_controller.theme_colors
         self.update_matplotlib_colors()
-        self.calories_card = None
-        self.calories_canvas_parent = None
+        self.calories_canvas = None
+        self.calories_widget = None
+        self.macro_canvas = None
+        self.macro_widget = None
+        self.corpo_canvas = None
+        self.corpo_widget = None
+        self.corpo_card = None
         self._build()
 
     def update_matplotlib_colors(self):
@@ -155,10 +160,16 @@ class StatsPage(ctk.CTkFrame):
         canvas = FigureCanvasTkAgg(fig, master=parent)
         canvas.draw()
         widget = canvas.get_tk_widget()
-        widget.configure(bg=bg_color, highlightthickness=0)
-        widget.pack(fill="both", expand=True, padx=12, pady=(0, 12))
+        widget.configure(
+            bg=bg_color, 
+            highlightthickness=0)
+        widget.pack(fill="both",
+                     expand=True,
+                       padx=12,
+                         pady=(0, 12))
         plt.close(fig)
-        return widget
+        
+        return canvas,widget  
 
     def _build(self):
         """Construit l'interface des statistiques en format dashboard.
@@ -224,223 +235,6 @@ class StatsPage(ctk.CTkFrame):
         # Row 3 : Evolution mesures corporelles
         self._chart_mesure_corpo_grid(self.dashboard_grid, row=3)
 
-    def _chart_calories(self, data):
-        """Crée un graphique d'évolution des calories.
-
-        Args:
-            data: Dictionnaire des calories par date.
-
-        Returns:
-            None
-        """
-        card = self._create_card_Version(
-            self.scroll,
-            "Évolution calories",
-            buttons=[
-                {
-                    "text": "Tout",
-                    "command": lambda: self.controller.change_period(None, "calor"),
-                },
-                {
-                    "text": "30 derniers",
-                    "command": lambda: self.controller.change_period(30, "calor"),
-                },
-                {
-                    "text": "7 derniers",
-                    "command": lambda: self.controller.change_period(7, "calor"),
-                },
-            ],
-        )
-        fig, ax = plt.subplots(figsize=(8, 3))
-        if not data:
-            ax.text(
-                0.5,
-                0.5,
-                "Aucune donnée pour les calories",
-                ha="center",
-                va="center",
-                wrap=True,
-            )
-            ax.set_axis_off()
-        else:
-            dates = [d for d in data.keys()]
-            calories = list(data.values())
-            duree = self.controller.duree["calor"]
-            if duree:
-                combined = list(zip(dates, calories))
-                combined.sort(key=lambda x: x[0])
-                combined = combined[-duree:]
-                dates, calories = map(list, zip(*combined))
-            ax.plot(
-                dates,
-                calories,
-                color=self.main_controller.settings.theme,
-                linewidth=2.5,
-                label="Calories",
-            )
-            ax.fill_between(
-                dates, calories, alpha=0.15, color=self.main_controller.settings.theme
-            )
-            ax.set_xlabel("Date", labelpad=12)
-            ax.set_ylabel("Calories", labelpad=10)
-            ax.legend()
-            ax.grid(True, linestyle="--", alpha=0.25)
-            ax.spines["top"].set_visible(False)
-            ax.spines["right"].set_visible(False)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-            fig.autofmt_xdate()
-        self._embed(fig, card)
-
-    def _chart_macros_pie(self, parent):
-        """Crée un graphique en camembert des macros du dernier repas.
-
-        Args:
-            parent: Widget parent où afficher le graphique.
-
-        Returns:
-            None
-        """
-        card = self._create_card(parent, "Macros du dernier repas")
-        avg_p = self.macrosToday["proteins"]
-        avg_c = self.macrosToday["carbohydrate"]
-        avg_f = self.macrosToday["fats"]
-        values = [
-            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
-            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
-            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
-        ]
-        fig, ax = plt.subplots(figsize=(4, 4))
-        total = sum(values)
-        if total > 0:
-            ax.pie(
-                values,
-                colors=[C_PURPLE, C_BLUE, C_ORANGE],
-                startangle=90,
-                wedgeprops={"edgecolor": "#1D1F21"},
-            )
-        else:
-            ax.text(
-                0.5,
-                0.5,
-                "Aucune donnée pour le dernier repas",
-                ha="center",
-                va="center",
-                wrap=True,
-            )
-            ax.set_axis_off()
-        ax.set_position((0.20, 0.1, 0.6, 0.8))
-        fig.tight_layout()
-        if total > 0:
-            ax.legend(MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5))
-        self._embed(fig, card)
-
-    def _chart_macros_bar(self, parent):
-        """Crée un graphique en barres pour comparer les macros du dernier repas.
-
-        Args:
-            parent: Widget parent où afficher le graphique.
-
-        Returns:
-            None
-        """
-        card = self._create_card(parent, "Comparaison pour le dernier repas")
-        avg_p = self.macrosToday["proteins"]
-        avg_c = self.macrosToday["carbohydrate"]
-        avg_f = self.macrosToday["fats"]
-        values = [
-            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
-            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
-            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
-        ]
-        fig, ax = plt.subplots(figsize=(4, 4))
-        total = sum(values)
-        if total > 0:
-            bars = ax.bar([1, 2, 3], values, color=[C_PURPLE, C_BLUE, C_ORANGE])
-            ax.set_xticks([])
-            ax.set_xlabel("Macronutriments", labelpad=12)
-            ax.set_ylabel("Quantité moyenne", labelpad=10)
-            ax.legend(bars, MACRO_LABELS)
-            ax.grid(True, axis="y", alpha=0.2)
-            ax.spines["top"].set_visible(False)
-            ax.spines["right"].set_visible(False)
-        else:
-            ax.text(
-                0.5,
-                0.5,
-                "Aucune donnée pour le dernier repas",
-                ha="center",
-                va="center",
-                wrap=True,
-            )
-            ax.set_axis_off()
-        self._embed(fig, card)
-
-    def _caracteristicsChart(self):
-        """
-        Crée un graphique d'évolution des macros (protéines, lipides, glucides).
-
-        Retruns:
-            None"""
-        card = self._create_card_Version(
-            self.scroll,
-            "Évolution macros",
-            buttons=[
-                {
-                    "text": "Tout",
-                    "command": lambda: self.controller.change_period(None, "macro"),
-                },
-                {
-                    "text": "30 derniers",
-                    "command": lambda: self.controller.change_period(30, "macro"),
-                },
-                {
-                    "text": "7 derniers",
-                    "command": lambda: self.controller.change_period(7, "macro"),
-                },
-            ],
-        )
-        fig, ax = plt.subplots(figsize=(8, 3))
-        if not self.macrosDated["proteins"]:
-            ax.text(
-                0.5,
-                0.5,
-                "Aucune donnée pour les macros",
-                ha="center",
-                va="center",
-                wrap=True,
-            )
-            ax.set_axis_off()
-        else:
-            dates = [d for d in self.macrosDated["proteins"].keys()]
-            dates = [parser.parse(d) for d in dates]
-            carbohydrate = list(self.macrosDated["proteins"].values())
-            proteins = list(self.macrosDated["proteins"].values())
-            fats = list(self.macrosDated["fats"].values())
-            duree = self.controller.duree["macro"]
-            if duree:
-                combined = list(zip(dates, carbohydrate, proteins, fats))
-                combined.sort(key=lambda x: x[0])
-                combined = combined[-duree:]
-                dates, carbohydrate, proteins, fats = map(list, zip(*combined))
-
-            ax.plot(
-                dates, carbohydrate, color="green", linewidth=2.5, label="carbohydrate"
-            )
-            ax.fill_between(dates, carbohydrate, alpha=0.1, color="green")
-            ax.plot(
-                dates, proteins, color="blue", linewidth=2.5, label=MACRO_PROTEIN_LABEL
-            )
-            ax.plot(dates, fats, color="red", linewidth=2.5, label=MACRO_FAT_LABEL)
-            ax.set_xlabel("Date", labelpad=12)
-            ax.set_ylabel("Valeurs", labelpad=10)
-            ax.legend()
-            ax.grid(True, linestyle="--", alpha=0.25)
-            ax.spines["top"].set_visible(False)
-            ax.spines["right"].set_visible(False)
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-            fig.autofmt_xdate()
-        self._embed(fig, card)
-
     def _chart_calories_grid(self, parent, row, col):
         """Crée un graphique d'évolution des calories en grille.
 
@@ -466,6 +260,10 @@ class StatsPage(ctk.CTkFrame):
             ])
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
         self.calories_card = card
+
+        self._draw_calories_chart(card, data)
+        
+    def _draw_calories_chart(self, card, data):
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not data:
             ax.text(
@@ -497,8 +295,7 @@ class StatsPage(ctk.CTkFrame):
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
             fig.autofmt_xdate(rotation=45)
             ax.tick_params(labelsize=8)
-        self._embed(fig, card)
-
+        self.calories_canvas, self.calories_widget = self._embed(fig, card)
     def _chart_macros_pie_grid(self, parent, row, col):
         """Crée un graphique en camembert des macros du dernier repas en grille.
 
@@ -611,7 +408,10 @@ class StatsPage(ctk.CTkFrame):
                 },
             ])
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
-
+        self.macros_card = card
+        self._draw_caracteristics_chart( card)
+        
+    def _draw_caracteristics_chart(self, card):
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not self.macrosDated["proteins"]:
             ax.text(
@@ -650,8 +450,7 @@ class StatsPage(ctk.CTkFrame):
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
             fig.autofmt_xdate(rotation=45)
             ax.tick_params(labelsize=8)
-        self._embed(fig, card)
-
+        self.macro_canvas, self.macro_widget = self._embed(fig, card)
     def _bodyanalys_compact(self, parent, row):
         """Crée une section compacte des mesu   res corporelles dans la grille.
 
@@ -787,7 +586,6 @@ class StatsPage(ctk.CTkFrame):
         )
         self.graisse_entry.pack(in_=entries_center,side="left", padx=3)
 
-        # Row 3: Mini tableau de l'historique
         ctk.CTkLabel(
             main_container,
             text="Historique (5 dernières)",
@@ -795,7 +593,6 @@ class StatsPage(ctk.CTkFrame):
             text_color=text_color,
         ).pack(anchor="w", pady=(10, 5))
 
-        # Tableau mini
         self.tableau_scroll = ctk.CTkScrollableFrame(
         main_container,
         fg_color=content_color,
@@ -804,7 +601,6 @@ class StatsPage(ctk.CTkFrame):
     )
         self.tableau_scroll.pack(fill="x")
         self.ligne_tableau = 1
-        # Les colonnes prennent toute la largeur disponible du tableau
         for i in range(5):
             self.tableau_scroll.grid_columnconfigure(i, weight=1, uniform="table")
         headers = ["Date", "Poids", "Tour taille", "Tour bras", "Masse grasse"]
@@ -817,13 +613,10 @@ class StatsPage(ctk.CTkFrame):
             )
             label.grid(row=0, column=col, padx=5, pady=5,sticky="nsew")
 
-        # Charger et afficher les mesures existantes depuis le profil (max 5)
         mesures_existantes = self.controller.get_mesures_corporelles()
-        # Afficher les mesures en ordre inverse (plus récentes en haut)
         for mesure in list(reversed(mesures_existantes))[:5]:
             self.ajouter_ligne_mesure(mesure)
 
-        
     def ajouter_mesure(self, event=None):
         """
         Crée une nouvelle mesure corporelle à partir des champs de saisie de l'interface,
@@ -878,26 +671,21 @@ class StatsPage(ctk.CTkFrame):
         ]
         mesure_date = mesure.date
 
-        # Trouver la bonne position pour insérer la mesure (ordre décroissant par date)
         insert_position = 0
         for i, row in enumerate(self.table_rows):
-            # Récupérer la date de la ligne existante (première cellule)
             row_date_label = row[0]
             row_date = row_date_label.cget("text")
 
-            # Si la nouvelle date est plus récente, insérer avant cette ligne
             if mesure_date > row_date:
                 insert_position = i
                 break
             insert_position = i + 1
 
-        # Décaler les lignes après la position d'insertion
         for row in self.table_rows[insert_position:]:
             for widget in row:
                 current_info = widget.grid_info()
                 widget.grid_configure(row=current_info["row"] + 1)
 
-        # Créer la nouvelle ligne à la bonne position
         row_widget = []
         for col, value in enumerate(values):
             label = ctk.CTkLabel(self.tableau_scroll, text=value, text_color=text_color)
@@ -906,7 +694,6 @@ class StatsPage(ctk.CTkFrame):
 
         self.table_rows.insert(insert_position, row_widget)
 
-        # Supprimer la ligne la plus ancienne si on dépasse 10 lignes
         if len(self.table_rows) > 10:
             for widget in self.table_rows[-1]:
                 widget.destroy()
@@ -956,7 +743,6 @@ class StatsPage(ctk.CTkFrame):
 
         for m in mesures:
             try:
-                # Vérifier et convertir tous les éléments avant d'ajouter à la liste
                 date_val = m.date
                 poids_val = float(m.poids) if m.poids not in (None, "") else 0
                 taille_val = (
@@ -969,7 +755,6 @@ class StatsPage(ctk.CTkFrame):
                     float(m.masse_grasse) if m.masse_grasse not in (None, "") else 0
                 )
 
-                # Ajouter à la liste seulement si tout est valide
                 dates.append(date_val)
                 poids.append(poids_val)
                 taille.append(taille_val)
@@ -987,7 +772,6 @@ class StatsPage(ctk.CTkFrame):
             return
         duree = self.controller.duree["corpo"]
         if duree:
-            # méthode utile pour trier les listes de la même manière
             combined = list(zip(dates, poids, taille, bras, masse_grasse))
             combined.sort(key=lambda x: x[0])
             dates, poids, taille, bras, masse_grasse = map(list, zip(*combined))
@@ -1021,7 +805,6 @@ class StatsPage(ctk.CTkFrame):
         axes[3].legend()
         axes[3].grid(True, linestyle="--", alpha=0.3)
 
-        # axe x commun
         axes[3].set_xlabel("Date de mesure")
         axes[3].xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
         fig.autofmt_xdate()
@@ -1043,65 +826,6 @@ class StatsPage(ctk.CTkFrame):
         self.ajouter_mesure()
         self.controller._update_charts_only()
 
-    def _create_card_Version(self, parent, title, buttons=None):
-        """difference par rapport à create card est l'ajout de 3 boutons.
-                Params:
-                parent : CTk widget
-            Widget parent
-        title : str
-            Titre affiché dans le header de la card.
-        buttons : list[dict], optional
-            Liste de boutons à afficher dans le header.
-            Chaque bouton doit contenir :
-                - "text" : str (texte du bouton)
-                - "command" : callable (fonction appelée au clic)
-
-        Returns:
-        CTkFrame
-            Widget card créé et configuré."""
-
-        card = ctk.CTkFrame(
-            parent,
-            fg_color=self.theme_colors.get("frame", "#2A2D30"),
-            corner_radius=14,
-        )
-        card.pack(fill="x", pady=10)
-
-        header = ctk.CTkFrame(card, fg_color="transparent")
-        header.pack(fill="x", padx=14, pady=(12, 5))
-
-        # Partie gauche : titre
-        title_label = ctk.CTkLabel(
-            header,
-            text=title,
-            font=ctk.CTkFont(size=16, weight="bold"),
-            text_color=self.theme_colors.get("text", "#F1F1F1"),
-        )
-        title_label.pack(side="left")
-
-        # Partie droite : boutons
-        if buttons:
-            buttons_frame = ctk.CTkFrame(header, fg_color="transparent")
-            buttons_frame.pack(side="right")
-
-            for btn in buttons:
-                button = ctk.CTkButton(
-                    buttons_frame,
-                    text=btn["text"],
-                    width=32,
-                    height=32,
-                    corner_radius=10,
-                    text_color=self.main_controller.theme_colors["text"],
-                    font=ctk.CTkFont(size=12, weight="bold"),
-                    fg_color=self.main_controller.settings.theme,
-                    hover_color=self.main_controller.darken_color(
-                        self.main_controller.settings.theme
-                    ),
-                    command=btn["command"],
-                )
-                button.pack(side="left", padx=4)
-
-        return card
     def _chart_mesure_corpo_grid(self, parent, row):
         """
         Affiche le graphique des mesures corporelles
@@ -1112,7 +836,6 @@ class StatsPage(ctk.CTkFrame):
             row: numéro de ligne dans la grille
         """
 
-        # Création de la card
         card = self._create_card(
             parent,
             "Évolution des mesures corporelles",
@@ -1140,7 +863,10 @@ class StatsPage(ctk.CTkFrame):
             padx=5,
             pady=5,
         )
+        self.corpo_card = card
+        self._draw_corpo_chart(card)
 
+    def _draw_corpo_chart(self, card):
         fig, axes = plt.subplots(
             4,
             1,
@@ -1152,7 +878,6 @@ class StatsPage(ctk.CTkFrame):
 
         mesures = getattr(self.profile, "mesures_corporelles", [])
 
-        # Cas aucune donnée
         if not mesures:
             for ax in axes:
                 ax.text(
@@ -1177,7 +902,6 @@ class StatsPage(ctk.CTkFrame):
         for m in mesures:
             try:
                 date_val = datetime.datetime.fromisoformat(m.date)
-# dates = [datetime.datetime.fromisoformat(m.date) for d in dates]
                 poids_val = (
                     float(m.poids)
                     if m.poids not in (None, "")
@@ -1211,7 +935,7 @@ class StatsPage(ctk.CTkFrame):
             except Exception:
                 continue
 
-        # Cas données invalides
+
         if not dates:
             for ax in axes:
                 ax.text(
@@ -1225,7 +949,7 @@ class StatsPage(ctk.CTkFrame):
 
             self._embed(fig, card)
             return
-        # Tri chronologique
+
         combined = list(
             zip(
                 dates,
@@ -1315,7 +1039,6 @@ class StatsPage(ctk.CTkFrame):
         axes[2].legend()
         axes[2].grid(True, linestyle="--", alpha=0.3)
 
-        # ----- Masse grasse -----
         axes[3].plot(
             dates,
             masse_grasse,
@@ -1345,13 +1068,9 @@ class StatsPage(ctk.CTkFrame):
 
         fig.autofmt_xdate(rotation=45)
 
-        # Style commun
         for ax in axes:
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
-
-        self._embed(fig, card)
-
 
         locator = mdates.AutoDateLocator()
         formatter = mdates.DateFormatter("%m/%d")
@@ -1361,3 +1080,4 @@ class StatsPage(ctk.CTkFrame):
             ax.xaxis.set_major_formatter(formatter)
 
         fig.autofmt_xdate(rotation=45)
+        self.corpo_canvas, self.corpo_widget = self._embed(fig, card)
