@@ -14,32 +14,35 @@ class StatsController:
         self.duree = {"calor": None, "macro": None, "corpo": None}
 
     def macros_by_date(self):
-        """Calcule les macros consommés pour chaque jour.
-
-        Returns:
-            Dictionnaire with calories, carbohydrate, proteins, and fats by date.
-        """
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
+
         if self.main_controller.current_profile is None:
             return result
+
         menus_end_to_end = self.menus_all_dates()
+
         for menu in menus_end_to_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
                 continue
-            date = menu.date
+
+            date = datetime.fromisoformat(menu.date).date()  # <-- JOUR UNIQUEMENT
+
+            if date not in result["calories"]:
+                result["calories"][date] = 0
+                result["proteins"][date] = 0
+                result["carbohydrate"][date] = 0
+                result["fats"][date] = 0
+
             for food_menu in menu.content:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
                     ratio = food_menu.quantity / 100
-                    if date not in result["calories"]:
-                        result["calories"][date] = 0
-                        result["proteins"][date] = 0
-                        result["carbohydrate"][date] = 0
-                        result["fats"][date] = 0
+
                     result["calories"][date] += macro.calorie * ratio
                     result["proteins"][date] += macro.proteine * ratio
                     result["carbohydrate"][date] += macro.carbohydrate * ratio
                     result["fats"][date] += macro.fat * ratio
+
         return result
 
     def menus_all_dates(self):
