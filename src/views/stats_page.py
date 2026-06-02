@@ -95,7 +95,7 @@ class StatsPage(ctk.CTkFrame):
 
         self._build()
 
-    def _create_card(self, parent, title,center_title=False,buttons=None):
+    def _create_card(self, parent, title, center_title=False, buttons=None):
         """Crée une carte pour afficher un graphique.
 
         Args:
@@ -110,13 +110,13 @@ class StatsPage(ctk.CTkFrame):
         )
         header = ctk.CTkFrame(card, fg_color="transparent")
         header.pack(fill="x", padx=14, pady=(12, 5))
-        label_title=ctk.CTkLabel(
+        label_title = ctk.CTkLabel(
             header,
             text=title,
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color=self.theme_colors.get("text", "#F1F1F1"),
         )
-        if not center_title : 
+        if not center_title:
             label_title.pack(side="left")
         else:
             label_title.pack(anchor="center")
@@ -160,16 +160,11 @@ class StatsPage(ctk.CTkFrame):
         canvas = FigureCanvasTkAgg(fig, master=parent)
         canvas.draw()
         widget = canvas.get_tk_widget()
-        widget.configure(
-            bg=bg_color, 
-            highlightthickness=0)
-        widget.pack(fill="both",
-                     expand=True,
-                       padx=12,
-                         pady=(0, 12))
+        widget.configure(bg=bg_color, highlightthickness=0)
+        widget.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         plt.close(fig)
-        
-        return canvas,widget  
+
+        return canvas, widget
 
     def _build(self):
         """Construit l'interface des statistiques en format dashboard.
@@ -178,7 +173,7 @@ class StatsPage(ctk.CTkFrame):
 
         Returns:
             None
-        
+
         """
         # Entête
         header = ctk.CTkFrame(self, fg_color="transparent")
@@ -244,7 +239,10 @@ class StatsPage(ctk.CTkFrame):
             col: Numéro de colonne dans la grille.
         """
         data = self.macrosDated["calories"]
-        card = self._create_card(parent, "Évolution calories",buttons=[
+        card = self._create_card(
+            parent,
+            "Évolution calories",
+            buttons=[
                 {
                     "text": "Tout",
                     "command": lambda: self.controller.change_period(None, "calor"),
@@ -257,12 +255,13 @@ class StatsPage(ctk.CTkFrame):
                     "text": "7 derniers",
                     "command": lambda: self.controller.change_period(7, "calor"),
                 },
-            ])
+            ],
+        )
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
         self.calories_card = card
 
         self._draw_calories_chart(card, data)
-        
+
     def _draw_calories_chart(self, card, data):
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not data:
@@ -278,7 +277,7 @@ class StatsPage(ctk.CTkFrame):
         else:
             dates = sorted(data.keys())
             calories = [data[d] for d in dates]
-            duree=self.controller.duree["calor"]
+            duree = self.controller.duree["calor"]
             if duree:
                 dates = dates[-duree:]
                 calories = calories[-duree:]
@@ -296,6 +295,7 @@ class StatsPage(ctk.CTkFrame):
             fig.autofmt_xdate(rotation=45)
             ax.tick_params(labelsize=8)
         self.calories_canvas, self.calories_widget = self._embed(fig, card)
+
     def _chart_macros_pie_grid(self, parent, row, col):
         """Crée un graphique en camembert des macros du dernier repas en grille.
 
@@ -393,7 +393,10 @@ class StatsPage(ctk.CTkFrame):
             row: Numéro de ligne dans la grille.
             col: Numéro de colonne dans la grille.
         """
-        card = self._create_card(parent, "Évolution macros",buttons=[
+        card = self._create_card(
+            parent,
+            "Évolution macros",
+            buttons=[
                 {
                     "text": "Tout",
                     "command": lambda: self.controller.change_period(None, "macro"),
@@ -406,11 +409,12 @@ class StatsPage(ctk.CTkFrame):
                     "text": "7 derniers",
                     "command": lambda: self.controller.change_period(7, "macro"),
                 },
-            ])
+            ],
+        )
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
         self.macros_card = card
-        self._draw_caracteristics_chart( card)
-        
+        self._draw_caracteristics_chart(card)
+
     def _draw_caracteristics_chart(self, card):
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not self.macrosDated["proteins"]:
@@ -424,14 +428,14 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         else:
-            carbohydrate,proteins,fats=[],[],[]
+            carbohydrate, proteins, fats = [], [], []
             data = self.macrosDated
             dates = sorted(data["proteins"].keys())
             for d in dates:
                 carbohydrate.append(data["carbohydrate"][d])
                 proteins.append(data["proteins"][d])
                 fats.append(data["fats"][d])
-            duree=self.controller.duree["macro"]
+            duree = self.controller.duree["macro"]
             if duree:
                 dates = dates[-duree:]
                 carbohydrate = carbohydrate[-duree:]
@@ -451,6 +455,7 @@ class StatsPage(ctk.CTkFrame):
             fig.autofmt_xdate(rotation=45)
             ax.tick_params(labelsize=8)
         self.macro_canvas, self.macro_widget = self._embed(fig, card)
+
     def _bodyanalys_compact(self, parent, row):
         """Crée une section compacte des mesu   res corporelles dans la grille.
 
@@ -465,7 +470,7 @@ class StatsPage(ctk.CTkFrame):
         text_secondary = self.theme_colors.get("text_secondary", "#A8AFB6")
 
         # création de la card
-        card = self._create_card(parent, "Mesures corporelles",center_title=True)
+        card = self._create_card(parent, "Mesures corporelles", center_title=True)
         card.grid(row=row, column=0, columnspan=2, sticky="nsew", padx=5, pady=5)
 
         # Conteneur principal
@@ -480,7 +485,7 @@ class StatsPage(ctk.CTkFrame):
         top_row_center.pack(anchor="center")
         # Date frame
         date_frame = ctk.CTkFrame(top_row, fg_color=button_color, corner_radius=10)
-        date_frame.pack(in_=top_row_center,side="left", padx=(0, 10))
+        date_frame.pack(in_=top_row_center, side="left", padx=(0, 10))
 
         self.button_previous = ctk.CTkButton(
             date_frame,
@@ -528,7 +533,7 @@ class StatsPage(ctk.CTkFrame):
             ),
             text_color="#FFFFFF",
         )
-        boutton_ajouter.pack(in_=top_row_center,side="left")
+        boutton_ajouter.pack(in_=top_row_center, side="left")
         boutton_ajouter.bind("<Button-1>", self.ajouter_mesure)
 
         # Row 2: Entrées compactes
@@ -548,7 +553,7 @@ class StatsPage(ctk.CTkFrame):
             text_color=text_color,
             placeholder_text_color=text_secondary,
         )
-        self.poids_entry.pack(in_=entries_center,side="left", padx=3)
+        self.poids_entry.pack(in_=entries_center, side="left", padx=3)
 
         self.taille_entry = ctk.CTkEntry(
             entries_frame,
@@ -560,7 +565,7 @@ class StatsPage(ctk.CTkFrame):
             text_color=text_color,
             placeholder_text_color=text_secondary,
         )
-        self.taille_entry.pack(in_=entries_center,side="left", padx=3)
+        self.taille_entry.pack(in_=entries_center, side="left", padx=3)
 
         self.bras_entry = ctk.CTkEntry(
             entries_frame,
@@ -572,7 +577,7 @@ class StatsPage(ctk.CTkFrame):
             text_color=text_color,
             placeholder_text_color=text_secondary,
         )
-        self.bras_entry.pack(in_=entries_center,side="left", padx=3)
+        self.bras_entry.pack(in_=entries_center, side="left", padx=3)
 
         self.graisse_entry = ctk.CTkEntry(
             entries_frame,
@@ -584,7 +589,7 @@ class StatsPage(ctk.CTkFrame):
             text_color=text_color,
             placeholder_text_color=text_secondary,
         )
-        self.graisse_entry.pack(in_=entries_center,side="left", padx=3)
+        self.graisse_entry.pack(in_=entries_center, side="left", padx=3)
 
         ctk.CTkLabel(
             main_container,
@@ -594,11 +599,8 @@ class StatsPage(ctk.CTkFrame):
         ).pack(anchor="w", pady=(10, 5))
 
         self.tableau_scroll = ctk.CTkScrollableFrame(
-        main_container,
-        fg_color=content_color,
-        height=120,    
-        corner_radius=10
-    )
+            main_container, fg_color=content_color, height=120, corner_radius=10
+        )
         self.tableau_scroll.pack(fill="x")
         self.ligne_tableau = 1
         for i in range(5):
@@ -611,7 +613,7 @@ class StatsPage(ctk.CTkFrame):
                 font=ctk.CTkFont(size=9, weight="bold"),
                 text_color=text_color,
             )
-            label.grid(row=0, column=col, padx=5, pady=5,sticky="nsew")
+            label.grid(row=0, column=col, padx=5, pady=5, sticky="nsew")
 
         mesures_existantes = self.controller.get_mesures_corporelles()
         for mesure in list(reversed(mesures_existantes))[:5]:
@@ -689,7 +691,9 @@ class StatsPage(ctk.CTkFrame):
         row_widget = []
         for col, value in enumerate(values):
             label = ctk.CTkLabel(self.tableau_scroll, text=value, text_color=text_color)
-            label.grid(row=insert_position + 1, column=col, padx=35, pady=5,sticky="nsew")
+            label.grid(
+                row=insert_position + 1, column=col, padx=35, pady=5, sticky="nsew"
+            )
             row_widget.append(label)
 
         self.table_rows.insert(insert_position, row_widget)
@@ -852,7 +856,7 @@ class StatsPage(ctk.CTkFrame):
                     "text": "7 dernier",
                     "command": lambda: self.controller.change_period(7, "corpo"),
                 },
-            ]
+            ],
         )
 
         card.grid(
@@ -902,28 +906,18 @@ class StatsPage(ctk.CTkFrame):
         for m in mesures:
             try:
                 date_val = datetime.datetime.fromisoformat(m.date)
-                poids_val = (
-                    float(m.poids)
-                    if m.poids not in (None, "")
-                    else 0
-                )
+                poids_val = float(m.poids) if m.poids not in (None, "") else 0
 
                 taille_val = (
-                    float(m.tour_de_taille)
-                    if m.tour_de_taille not in (None, "")
-                    else 0
+                    float(m.tour_de_taille) if m.tour_de_taille not in (None, "") else 0
                 )
 
                 bras_val = (
-                    float(m.tour_de_bras)
-                    if m.tour_de_bras not in (None, "")
-                    else 0
+                    float(m.tour_de_bras) if m.tour_de_bras not in (None, "") else 0
                 )
 
                 masse_grasse_val = (
-                    float(m.masse_grasse)
-                    if m.masse_grasse not in (None, "")
-                    else 0
+                    float(m.masse_grasse) if m.masse_grasse not in (None, "") else 0
                 )
 
                 dates.append(date_val)
@@ -934,7 +928,6 @@ class StatsPage(ctk.CTkFrame):
 
             except Exception:
                 continue
-
 
         if not dates:
             for ax in axes:
@@ -971,7 +964,7 @@ class StatsPage(ctk.CTkFrame):
         ) = map(list, zip(*combined))
 
         duree = self.controller.duree["corpo"]
-        
+
         if duree:
             dates = dates[-duree:]
             poids = poids[-duree:]
@@ -1062,9 +1055,7 @@ class StatsPage(ctk.CTkFrame):
         # Axe X commun
         axes[3].set_xlabel("Date")
 
-        axes[3].xaxis.set_major_formatter(
-            mdates.DateFormatter("%d/%m")
-        )
+        axes[3].xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
 
         fig.autofmt_xdate(rotation=45)
 

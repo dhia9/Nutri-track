@@ -291,28 +291,23 @@ class StatsController:
         if self.view.calories_widget:
             self.view.calories_widget.destroy()
             self.view.calories_widget = None
-        self.view._draw_calories_chart(
-            self.view.calories_card,
-            data
-        )
+        self.view._draw_calories_chart(self.view.calories_card, data)
 
     def refresh_macro_only(self):
         self.macrosDated = self.macros_by_date()
         if self.view.macro_widget:
             self.view.macro_widget.destroy()
             self.view.macro_widget = None
-        self.view._draw_caracteristics_chart(
-    self.view.macros_card
-)
+        self.view._draw_caracteristics_chart(self.view.macros_card)
+
     def refresh_corpo_only(self):
 
         if self.view.corpo_widget:
             self.view.corpo_widget.destroy()
             self.view.corpo_widget = None
 
-        self.view._draw_corpo_chart(
-            self.view.corpo_card
-        )
+        self.view._draw_corpo_chart(self.view.corpo_card)
+
     def last_n_elements(self, l, n):
         """
         Retourne les n derniers éléments d'une liste.
