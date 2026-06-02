@@ -108,10 +108,10 @@ class MainController:
             self.set_existing_pages(pages)
 
         current = self.current_page or "Accueil"
-        self._show_page(current)
+        self.show_page(current)
         self.update_nav_buttons()
 
-    def _show_page(self, page_name):
+    def show_page(self, page_name):
         """Affiche une page spécifique et met à jour les boutons de navigation."""
         if self.current_profile is None and page_name not in ["Accueil", "Paramètres"]:
             return
@@ -145,8 +145,6 @@ class MainController:
         # Afficher la nouvelle page
         self.pages[page_name].grid()
         self.current_page = page_name
-
-    show_page = _show_page
 
     def refresh_current_page(self):
         """Recharge la page courante avec les couleurs du thème mis à jour."""

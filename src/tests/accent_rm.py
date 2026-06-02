@@ -10,6 +10,13 @@ def enlever_accents(texte):
     return resultat
 
 
-print(enlever_accents("Pruneau, sans noyau, sec"))
-print(enlever_accents("Âge"))
-print(enlever_accents("Taïlle (cm)"))
+def test_enlever_accents_simple():
+    print(enlever_accents("Pruneau, sans noyau, sec") == "Pruneau, sans noyau, sec")
+
+
+def test_enlever_accents_circumflex():
+    print(enlever_accents("Âge") == "Age")
+
+
+def test_enlever_accents_diaeresis():
+    print(enlever_accents("Taïlle (cm)") == "Taille (cm)")

@@ -84,6 +84,8 @@ score = 0.35 * écart_calories
       + bruit,  valeur aléatoire (faible) : évite des menus identiques
 ```
 
+Les coefficients sont choisis pour pondérer davantage les calories et les protéines, qui sont souvent les macros les plus critiques à ajuster.
+
 L'écart est calculé comme `1 − |1 − ratio|`, où `ratio = apport / cible` (plafonné à 2). Un aliment déjà utilisé dans la
 journée ou dans le repas est exclu.
 
