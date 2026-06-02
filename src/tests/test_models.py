@@ -4,281 +4,103 @@ from src.models.food_menu import FoodMenu
 from src.models.macro import Macro
 from src.models.menu import Menu
 
-"""
-pour run depuis terminal au niveau de la racnie exécuter python -m src.tests.testModels
-"""
-
-
-def print_test(test_name, status):
-    symbol = "✓" if status else "✗"
-    color = "\033[92m" if status else "\033[91m"
-    reset = "\033[0m"
-    print(f"{color}{symbol} {test_name}{reset}")
-
-
-def print_section(section_name):
-    print(f"\n{'=' * 60}")
-    print(f"  {section_name}")
-    print(f"{'=' * 60}")
-
-
 # MACRO TESTS
 
 
 def test_macro_masse_negative_raises_error():
     try:
         Macro(-10, 20, 100, 5, 15)
-        print_test("test_macro_masse_negative_raises_error", False)
-        return False
+        print(False)
     except ValueError as e:
-        result = "La masse doit être positive" in str(e)
-        print_test("test_macro_masse_negative_raises_error", result)
-        return result
+        print("La masse doit être positive" in str(e))
 
 
 def test_macro_scaling_affects_all_values():
-    try:
-        macro_100g = Macro(100, 25, 150, 10, 20)
-        macro_50g = Macro(50, 25, 150, 10, 20)
-
-        result = (
-            macro_100g.proteine == 25
-            and macro_50g.proteine == 12.5
-            and macro_100g.calorie == 150
-            and macro_50g.calorie == 75
-            and macro_100g.fat == 10
-            and macro_50g.fat == 5
-            and macro_100g.carbohydrate == 20
-            and macro_50g.carbohydrate == 10
-        )
-
-        print_test("test_macro_scaling_affects_all_values", result)
-        return result
-
-    except Exception:
-        print_test("test_macro_scaling_affects_all_values", False)
-        return False
+    macro_100g = Macro(100, 25, 150, 10, 20)
+    macro_50g = Macro(50, 25, 150, 10, 20)
+    print(
+        macro_100g.proteine == 25
+        and macro_50g.proteine == 12.5
+        and macro_100g.calorie == 150
+        and macro_50g.calorie == 75
+        and macro_100g.fat == 10
+        and macro_50g.fat == 5
+        and macro_100g.carbohydrate == 20
+        and macro_50g.carbohydrate == 10
+    )
 
 
 def test_macro_zero_masse_creates_zero_values():
-    try:
-        macro = Macro(0, 25, 150, 10, 20)
-
-        result = (
-            macro.proteine == 0
-            and macro.calorie == 0
-            and macro.fat == 0
-            and macro.carbohydrate == 0
-        )
-
-        print_test("test_macro_zero_masse_creates_zero_values", result)
-        return result
-
-    except Exception:
-        print_test("test_macro_zero_masse_creates_zero_values", False)
-        return False
+    macro = Macro(0, 25, 150, 10, 20)
+    print(
+        macro.proteine == 0
+        and macro.calorie == 0
+        and macro.fat == 0
+        and macro.carbohydrate == 0
+    )
 
 
 # FOOD TESTS
 
 
 def test_food_shares_macro_references():
-    try:
-        macros = [Macro(100, 25, 150, 10, 20)]
-        food = Food("Chicken", macros)
-
-        macros.append(Macro(150, 30, 200, 12, 25))
-
-        result = food.macros is macros and len(food.macros) == 2
-
-        print_test("test_food_shares_macro_references", result)
-        return result
-
-    except Exception:
-        print_test("test_food_shares_macro_references", False)
-        return False
+    macros = [Macro(100, 25, 150, 10, 20)]
+    food = Food("Chicken", macros)
+    macros.append(Macro(150, 30, 200, 12, 25))
+    print(food.macros is macros and len(food.macros) == 2)
 
 
 def test_food_score_with_zero_calories_returns_zero():
-    try:
-        macro = Macro(100, 25, 0, 10, 20)
-        food = Food("Empty Food", [macro])
-
-        score = food.score(150, 25, 10, 20, 100)
-
-        result = score == 0.0
-
-        print_test("test_food_score_with_zero_calories_returns_zero", result)
-        return result
-
-    except Exception:
-        print_test("test_food_score_with_zero_calories_returns_zero", False)
-        return False
+    macro = Macro(100, 25, 0, 10, 20)
+    food = Food("Empty Food", [macro])
+    score = food.score(150, 25, 10, 20, 100)
+    print(score == 0.0)
 
 
 # FOODMENU TESTS
 
 
 def test_foodmenu_inherits_from_food():
-    try:
-        macros = [Macro(100, 25, 150, 10, 20)]
-        food_menu = FoodMenu(150, "Chicken", macros)
-
-        result = (
-            food_menu.name == "Chicken"
-            and food_menu.quantity == 150
-            and isinstance(food_menu, Food)
-        )
-
-        print_test("test_foodmenu_inherits_from_food", result)
-        return result
-
-    except Exception:
-        print_test("test_foodmenu_inherits_from_food", False)
-        return False
+    macros = [Macro(100, 25, 150, 10, 20)]
+    food_menu = FoodMenu(150, "Chicken", macros)
+    print(
+        food_menu.name == "Chicken"
+        and food_menu.quantity == 150
+        and isinstance(food_menu, Food)
+    )
 
 
 # MENU TESTS
 
 
 def test_menu_add_food_mutates_content():
-    try:
-        menu = Menu("2024-01-01")
-
-        macro = Macro(100, 25, 150, 10, 20)
-        food = Food("Chicken", [macro])
-
-        menu.add_food_menu(food, 150)
-
-        result = (
-            len(menu.content) == 1
-            and menu.content[0].name == "Chicken"
-            and menu.content[0].quantity == 150
-        )
-
-        print_test("test_menu_add_food_mutates_content", result)
-        return result
-
-    except Exception:
-        print_test("test_menu_add_food_mutates_content", False)
-        return False
+    menu = Menu("2024-01-01")
+    macro = Macro(100, 25, 150, 10, 20)
+    food = Food("Chicken", [macro])
+    menu.add_food_menu(food, 150)
+    print(
+        len(menu.content) == 1
+        and menu.content[0].name == "Chicken"
+        and menu.content[0].quantity == 150
+    )
 
 
 def test_menu_hash_allows_use_in_set():
-    try:
-        menu1 = Menu("2024-01-01")
-        menu2 = Menu("2024-01-01")
-        menu3 = Menu("2024-01-02")
-
-        menu_set = {menu1, menu2, menu3}
-
-        result = len(menu_set) == 2
-
-        print_test("test_menu_hash_allows_use_in_set", result)
-        return result
-
-    except Exception:
-        print_test("test_menu_hash_allows_use_in_set", False)
-        return False
+    menu1 = Menu("2024-01-01")
+    menu2 = Menu("2024-01-01")
+    menu3 = Menu("2024-01-02")
+    menu_set = {menu1, menu2, menu3}
+    print(len(menu_set) == 2)
 
 
 # CROSS MODEL TESTS
 
 
 def test_deepcopy_independence():
-    try:
-        menu1 = Menu("2024-01-01")
-
-        macro = Macro(100, 25, 150, 10, 20)
-        food = Food("Chicken", [macro])
-
-        menu1.add_food_menu(food, 150)
-
-        menu2 = deepcopy(menu1)
-
-        menu2.content.clear()
-
-        result = len(menu1.content) == 1 and len(menu2.content) == 0
-
-        print_test("test_deepcopy_independence", result)
-        return result
-
-    except Exception:
-        print_test("test_deepcopy_independence", False)
-        return False
-
-
-# ============================================================================
-# RUNNER
-# ============================================================================
-
-
-def run_all_tests():
-
-    tests = [
-        (
-            "MACRO TESTS",
-            [
-                test_macro_masse_negative_raises_error,
-                test_macro_scaling_affects_all_values,
-                test_macro_zero_masse_creates_zero_values,
-            ],
-        ),
-        (
-            "FOOD TESTS",
-            [
-                test_food_shares_macro_references,
-                test_food_score_with_zero_calories_returns_zero,
-            ],
-        ),
-        (
-            "FOODMENU TESTS",
-            [
-                test_foodmenu_inherits_from_food,
-            ],
-        ),
-        (
-            "MENU TESTS",
-            [
-                test_menu_add_food_mutates_content,
-                test_menu_hash_allows_use_in_set,
-            ],
-        ),
-        (
-            "CROSS MODEL TESTS",
-            [
-                test_deepcopy_independence,
-            ],
-        ),
-    ]
-
-    total_tests = 0
-    passed_tests = 0
-
-    for section_name, test_functions in tests:
-        print_section(section_name)
-
-        for test_func in test_functions:
-            total_tests += 1
-
-            if test_func():
-                passed_tests += 1
-
-    print(f"\n{'=' * 60}")
-    print("  RÉSUMÉ FINAL")
-    print(f"{'=' * 60}")
-
-    print(f"\nTotal: {total_tests}")
-    print(f"Réussis: {passed_tests}")
-    print(f"Échoués: {total_tests - passed_tests}")
-
-    percentage = passed_tests / total_tests * 100
-
-    print(f"Taux de réussite: {percentage:.1f}%\n")
-
-    return passed_tests == total_tests
-
-
-if __name__ == "__main__":
-    success = run_all_tests()
-    exit(0 if success else 1)
+    menu1 = Menu("2024-01-01")
+    macro = Macro(100, 25, 150, 10, 20)
+    food = Food("Chicken", [macro])
+    menu1.add_food_menu(food, 150)
+    menu2 = deepcopy(menu1)
+    menu2.content.clear()
+    print(len(menu1.content) == 1 and len(menu2.content) == 0)
