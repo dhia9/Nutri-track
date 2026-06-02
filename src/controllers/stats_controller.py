@@ -14,6 +14,12 @@ class StatsController:
         self.duree = {"calor": None, "macro": None, "corpo": None}
 
     def macros_by_date(self):
+        """
+        préparer données pour les plot
+        à partir des eating habits genere des données par date
+
+        returns : 
+            dictionnaire avec comme values des dictionnaire avec comme key date et comme values float"""
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
 
         if self.main_controller.current_profile is None:
