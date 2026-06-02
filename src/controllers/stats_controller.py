@@ -11,34 +11,44 @@ class StatsController:
         self.view = None
         self.current_date = datetime.now()
         self.mesures_corporelles = []
+        self.duree = {"calor": None, "macro": None, "corpo": None}
 
     def macros_by_date(self):
-        """Calcule les macros consommés pour chaque jour.
-
-        Returns:
-            Dictionnaire with calories, carbohydrate, proteins, and fats by date.
         """
+        préparer données pour les plot
+        à partir des eating habits genere des données par date
+
+        returns : 
+            dictionnaire avec comme values des dictionnaire avec comme key date et comme values float"""
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
+
         if self.main_controller.current_profile is None:
             return result
+
         menus_end_to_end = self.menus_all_dates()
+
         for menu in menus_end_to_end.values():
             if not hasattr(menu, "date") or not hasattr(menu, "content"):
                 continue
-            date = menu.date[:10]
+
+            date = datetime.fromisoformat(menu.date).date()  # <-- JOUR UNIQUEMENT
+
+            if date not in result["calories"]:
+                result["calories"][date] = 0
+                result["proteins"][date] = 0
+                result["carbohydrate"][date] = 0
+                result["fats"][date] = 0
+
             for food_menu in menu.content:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
                     ratio = food_menu.quantity / 100
-                    if date not in result["calories"]:
-                        result["calories"][date] = 0
-                        result["proteins"][date] = 0
-                        result["carbohydrate"][date] = 0
-                        result["fats"][date] = 0
+
                     result["calories"][date] += macro.calorie * ratio
                     result["proteins"][date] += macro.proteine * ratio
                     result["carbohydrate"][date] += macro.carbohydrate * ratio
                     result["fats"][date] += macro.fat * ratio
+
         return result
 
     def menus_all_dates(self):
@@ -150,23 +160,47 @@ class StatsController:
         return total / len(data) if data else 0
 
     def update_date(self):
-        # Mettre a jour sur la vue la date affiché dans le label
+        """
+        Mettre a jour sur la vue la date affiché dans le label
+
+        returns:None
+        """
         self.view.date_label.configure(
             text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
         )
 
     def previous_day(self, event):
-        # Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+        """
+        Mettre a jour la date en mettant la date d'avant et ensuite mettre a jour le label
+
+        Parameters
+            event : tk.Event
+            Événement déclenché par le callback (clic sur le bouton).
+        Returns:
+            None"""
         self.current_date -= timedelta(days=1)
         self.update_date()
 
     def next_day(self, event):
-        # Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+        """
+        Mettre a jour la date en mettant la date d'après et ensuite mettre a jour le label
+
+        Parameters
+            event : tk.Event
+            Événement déclenché par le callback (clic sur le bouton).
+        Returns:
+            None"""
         self.current_date += timedelta(days=1)
         self.update_date()
 
     def ajouter_mesure(self, mesure):
-        # Ajouter la mesure au profil courant
+        """
+        Ajouter la mesure au profil courant
+
+        Parameters:
+            mesure:Model mesure_coporelles
+        Returns:
+            None"""
         if self.main_controller.current_profile is not None:
             self.main_controller.current_profile.mesures_corporelles.append(mesure)
             # Sauvegarder les modifications dans le fichier JSON
@@ -179,7 +213,12 @@ class StatsController:
         return self.mesures_corporelles
 
     def get_mesures_corporelles(self):
-        """Retourne les mesures corporelles du profil courant"""
+        """
+        Retourne les mesures corporelles du profil courant
+
+        Returns:
+            None
+        """
         if self.main_controller.current_profile is not None:
             return self.main_controller.current_profile.mesures_corporelles
         return []
@@ -225,3 +264,68 @@ class StatsController:
             row_widget.append(label)
 
         self.view.table_rows.append(row_widget)
+
+    def change_period(self, days, type):
+        """
+        Met à jour la durée , puis rafraîchit la vue.
+        Parameters:
+        days : int
+            Nombre de jours à appliquer pour la période.
+        type : str
+            Clé représentant le type de période à modifier dans self.duree.
+
+        Returns:
+        None
+        """
+        self.duree[type] = days
+        # refresh complet
+        # self.view.refresh()
+        if type == "macro":
+            self.refresh_macro_only()
+
+        elif type == "calor":
+            self.refresh_calories_only()
+
+        elif type == "corpo":
+            self.refresh_corpo_only()
+
+    def refresh_calories_only(self):
+        self.macrosDated = self.macros_by_date()
+        data = self.macrosDated["calories"]
+        if self.view.calories_canvas:
+            self.view.calories_canvas.get_tk_widget().destroy()
+        if self.view.calories_widget:
+            self.view.calories_widget.destroy()
+            self.view.calories_widget = None
+        self.view._draw_calories_chart(self.view.calories_card, data)
+
+    def refresh_macro_only(self):
+        self.macrosDated = self.macros_by_date()
+        if self.view.macro_widget:
+            self.view.macro_widget.destroy()
+            self.view.macro_widget = None
+        self.view._draw_caracteristics_chart(self.view.macros_card)
+
+    def refresh_corpo_only(self):
+
+        if self.view.corpo_widget:
+            self.view.corpo_widget.destroy()
+            self.view.corpo_widget = None
+
+        self.view._draw_corpo_chart(self.view.corpo_card)
+
+    def last_n_elements(self, l, n):
+        """
+        Retourne les n derniers éléments d'une liste.
+        Parameters:
+
+        l : list
+            Liste source.
+        n : int
+            Nombre d'éléments à récupérer depuis la fin de la liste.
+
+        Returns:
+        list
+            Sous-liste contenant les n derniers éléments.
+        """
+        return l[(-1 * n) :]
