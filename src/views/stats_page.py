@@ -220,15 +220,15 @@ class StatsPage(ctk.CTkFrame):
         self._bodyanalys_compact(self.dashboard_grid, row=0)
 
         # Row 1: Calories et Pie chart
-        self._chart_calories_grid(self.dashboard_grid, row=1, col=0)
-        self._chart_macros_pie_grid(self.dashboard_grid, row=1, col=1)
+        self._chart_calories_grid(self.dashboard_grid, row=2, col=0)
+        self._chart_macros_pie_grid(self.dashboard_grid, row=2, col=1)
 
         # Row 2: Bar chart et Évolution macros
-        self._chart_macros_bar_grid(self.dashboard_grid, row=2, col=1)
-        self._caracteristicsChart_grid(self.dashboard_grid, row=2, col=0)
+        self._chart_macros_bar_grid(self.dashboard_grid, row=3, col=1)
+        self._caracteristicsChart_grid(self.dashboard_grid, row=3, col=0)
 
         # Row 3 : Evolution mesures corporelles
-        self._chart_mesure_corpo_grid(self.dashboard_grid, row=3)
+        self._chart_mesure_corpo_grid(self.dashboard_grid, row=1)
 
     def _chart_calories_grid(self, parent, row, col):
         """Crée un graphique d'évolution des calories en grille.
@@ -281,7 +281,6 @@ class StatsPage(ctk.CTkFrame):
             if duree:
                 dates = dates[-duree:]
                 calories = calories[-duree:]
-                print(calories)
 
             ax.plot(dates, calories, color=C_GREEN, linewidth=2.5, label="Calories")
             ax.fill_between(dates, calories, alpha=0.15, color=C_GREEN)
@@ -703,117 +702,6 @@ class StatsPage(ctk.CTkFrame):
                 widget.destroy()
             self.table_rows.pop()
 
-    def _chart_mesure_corpo(self, parent):
-        """
-        Génère un graphique multi-axes (4 sous-graphiques) représentant l'évolution
-        des mesures corporelles d'un profil.
-        Args:
-            parent (tkinter widget / CTkFrame):
-                Le conteneur dans lequel le graphique Matplotlib sera intégré.
-        Returns:
-            None
-        """
-        card = self._create_card_Version(
-            parent,
-            "Évolution des mesures corporelles",
-            buttons=[
-                {
-                    "text": "Tout",
-                    "command": lambda: self.controller.change_period(None, "corpo"),
-                },
-                {
-                    "text": "30 derniers",
-                    "command": lambda: self.controller.change_period(30, "corpo"),
-                },
-                {
-                    "text": "7 dernierss",
-                    "command": lambda: self.controller.change_period(7, "corpo"),
-                },
-            ],
-        )
-        fig, axes = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
-        fig.subplots_adjust(hspace=0.5)
-
-        mesures = getattr(self.profile, "mesures_corporelles", [])
-        if not mesures:
-            for ax in axes:
-                ax.text(0.5, 0.5, "Aucune donnée disponible", ha="center", va="center")
-                ax.set_axis_off()
-            self._embed(fig, card)
-            return
-
-        dates = []
-        poids, taille, bras, masse_grasse = [], [], [], []
-
-        for m in mesures:
-            try:
-                date_val = m.date
-                poids_val = float(m.poids) if m.poids not in (None, "") else 0
-                taille_val = (
-                    float(m.tour_de_taille) if m.tour_de_taille not in (None, "") else 0
-                )
-                bras_val = (
-                    float(m.tour_de_bras) if m.tour_de_bras not in (None, "") else 0
-                )
-                masse_grasse_val = (
-                    float(m.masse_grasse) if m.masse_grasse not in (None, "") else 0
-                )
-
-                dates.append(date_val)
-                poids.append(poids_val)
-                taille.append(taille_val)
-                bras.append(bras_val)
-                masse_grasse.append(masse_grasse_val)
-
-            except Exception:
-                continue
-
-        if not dates:
-            for ax in axes:
-                ax.text(0.5, 0.5, "Données invalides", ha="center", va="center")
-                ax.set_axis_off()
-            self._embed(fig, card)
-            return
-        duree = self.controller.duree["corpo"]
-        if duree:
-            combined = list(zip(dates, poids, taille, bras, masse_grasse))
-            combined.sort(key=lambda x: x[0])
-            dates, poids, taille, bras, masse_grasse = map(list, zip(*combined))
-            dates = self.controller.last_n_elements(dates, duree)
-            poids = self.controller.last_n_elements(poids, duree)
-            taille = self.controller.last_n_elements(taille, duree)
-            bras = self.controller.last_n_elements(bras, duree)
-            masse_grasse = self.controller.last_n_elements(masse_grasse, duree)
-        dates = [parser.parse(d) for d in dates]
-        axes[0].plot(dates, poids, color=C_GREEN, label="Poids corporel")
-        axes[0].set_title("Évolution du poids")
-        axes[0].set_ylabel("Poids (kg)")
-        axes[0].legend()
-        axes[0].grid(True, linestyle="--", alpha=0.3)
-
-        axes[1].plot(dates, taille, color=C_BLUE, label="Tour de taille")
-        axes[1].set_title("Évolution du tour de taille")
-        axes[1].set_ylabel("Tour de taille (cm)")
-        axes[1].legend()
-        axes[1].grid(True, linestyle="--", alpha=0.3)
-
-        axes[2].plot(dates, bras, color=C_ORANGE, label="Tour de bras")
-        axes[2].set_title("Évolution du tour de bras")
-        axes[2].set_ylabel("Tour de bras (cm)")
-        axes[2].legend()
-        axes[2].grid(True, linestyle="--", alpha=0.3)
-
-        axes[3].plot(dates, masse_grasse, color=C_RED, label="Masse grasse")
-        axes[3].set_title("Évolution du taux de masse grasse")
-        axes[3].set_ylabel("Pourcentage (%)")
-        axes[3].legend()
-        axes[3].grid(True, linestyle="--", alpha=0.3)
-
-        axes[3].set_xlabel("Date de mesure")
-        axes[3].xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-        fig.autofmt_xdate()
-
-        self._embed(fig, card)
 
     def _on_add_mesure(self, event):
         """
