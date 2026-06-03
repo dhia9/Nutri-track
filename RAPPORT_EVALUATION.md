@@ -126,13 +126,13 @@ les utilisateurs souhaitant suivre et améliorer leur alimentation.
 ## 6. Perspectives
 Axes d'amélioration identifiés
 
-Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
+- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
 
-Base de données : La gestion des données doit être améliorée pour éviter les bugs rencontrés lors de l'utilisation.
+- Base de données : La gestion des données doit être améliorée pour éviter les bugs rencontrés lors de l'utilisation.
 
-Interface utilisateur : L'interface doit être retravaillée pour rendre la saisie et la gestion du facteur d'activité plus intuitive car celle ci peut être difficile à comprendre.
+- Interface utilisateur : L'interface doit être retravaillée pour rendre la saisie et la gestion du facteur d'activité plus intuitive car celle ci peut être difficile à comprendre.
 
-Performances d'affichage : Le temps de chargement lors du changement de thème ou de couleur est trop long et doit être réduit. De même, la page des statistiques gagnerait à être optimisée pour s'afficher plus rapidement.
+- Performances d'affichage : Le temps de chargement lors du changement de thème ou de couleur est trop long et doit être réduit. De même, la page des statistiques doit être optimisée pour s'afficher plus rapidement.
 
 
 ---
