@@ -123,3 +123,4 @@ On répète les étapes 3-4 jusqu'à **4 aliments** ou jusqu'à ce que le budget
 - La répartition entre repas est uniforme, sans pondération matin/midi/soir.
 - L'algorithme est **glouton** : il ne revient jamais sur un choix, ce qui peut produire des repas sous-optimaux si les
   aliments disponibles sont peu nombreux.
+- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
