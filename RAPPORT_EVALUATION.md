@@ -123,6 +123,8 @@ aux besoins définis dans le cahier des charges (et même plus !), tout en respe
 temporelles. Nous sommes fiers du travail accompli et confiants que NutriTrack pourra être un outil utile pour
 les utilisateurs souhaitant suivre et améliorer leur alimentation.
 
+## 6. Perspectives
+-Menus suggérer ---> nous donne des aliments pas pertinents
 ---
 
 ## Annexes Utilisation de l'IA
