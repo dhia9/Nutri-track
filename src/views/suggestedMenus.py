@@ -40,12 +40,12 @@ class SuggestedMenuWindow(ctk.CTkToplevel):
         )
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
 
-        # Afficher les menus favoris
+        # Afficher les menus 
         self.display_suggested_menus()
         self.grab_set()  # Rendre la fenêtre modale
 
     def display_suggested_menus(self):
-        """Affiche la liste des menus favoris avec leur composition"""
+        """Affiche la liste des menus  avec leur composition"""
         # Récupérer les menus  proposés (profil actuel)
         suggest_menus_data = self.controller.suggested_menus
 

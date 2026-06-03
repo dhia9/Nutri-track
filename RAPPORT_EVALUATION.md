@@ -98,7 +98,6 @@ estimation basée sur les volumes de données manipulés par l’application.
 
 Ces coûts sont limités notamment par l'usage de `set` et de dictionnaires pour certaines comparaisons.
 
-
 ## 4. Engagement et Implications des Membres
 
 Qui a travaillé sur quelle partie du projet ?
@@ -107,11 +106,13 @@ Qui a travaillé sur quelle partie du projet ?
   projet, intégration, tests unitaires,
   documentation. Contrôle qualité et revue des merge requests.
 - Nolan : Gestion de la base de données, implémentation des modèles, mesures corporelles, page statistiques, page
-  paramètres, système de thème et de personnalisation.
-- Dhia : implémentation de la logique métier (calcul des apports, détection de dépassement, recommandations),
-  gestion des profils, gestion des données utilisateur, tests, page statistiques, IHM suggestion de menus.
-- Yanis : implémentation de la logique métier, page nutrition, système de pagination, optimisations, création de
-  l'interface utilisateur.
+  paramètres, système de thème et de personnalisation, controlleurs.
+- Dhia : implémentation de la logique métier (calcul des apports, implémentation des modèles, détection de dépassement,
+  recommandations), gestion des profils, gestion des données utilisateur, tests, page statistiques, stats_controller,
+  IHM suggestion de menus (fenêtre secondaire suggestedMenus et nutrition_controller).
+- Yanis : implémentation de la logique métier, page nutrition, page d'accueil, système de pagination, optimisations,
+  création de
+  l'interface utilisateur, fenêtres secondaires (ajout d'aliments, controlleur menus favoris, etc.)
 - Marouan : Réalisation de Main, Home et Nutrition Controller. Developpement Tkinter de CTKMessageBox. Ajout des
   fenetres secondaire lié à Nutrition Page (Food_quantity.py, Fav_Win.py) et ajout du Logo (conceptionné par Gemini
   IA).

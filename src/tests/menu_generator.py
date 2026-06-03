@@ -21,7 +21,7 @@ def check_nutritional_targets(
     target_prot: float,
     target_fat: float,
     target_carb: float,
-    threshold: float = 0.60,
+    threshold: float = 0.60, #portion des objectifs
 ) -> bool:
     """Vérifie si les macros du menu atteignent les objectifs à un certain seuil (par défaut 60%)."""
     total_cal = sum(f.macros[0].calorie for f in menu.content)

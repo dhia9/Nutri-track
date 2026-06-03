@@ -27,14 +27,15 @@ class StatsPage(ctk.CTkFrame):
         self.controller = self.main_controller.controllers["Stats"]
         self.controller.view = self
         self.profile = self.controller.get_current_profile()
-        self.history = self.controller.generate_history(30)
         self.period = 7
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
+        # attribut utile pour le tableau
         self.table_rows = []
         # Récupérer les couleurs du thème
         self.theme_colors = self.main_controller.theme_colors
         self.update_matplotlib_colors()
+        # attributs utiles pour refresh les graphs 
         self.calories_canvas = None
         self.calories_widget = None
         self.macro_canvas = None
@@ -84,7 +85,6 @@ class StatsPage(ctk.CTkFrame):
             child.destroy()
 
         self.profile = self.controller.get_current_profile()
-        self.history = self.controller.generate_history(30)
         self.macrosDated = self.controller.macros_by_date()
         self.macrosToday = self.controller.macros_today(datetime.date.today())
         self.table_rows = []
@@ -288,11 +288,11 @@ class StatsPage(ctk.CTkFrame):
             ax.set_ylabel("Calories", labelpad=10, fontsize=9)
             ax.legend(fontsize=8)
             ax.grid(True, linestyle="--", alpha=0.25)
-            ax.spines["top"].set_visible(False)
+            ax.spines["top"].set_visible(False) # rendre bordure haut non visible
             ax.spines["right"].set_visible(False)
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-            fig.autofmt_xdate(rotation=45)
-            ax.tick_params(labelsize=8)
+            fig.autofmt_xdate(rotation=45)#rotation de l'axe date pour eviter chevauchement
+            ax.tick_params(labelsize=8)#taille de police des valeurs et les titres des axes
         self.calories_canvas, self.calories_widget = self._embed(fig, card)
 
     def _chart_macros_pie_grid(self, parent, row, col):
@@ -306,13 +306,13 @@ class StatsPage(ctk.CTkFrame):
         card = self._create_card(parent, "Macros du dernier repas")
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
 
-        avg_p = self.macrosToday["proteins"]
-        avg_c = self.macrosToday["carbohydrate"]
-        avg_f = self.macrosToday["fats"]
+        proteins = self.macrosToday["proteins"]
+        carbohydrate = self.macrosToday["carbohydrate"]
+        fats = self.macrosToday["fats"]
         values = [
-            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
-            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
-            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
+            proteins if math.isfinite(proteins) and proteins > 0 else 0,
+            carbohydrate if math.isfinite(carbohydrate) and carbohydrate > 0 else 0,
+            fats if math.isfinite(fats) and fats > 0 else 0,
         ]
         fig, ax = plt.subplots(figsize=(4, 2.5))
         total = sum(values)
@@ -335,7 +335,7 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         ax.set_position((0.15, 0.1, 0.7, 0.8))
-        fig.tight_layout()
+        fig.tight_layout()#margin
         if total > 0:
             ax.legend(
                 MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5), fontsize=8
@@ -353,13 +353,13 @@ class StatsPage(ctk.CTkFrame):
         card = self._create_card(parent, "Comparaison du dernier repas")
         card.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
 
-        avg_p = self.macrosToday["proteins"]
-        avg_c = self.macrosToday["carbohydrate"]
-        avg_f = self.macrosToday["fats"]
+        proteins = self.macrosToday["proteins"]
+        carbohydrate = self.macrosToday["carbohydrate"]
+        fats = self.macrosToday["fats"]
         values = [
-            avg_p if math.isfinite(avg_p) and avg_p > 0 else 0,
-            avg_c if math.isfinite(avg_c) and avg_c > 0 else 0,
-            avg_f if math.isfinite(avg_f) and avg_f > 0 else 0,
+            proteins if math.isfinite(proteins) and proteins > 0 else 0,
+            carbohydrate if math.isfinite(carbohydrate) and carbohydrate > 0 else 0,
+            fats if math.isfinite(fats) and fats > 0 else 0,
         ]
         fig, ax = plt.subplots(figsize=(4, 2.5))
         total = sum(values)
@@ -415,6 +415,7 @@ class StatsPage(ctk.CTkFrame):
         self._draw_caracteristics_chart(card)
 
     def _draw_caracteristics_chart(self, card):
+        #draw all caracteristics  with the option to choose the time delay
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not self.macrosDated["proteins"]:
             ax.text(
