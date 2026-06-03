@@ -18,8 +18,9 @@ class StatsController:
         préparer données pour les plot
         à partir des eating habits genere des données par date
 
-        returns : 
-            dictionnaire avec comme values des dictionnaire avec comme key date et comme values float"""
+        returns :
+            dictionnaire avec comme values des dictionnaire avec comme key date et comme values float
+        """
         result = {"calories": {}, "carbohydrate": {}, "proteins": {}, "fats": {}}
 
         if self.main_controller.current_profile is None:
@@ -210,6 +211,7 @@ class StatsController:
             self.main_controller.settings.serialize(settings_path)
         # Garder aussi en mémoire dans le contrôleur pour la vue actuelle
         self.mesures_corporelles.append(mesure)
+        self.refresh_corpo_only()
         return self.mesures_corporelles
 
     def get_mesures_corporelles(self):

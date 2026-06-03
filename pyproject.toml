@@ -14,7 +14,7 @@ dependencies = [
     "mypy-extensions==1.1.0",
     "packaging==26.1",
     "pathspec==1.0.4",
-    "pillow==11.0.0",
+    "pillow==12.2.0",
     "platformdirs==4.9.6",
     "python-dateutil==2.9.0",
     "pytokens==0.4.1",
