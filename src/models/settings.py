@@ -19,9 +19,9 @@ class Settings(JsonSerializable):
         self.theme = "#2DBA7F"  # Nom du thème (couleur)
         self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
-        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)
+        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)#création du dossier si pas déja fait
         # créer le fichier settings.json s'il n'existe pas déjà
-        if not os.path.isfile(SETTINGS_PATH):
+        if not os.path.isfile(SETTINGS_PATH):#verification d'existence du fichier
             self.serialize(
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales

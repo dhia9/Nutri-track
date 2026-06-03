@@ -29,10 +29,10 @@ class StatsController:
         menus_end_to_end = self.menus_all_dates()
 
         for menu in menus_end_to_end.values():
-            if not hasattr(menu, "date") or not hasattr(menu, "content"):
+            if not hasattr(menu, "date") or not hasattr(menu, "content"):#vérifier l'existence d'attributs
                 continue
 
-            date = datetime.fromisoformat(menu.date).date()  # <-- JOUR UNIQUEMENT
+            date = datetime.fromisoformat(menu.date).date()
 
             if date not in result["calories"]:
                 result["calories"][date] = 0
@@ -44,7 +44,6 @@ class StatsController:
                 if food_menu.macros:
                     macro = food_menu.macros[0]
                     ratio = food_menu.quantity / 100
-
                     result["calories"][date] += macro.calorie * ratio
                     result["proteins"][date] += macro.proteine * ratio
                     result["carbohydrate"][date] += macro.carbohydrate * ratio
@@ -81,7 +80,7 @@ class StatsController:
         for menu in self.main_controller.current_profile.eating_habits:
             if menu.date.startswith(
                 date_str
-            ):  # Vérifier si le menu correspond à la date donnée
+            ):
                 profile_menus[menu.date] = menu
         return profile_menus
 
@@ -116,35 +115,6 @@ class StatsController:
             Le profil Profile actuel ou None.
         """
         return self.main_controller.current_profile
-
-    def generate_history(self, days=30):
-        """Génére un historique de données sur un nombre de jours.
-
-        Returns des données aléatoires pour les tests.
-
-        Args:
-            days: Le nombre de jours d'historique à générer.
-
-        Returns:
-            Liste de dictionnaires contenant les données par jour.
-        """
-        history = []
-        today = datetime.today()
-        for i in range(days):
-            date = today - timedelta(days=(days - i))
-            history.append(
-                {
-                    "date": date.strftime("%Y-%m-%d"),
-                    "calories": random.randint(1800, 2600),
-                    "proteins": random.randint(70, 140),
-                    "carbohydrate": random.randint(150, 300),
-                    "fats": random.randint(40, 90),
-                    "salt": round(random.uniform(3, 9), 1),
-                    "sugar": round(random.uniform(20, 70), 1),
-                }
-            )
-        return history
-
     def mesure_avg(self, data, macro_type):
         """Calcule la moyenne d'un type de macro pour une liste de données.
 
@@ -167,7 +137,7 @@ class StatsController:
         returns:None
         """
         self.view.date_label.configure(
-            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()
+            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()#current date in the app not the actual date (now)
         )
 
     def previous_day(self, event):
@@ -202,7 +172,7 @@ class StatsController:
             mesure:Model mesure_coporelles
         Returns:
             None"""
-        if self.main_controller.current_profile is not None:
+        if self.main_controller.current_profile:
             self.main_controller.current_profile.mesures_corporelles.append(mesure)
             # Sauvegarder les modifications dans le fichier JSON
             settings_path = os.path.join(
@@ -221,7 +191,7 @@ class StatsController:
         Returns:
             None
         """
-        if self.main_controller.current_profile is not None:
+        if self.main_controller.current_profile:
             return self.main_controller.current_profile.mesures_corporelles
         return []
 
@@ -236,7 +206,7 @@ class StatsController:
             None
 
         """
-        for child in self.view.scroll.winfo_children():
+        for child in self.view.scroll.winfo_children():#widgets enfant du parent scroll
             child.destroy()
         self.view.table_rows = []
         self.view._render_all_charts()
@@ -261,6 +231,7 @@ class StatsController:
         row_widget = []
 
         for col, value in enumerate(values):
+            # fonction enumerate méthode utile pour avoir value et colonne (indice)
             label = ctk.CTkLabel(self.view.tableau_frame, text=value)
             label.grid(row=len(self.view.table_rows) + 1, column=col, padx=35, pady=5)
             row_widget.append(label)
@@ -270,6 +241,8 @@ class StatsController:
     def change_period(self, days, type):
         """
         Met à jour la durée , puis rafraîchit la vue.
+        methode optimiser pour refresh que la widget modifiée au lieu de recharger toute 
+        la vue ou tous les graphs.
         Parameters:
         days : int
             Nombre de jours à appliquer pour la période.
@@ -292,6 +265,10 @@ class StatsController:
             self.refresh_corpo_only()
 
     def refresh_calories_only(self):
+        """
+        refresh la widget et dans ce cas là la canva 
+        returns :
+            None"""
         self.macrosDated = self.macros_by_date()
         data = self.macrosDated["calories"]
         if self.view.calories_canvas:
@@ -302,6 +279,7 @@ class StatsController:
         self.view._draw_calories_chart(self.view.calories_card, data)
 
     def refresh_macro_only(self):
+        #refresh en détruisant la widget et en suite la recréer
         self.macrosDated = self.macros_by_date()
         if self.view.macro_widget:
             self.view.macro_widget.destroy()
@@ -309,7 +287,7 @@ class StatsController:
         self.view._draw_caracteristics_chart(self.view.macros_card)
 
     def refresh_corpo_only(self):
-
+        #refresh en détruisant la widget et en suite la recréer
         if self.view.corpo_widget:
             self.view.corpo_widget.destroy()
             self.view.corpo_widget = None
