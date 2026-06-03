@@ -127,6 +127,11 @@ les utilisateurs souhaitant suivre et améliorer leur alimentation.
 -Menus suggérer ---> nous donne des aliments pas pertinents
 il faut prendre en compte le type d'aliment pour ne pas proposer du lait en poudre ou de la menthe par exemple 
 
+avoir une meilleure base de données/gestion pour pas de bug
+avoir une meilleure interface/exp utilisateur pour avoir une meilleure gestion du facteur d'actitivté
+réduire temps d'affichage à chaque actualisation de la page (changement thème, couleur)
+complexité page statistique pour le temps affichage
+
 
 ---
 
