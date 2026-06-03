@@ -125,6 +125,9 @@ les utilisateurs souhaitant suivre et améliorer leur alimentation.
 
 ## 6. Perspectives
 -Menus suggérer ---> nous donne des aliments pas pertinents
+il faut prendre en compte le type d'aliment pour ne pas proposer du lait en poudre ou de la menthe par exemple 
+
+
 ---
 
 ## Annexes Utilisation de l'IA
