@@ -124,13 +124,15 @@ temporelles. Nous sommes fiers du travail accompli et confiants que NutriTrack p
 les utilisateurs souhaitant suivre et améliorer leur alimentation.
 
 ## 6. Perspectives
--Menus suggérer ---> nous donne des aliments pas pertinents
-il faut prendre en compte le type d'aliment pour ne pas proposer du lait en poudre ou de la menthe par exemple 
+Axes d'amélioration identifiés
 
-avoir une meilleure base de données/gestion pour pas de bug
-avoir une meilleure interface/exp utilisateur pour avoir une meilleure gestion du facteur d'actitivté
-réduire temps d'affichage à chaque actualisation de la page (changement thème, couleur)
-améliorer complexité page statistique pour le temps affichage
+Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
+
+Base de données : La gestion des données doit être améliorée pour éviter les bugs rencontrés lors de l'utilisation.
+
+Interface utilisateur : L'interface doit être retravaillée pour rendre la saisie et la gestion du facteur d'activité plus intuitive car celle ci peut être difficile à comprendre.
+
+Performances d'affichage : Le temps de chargement lors du changement de thème ou de couleur est trop long et doit être réduit. De même, la page des statistiques gagnerait à être optimisée pour s'afficher plus rapidement.
 
 
 ---
