@@ -1,4 +1,18 @@
-# Nutritrack
+<p align="center">
+  <img src="src/assets/images/Logo_sans_txt.png" alt="Logo" width="150" height="80">
+  <h1 align="center">Nutritrack</h1>
+  <p align="center">
+    Application de suivi nutritonnel.<br /> NutriTrack est un projet de développement d'une application de suivi nutritionnel, réalisé dans le cadre du module ISN4.
+    <br />
+    <a href="https://gitlab.insa-lyon.fr/melhamdeou/nutritrack">GitLab</a>
+    ·
+    <a href="Architecture.md">Architecture</a>
+    ·
+    <a href="RAPPORT_EVALUATION.md">Rapport</a>
+
+  </p>
+</p>
+
 
 NutriTrack est une application desktop développée en Python, permettant à chaque utilisateur de :
 
@@ -9,19 +23,29 @@ NutriTrack est une application desktop développée en Python, permettant à cha
 - Être alerté en cas de dépassement de seuils critiques (sel, sucre, lipides saturés, etc.)
 
 ## Installation
-### Avec pip
+
+Cloner le repo git et se placer dans le dossier du projet.
+
 ```shell
-py -m venv venv
-venv\Scripts\activate # Pour Windows, sur Linux/Mac : source venv/bin/activate
-pip install -r requirements.txt
+git clone https://gitlab.insa-lyon.fr/melhamdeou/nutritrack # fonctionne uniquement sur le BV ou via le VPN de l'INSA
+cd nutritrack
+```
+
+### Avec pip (fonctionne sur le BV)
+
+```shell
+python -m venv venv
+source venv/bin/activate # Pour Linux, sur Windows : venv\Scripts\activate
+pip install -r REQUIREMENTS.txt
 python main.py # lancer l'application
 ```
 
 ### Avec uv
+
 ```shell
 uv venv
-.venv\Scripts\activate # Pour Windows, sur Linux/Mac : source .venv/bin/activate
-uv add -r requirements.txt
+source .venv/bin/activate # Pour Linux, sur Windows : .\venv\Scripts\activate
+uv add -r REQUIREMENTS.txt
 uv run main.py # lancer l'application
 ```
 
@@ -30,6 +54,17 @@ uv run main.py # lancer l'application
 Les données sont issues du site [ciqual.anses.fr](https://ciqual.anses.fr/), qui fournit une base de données complète
 sur la composition nutritionnelle des aliments. Cette base de données est intégrée dans l'application pour permettre aux
 utilisateurs de rechercher et d'ajouter facilement des aliments à leur suivi nutritionnel.
+
+## Dépendances
+
+- `customtkinter` : pour l'interface graphique
+- `Pillow` : pour la manipulation d'images
+- `matplotlib` : pour les graphiques statistiques
+- `numpy` : pour les calculs numériques
+- `python-dateutil` : pour la gestion des dates
+- `black` : pour le formatage du code
+- `appdirs` : pour la gestion des chemins de fichiers spécifiques à l'application
+- `platformdirs` : pour la création de répertoires de manière multiplateforme
 
 # Algorithme de génération de menu
 
@@ -84,7 +119,8 @@ score = 0.35 * écart_calories
       + bruit,  valeur aléatoire (faible) : évite des menus identiques
 ```
 
-Les coefficients sont choisis pour pondérer davantage les calories et les protéines, qui sont souvent les macros les plus critiques à ajuster.
+Les coefficients sont choisis pour pondérer davantage les calories et les protéines, qui sont souvent les macros les
+plus critiques à ajuster.
 
 L'écart est calculé comme `1 − |1 − ratio|`, où `ratio = apport / cible` (plafonné à 2). Un aliment déjà utilisé dans la
 journée ou dans le repas est exclu.
@@ -122,4 +158,5 @@ On répète les étapes 3-4 jusqu'à **4 aliments** ou jusqu'à ce que le budget
 
 - L'algorithme est **glouton** : il ne revient jamais sur un choix, ce qui peut produire des repas sous-optimaux si les
   aliments disponibles sont peu nombreux.
-- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
+- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre,
+  menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
