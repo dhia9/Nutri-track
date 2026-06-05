@@ -8,26 +8,22 @@
 
 ## 1. Introduction et Contexte
 
-### 1.1 Présentation du projet
-
 **NutriTrack** est une application proposant un suivi nutritionnel local et simple d'utilisation, permettant à chaque
 utilisateur de mieux gérer son alimentation et d'atteindre ses objectifs physiques personnalisés (perte/maintien/prise
 de masse).
-
-### 1.2 Cahier des charges
 
 Nous vous invitons à consulter le premier rendu expliquant les différentes fonctionnalités de l'application, les besoins
 fonctionnels et non fonctionnels, ainsi que les contraintes techniques.
 
 **Stack technique finale retenue :**
 
-| Composant           | Technologie             | Justification                                                                                                                  |
-|---------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------|
-| Langage             | Python 3.14             | Langage accessible, riche en bibliothèques scientifiques                                                                       |
-| Interface graphique | CustomTkinter + Tkinter | Widgets modernes, natifs, cross-platform                                                                                       |
-| Stockage            | JSON                    | Format léger, rapide, lisible, pas besoin de base de données complexe                                                          |
-| Visualisation       | Matplotlib              | Libraire standard pour les graphiques statiques en Python                                                                      |
-| Base alimentaire    | fichier JSON partagé    | Données statiques à partir de [CIQUAL](https://ciqual.anses.fr/) (récupérer en XLSX et convertie en JSON via l'IA (Claude IA)) |
+| Composant        | Technologie          | Justification                                                                                                                  |
+|------------------|----------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Langage          | Python 3.14          | Langage accessible, riche en bibliothèques scientifiques                                                                       |
+| IHM              | CustomTkinter        | Widgets modernes, natifs, cross-platform                                                                                       |
+| Stockage         | JSON                 | Format léger, rapide, lisible, pas besoin de base de données complexe                                                          |
+| Visualisation    | Matplotlib           | Libraire standard pour les graphiques statiques en Python                                                                      |
+| Base alimentaire | fichier JSON partagé | Données statiques à partir de [CIQUAL](https://ciqual.anses.fr/) (récupérer en XLSX et convertie en JSON via l'IA (Claude IA)) |
 
 ## 2. Modularité et Architecture
 
@@ -98,47 +94,31 @@ estimation basée sur les volumes de données manipulés par l’application.
 
 Ces coûts sont limités notamment par l'usage de `set` et de dictionnaires pour certaines comparaisons.
 
-## 4. Engagement et Implications des Membres
+## 4. Perspectives
 
-Qui a travaillé sur quelle partie du projet ?
+Axes d'amélioration identifiés
 
-- Léo : Chef de projet, architecture globale, sérialisation, algorithme de recommendation des menus, gestion de
-  projet, intégration, tests unitaires,
-  documentation. Contrôle qualité et revue des merge requests.
-- Nolan : Gestion de la base de données, implémentation des modèles, mesures corporelles, page statistiques, page
-  paramètres, système de thème et de personnalisation, controlleurs.
-- Dhia : implémentation de la logique métier (calcul des apports, implémentation des modèles, détection de dépassement,
-  recommandations), gestion des profils, gestion des données utilisateur, tests, page statistiques, stats_controller,
-  IHM suggestion de menus (fenêtre secondaire suggestedMenus et nutrition_controller).
-- Yanis : implémentation de la logique métier, page nutrition, page d'accueil, système de pagination, optimisations,
-  création de
-  l'interface utilisateur, fenêtres secondaires (ajout d'aliments, controlleur menus favoris, etc.)
-- Marouan : Réalisation de Main, Home et Nutrition Controller. Developpement Tkinter de CTKMessageBox. Ajout des
-  fenetres secondaire lié à Nutrition Page (Food_quantity.py, Fav_Win.py) et ajout du Logo (conceptionné par Gemini
-  IA).
+- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre,
+  menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
+
+- Base de données : La gestion des données doit être améliorée pour éviter les bugs rencontrés lors de l'utilisation.
+
+- Interface utilisateur : L'interface doit être retravaillée pour rendre la saisie et la gestion du facteur d'activité
+  plus intuitive car celle ci peut être difficile à comprendre.
+
+- Performances d'affichage : Le temps de chargement lors du changement de thème ou de couleur est trop long et doit être
+  réduit. De même, la page des statistiques doit être optimisée pour s'afficher plus rapidement.
 
 ## 5. Conclusion
 
-Nous avons réussi à créer une application fonctionnelle répondant
+Nous avons ainsi réussi à créer une application fonctionnelle répondant
 aux besoins définis dans le cahier des charges (et même plus !), tout en respectant les contraintes techniques et
 temporelles. Nous sommes fiers du travail accompli et confiants que NutriTrack pourra être un outil utile pour
 les utilisateurs souhaitant suivre et améliorer leur alimentation.
 
-## 6. Perspectives
-Axes d'amélioration identifiés
-
-- Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre, menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
-
-- Base de données : La gestion des données doit être améliorée pour éviter les bugs rencontrés lors de l'utilisation.
-
-- Interface utilisateur : L'interface doit être retravaillée pour rendre la saisie et la gestion du facteur d'activité plus intuitive car celle ci peut être difficile à comprendre.
-
-- Performances d'affichage : Le temps de chargement lors du changement de thème ou de couleur est trop long et doit être réduit. De même, la page des statistiques doit être optimisée pour s'afficher plus rapidement.
-
-
 ---
 
-## Annexes Utilisation de l'IA
+## Annexes - Utilisation de l'IA
 
 Nous avons utilisé l'IA à plusieurs étapes du projet pour accélérer le développement et améliorer la qualité du code :
 Nous avons utilisé l'IA pour générer des morceaux de code, notamment pour la logique de
@@ -189,3 +169,25 @@ string, while the deserialize() method should create an object from a JSON strin
 
 Ce prompt a donné une classe trop complexe pour notre niveau et avons choisi d'implémenter manuellement la logique de
 désérialisation.
+
+4. Génération du fichier tests.py
+
+Ce fichier permet de lancer tous les tests dans les fichiers Python situés dans `src/tests/` et d'afficher un rapport de
+test détaillé.
+
+```text
+Génère un fichier tests.py permerttant de lancer tous les tests dans les fichiers Python situés dans src/tests/ 
+et d'afficher un rapport de test détaillé. Tu dois utiliser le format imposé suivant :
+if fonction(param) == expected_output:
+    return True
+else:
+    return False
+```
+
+5. Parsing de la base de données CIQUAL
+
+```text 
+Je veux que tu génère un fichier JSON contenant les données de la base de données CIQUAL
+à partir du fichier XLSX que je t'ai fourni. Le fichier JSON doit être structuré de manière à ce que chaque
+aliment soit représenté par les classes que je te joins également. <Fichiers joints>
+```

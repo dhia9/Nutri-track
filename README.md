@@ -1,5 +1,4 @@
 <p align="center">
-  <img src="src/assets/images/Logo_sans_txt.png" alt="Logo" width="150" height="80">
   <h1 align="center">Nutritrack</h1>
   <p align="center">
     Application de suivi nutritonnel.<br /> NutriTrack est un projet de développement d'une application de suivi nutritionnel, réalisé dans le cadre du module ISN4.
@@ -13,6 +12,7 @@
   </p>
 </p>
 
+----
 
 NutriTrack est une application desktop développée en Python, permettant à chaque utilisateur de :
 
@@ -34,10 +34,10 @@ cd nutritrack
 ### Avec pip (fonctionne sur le BV)
 
 ```shell
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate # Pour Linux, sur Windows : venv\Scripts\activate
 pip install -r REQUIREMENTS.txt
-python main.py # lancer l'application
+python3 main.py # lancer l'application
 ```
 
 ### Avec uv
@@ -53,7 +53,12 @@ uv run main.py # lancer l'application
 
 Les données sont issues du site [ciqual.anses.fr](https://ciqual.anses.fr/), qui fournit une base de données complète
 sur la composition nutritionnelle des aliments. Cette base de données est intégrée dans l'application pour permettre aux
-utilisateurs de rechercher et d'ajouter facilement des aliments à leur suivi nutritionnel.
+utilisateurs de rechercher et d'ajouter facilement des aliments à leur suivi nutritionnel. Les données sont stockées au
+format JSON dans le dossier `src/data/data.json` et sont chargées en mémoire au démarrage de l'application.
+Afin d'éviter de surcharger l'application et l'IHM, nous avons implémenté une pagination pour l'affichage des aliments,
+limitant le nombre d'aliments affichés à 20 par page. Nous avons également fait un nettoyage manuel pour supprimer les
+aliments redondants ou peu pertinents (ex : "eau du robinet", "lait en poudre", etc.), afin d'améliorer l'expérience
+utilisateur et la pertinence des suggestions de menus.
 
 ## Dépendances
 
@@ -65,6 +70,61 @@ utilisateurs de rechercher et d'ajouter facilement des aliments à leur suivi nu
 - `black` : pour le formatage du code
 - `appdirs` : pour la gestion des chemins de fichiers spécifiques à l'application
 - `platformdirs` : pour la création de répertoires de manière multiplateforme
+
+## Organisation du code
+
+Voir [Architecture.md](Architecture.md) pour une description détaillée de l'architecture logicielle, des classes et de
+leurs interactions.
+
+```
+NUTRITRACK/
+│
+├── src/                            # Code source de l'application
+│   ├── views/                      # UI (CustomTkinter)
+│   ├── controllers/                # Orchestration / événements
+│   ├── models/                     # Domaine
+│   ├── data/                       # Accès aux données
+│   ├── utils/                      # Fonctions utilitaires (ex: serialisation JSON)
+│   └── assets/                     # Ressources statiques
+│       └── images/
+├── venv/
+├── main.py                         # Point d'entrée de l'application
+├── tests.py                        # Permet de lancer tous les tests unitaires
+├── .gitignore
+├── cahier-des-charges.md
+├── Architecture.md                 
+├── README.md
+└── REQUIREMENTS.txt                # Dépendances du projet
+```
+
+# Fonctionnalités
+
+## Page d'accueil
+
+La page d'accueil permet de créer un profil utilisateur ou de se connecter à un profil existant en renseignant les
+champs nécessaires.
+
+## Page de suivi nutritionnel
+
+- Affiche les apports nutritionnels du jour, avec une répartition par repas.
+- Permet d'ajouter des aliments à chaque repas, en recherchant dans la base de données.
+- Permet de visualiser les macros consommés et restants pour la journée.
+- Permet de générer un menu recommandé pour le repas en cours, en fonction des besoins nutritionnels restants.
+- Permet de marquer des menus comme favoris pour une utilisation future.
+- Permet de supprimer des aliments ou des repas entiers.
+- Affiche un historique des repas consommés, avec la possibilité de consulter les détails de chaque repas.
+
+## Page statistiques
+
+- Affiche des graphiques sur les apports nutritionnels sur une période donnée (semaine, mois).
+- Permet de visualiser la répartition des macros sur une période donnée.
+- Permet de saisir des mesures corporelles (poids, tour de taille, etc.) et de suivre leur évolution.
+
+## Page paramètres
+
+- Permet de modifier les informations du profil (poids, taille, âge, objectif).
+- Permet de choisir un thème d'affichage (clair/sombre).
+- Permet de supprimer le profil.
 
 # Algorithme de génération de menu
 
@@ -160,3 +220,27 @@ On répète les étapes 3-4 jusqu'à **4 aliments** ou jusqu'à ce que le budget
   aliments disponibles sont peu nombreux.
 - Suggestions de menus : L'algorithme de suggestion propose parfois des aliments non pertinents (ex : lait en poudre,
   menthe). Il faudrait mieux prendre en compte le type de chaque aliment pour avoir de meilleures recommandations.
+
+# Crédits
+
+## Auteurs
+
+- Yanis Belaid <yanis.belaid@insa-lyon.fr>
+- Marouan El-Hamdeoui <marouan.el-hamdeoui@insa-lyon.fr>
+- Nolan Mahadali <nolan.mahadali@insa-lyon.fr>
+- Léo Peyronnet <leo.peyronnet@insa-lyon.fr>
+- Dhia Somai <dhia.somai@insa-lyon.fr>
+
+## Participation
+
+| Auteur  | Rôle                                                                                                                                                                                                                                                                                                                     | Pourcentage |
+|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| Léo     | Chef de projet, architecture globale, sérialisation, algorithme de recommendation des menus, gestion de projet, intégration, tests unitaires, documentation. Contrôle qualité et revue des merge requests.                                                                                                               | 20%         |
+| Nolan   | Gestion de la base de données, implémentation des modèles, mesures corporelles, page statistiques, page paramètres, système de thème et de personnalisation, controlleurs.                                                                                                                                               | 20%         |
+| Dhia    | Implémentation de la logique métier (calcul des apports, implémentation des modèles, détection de dépassement, recommandations), gestion des profils, gestion des données utilisateur, tests, page statistiques, stats_controller, IHM suggestion de  menus (fenêtre secondaire suggestedMenus et nutrition_controller). | 20%         |
+| Yanis   | Implémentation de la logique métier, page nutrition, page d'accueil, système de pagination, optimisations, création de l'interface utilisateur, fenêtres secondaires (ajout d'aliments, controlleur menus favoris, etc.).                                                                                                | 20%         |
+| Marouan | Réalisation de Main, Home et Nutrition Controller. Developpement Tkinter de CTKMessageBox. Ajout des fenetres secondaire lié à Nutrition Page (food_quantity.py, fav_win.py) et ajout du Logo (conceptionné par Gemini IA).                                                                                              | 20%         | 
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
