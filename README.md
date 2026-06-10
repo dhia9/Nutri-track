@@ -37,7 +37,7 @@ cd nutritrack
 python3 -m venv venv
 source venv/bin/activate # Pour Linux, sur Windows : venv\Scripts\activate
 pip install -r REQUIREMENTS.txt
-python3 main.py # lancer l'application
+python3 main.pyw # lancer l'application
 ```
 
 ### Avec uv
@@ -46,8 +46,22 @@ python3 main.py # lancer l'application
 uv venv
 source .venv/bin/activate # Pour Linux, sur Windows : .\venv\Scripts\activate
 uv add -r REQUIREMENTS.txt
-uv run main.py # lancer l'application
+uv run main.pyw # lancer l'application
 ```
+
+## Profil de démonstration
+
+Pour ajouter un profil de demonstration, lancer le programme python ```add_exemple.py```.
+Cela ajoutera un profil "Demonstration" (si un profil du même nom n'existe pas).
+Ce profil comprend des données sur 7 jours (du 08/06/2026 au 14/06/2026) notamment :
+
+- des plats consommés
+- des plats favoris
+- des mesures corporelles
+
+Cela permet de mettre à jours les différentes courbes de la partie Statistique et de rendre plus sûr la suggestion des menus.
+
+(Le fichier ```./src/assets/examples/profile_example.json``` a été généré par IA (claude IA) en se basant sur le fichier ```data.json``` pour les données des aliments et sur le fichier ```settings.json``` pour la structure du fichier)
 
 ## Base de données
 

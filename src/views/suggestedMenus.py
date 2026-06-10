@@ -4,7 +4,7 @@ import customtkinter as ctk
 class SuggestedMenuWindow(ctk.CTkToplevel):
     def __init__(self, parent, main_controller):
         super().__init__(parent)
-        self.list_menus_fav = main_controller.settings.favorites_menus
+        self.list_menus_fav = main_controller.current_profile.favorites_menus if main_controller.current_profile else set()
         self.main_controller = main_controller
         self.nutrition_controller = main_controller.controllers.get("Nutrition")
         self.controller = self.main_controller.controllers["Nutrition"]

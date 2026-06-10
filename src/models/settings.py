@@ -17,9 +17,8 @@ class Settings(JsonSerializable):
         self.profiles = []
         self.appearance_mode = "dark"  # Mode d'apparence (dark/light)
         self.theme = "#2DBA7F"  # Nom du thème (couleur)
-        self.favorites_menus: set[Menu] = set()  # Set pour stocker les menus favoris
 
-        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True)#création du dossier si pas déja fait
+        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True) #création du dossier si pas déja fait
         # créer le fichier settings.json s'il n'existe pas déjà
         if not os.path.isfile(SETTINGS_PATH):#verification d'existence du fichier
             self.serialize(
@@ -150,34 +149,34 @@ class Settings(JsonSerializable):
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)
 
-            # Charger les menus favoris s'ils existent dans le JSON
-            if "favorites_menus" in data:
-                for data_menu in data["favorites_menus"]:
-                    # Initialiser un objet Menu avec ses attributs
-                    menu = Menu(data_menu["date"])
+                # Charger les menus favoris s'ils existent 
+                if "favorites_menus" in data_profile:
+                    for data_menu in data_profile["favorites_menus"]:
+                        # Initialiser un objet Menu avec ses attributs
+                        menu = Menu(data_menu["date"])
 
-                    # Peupler le contenu du Menu par extraction des informations dans la liste content
-                    for data_food in data_menu["content"]:
-                        # Création d'un plat/aliment avec ses attributs
-                        food = FoodMenu(data_food["quantity"], data_food["name"])
+                        # Peupler le contenu du Menu par extraction des informations dans la liste content
+                        for data_food in data_menu["content"]:
+                            # Création d'un plat/aliment avec ses attributs
+                            food = FoodMenu(data_food["quantity"], data_food["name"])
 
-                        # Extraire les macros / propriétés du plat en parcourant la liste
-                        for data_macro in data_food["macros"]:
-                            # Ajouter le Macro à la liste des macros
-                            food.macros.append(
-                                Macro(
-                                    data_macro["masse"],
-                                    data_macro["proteine"],
-                                    data_macro["calorie"],
-                                    data_macro["fat"],
-                                    data_macro["carbohydrate"],
+                            # Extraire les macros / propriétés du plat en parcourant la liste
+                            for data_macro in data_food["macros"]:
+                                # Ajouter le Macro à la liste des macros
+                                food.macros.append(
+                                    Macro(
+                                        data_macro["masse"],
+                                        data_macro["proteine"],
+                                        data_macro["calorie"],
+                                        data_macro["fat"],
+                                        data_macro["carbohydrate"],
+                                    )
                                 )
-                            )
-                        # Ajouter le plat / aliment au menu
-                        menu.content.append(food)
+                            # Ajouter le plat / aliment au menu
+                            menu.content.append(food)
 
-                    # Ajouter le menu au set des menus favoris
-                    self.favorites_menus.add(menu)
+                        # Ajouter le menu à la liste des menus favoris du profil
+                        profile.favorites_menus.add(menu)
 
         except FileNotFoundError:
             # s'il n'y a pas de fichier, réinitialiser les profils à une liste vide
