@@ -83,7 +83,7 @@ class SettingsPage(ctk.CTkFrame):
                 self.frame_carre_noir,
                 validate="key",
                 validatecommand=(
-                    self.register(self.main_controller.validate_int),
+                    self.register(self.main_controller.validate_float),
                     "%P",
                 ),
             )

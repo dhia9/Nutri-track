@@ -13,7 +13,11 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             main_controller: Le contrôleur principal de l'application.
         """
         super().__init__(parent)
-        self.list_menus_fav = main_controller.current_profile.favorites_menus if main_controller.current_profile else set()
+        self.list_menus_fav = (
+            main_controller.current_profile.favorites_menus
+            if main_controller.current_profile
+            else set()
+        )
         self.main_controller = main_controller
         self.nutrition_controller = main_controller.controllers.get("Nutrition")
 

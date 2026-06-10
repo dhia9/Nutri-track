@@ -29,7 +29,9 @@ class StatsController:
         menus_end_to_end = self.menus_all_dates()
 
         for menu in menus_end_to_end.values():
-            if not hasattr(menu, "date") or not hasattr(menu, "content"):#vérifier l'existence d'attributs
+            if not hasattr(menu, "date") or not hasattr(
+                menu, "content"
+            ):  # vérifier l'existence d'attributs
                 continue
 
             date = datetime.fromisoformat(menu.date).date()
@@ -78,9 +80,7 @@ class StatsController:
             return profile_menus
         date_str = date.strftime("%Y-%m-%d")  # Formater la date pour la comparaison
         for menu in self.main_controller.current_profile.eating_habits:
-            if menu.date.startswith(
-                date_str
-            ):
+            if menu.date.startswith(date_str):
                 profile_menus[menu.date] = menu
         return profile_menus
 
@@ -115,6 +115,7 @@ class StatsController:
             Le profil Profile actuel ou None.
         """
         return self.main_controller.current_profile
+
     def mesure_avg(self, data, macro_type):
         """Calcule la moyenne d'un type de macro pour une liste de données.
 
@@ -137,7 +138,9 @@ class StatsController:
         returns:None
         """
         self.view.date_label.configure(
-            text=self.current_date.strftime("  %A %d %B %Y  ").capitalize()#current date in the app not the actual date (now)
+            text=self.current_date.strftime(
+                "  %A %d %B %Y  "
+            ).capitalize()  # current date in the app not the actual date (now)
         )
 
     def previous_day(self, event):
@@ -206,7 +209,9 @@ class StatsController:
             None
 
         """
-        for child in self.view.scroll.winfo_children():#widgets enfant du parent scroll
+        for (
+            child
+        ) in self.view.scroll.winfo_children():  # widgets enfant du parent scroll
             child.destroy()
         self.view.table_rows = []
         self.view._render_all_charts()
@@ -241,7 +246,7 @@ class StatsController:
     def change_period(self, days, type):
         """
         Met à jour la durée , puis rafraîchit la vue.
-        methode optimiser pour refresh que la widget modifiée au lieu de recharger toute 
+        methode optimiser pour refresh que la widget modifiée au lieu de recharger toute
         la vue ou tous les graphs.
         Parameters:
         days : int
@@ -266,7 +271,7 @@ class StatsController:
 
     def refresh_calories_only(self):
         """
-        refresh la widget et dans ce cas là la canva 
+        refresh la widget et dans ce cas là la canva
         returns :
             None"""
         self.macrosDated = self.macros_by_date()
@@ -279,7 +284,7 @@ class StatsController:
         self.view._draw_calories_chart(self.view.calories_card, data)
 
     def refresh_macro_only(self):
-        #refresh en détruisant la widget et en suite la recréer
+        # refresh en détruisant la widget et en suite la recréer
         self.macrosDated = self.macros_by_date()
         if self.view.macro_widget:
             self.view.macro_widget.destroy()
@@ -287,7 +292,7 @@ class StatsController:
         self.view._draw_caracteristics_chart(self.view.macros_card)
 
     def refresh_corpo_only(self):
-        #refresh en détruisant la widget et en suite la recréer
+        # refresh en détruisant la widget et en suite la recréer
         if self.view.corpo_widget:
             self.view.corpo_widget.destroy()
             self.view.corpo_widget = None

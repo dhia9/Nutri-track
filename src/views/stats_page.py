@@ -35,7 +35,7 @@ class StatsPage(ctk.CTkFrame):
         # Récupérer les couleurs du thème
         self.theme_colors = self.main_controller.theme_colors
         self.update_matplotlib_colors()
-        # attributs utiles pour refresh les graphs 
+        # attributs utiles pour refresh les graphs
         self.calories_canvas = None
         self.calories_widget = None
         self.macro_canvas = None
@@ -288,11 +288,15 @@ class StatsPage(ctk.CTkFrame):
             ax.set_ylabel("Calories", labelpad=10, fontsize=9)
             ax.legend(fontsize=8)
             ax.grid(True, linestyle="--", alpha=0.25)
-            ax.spines["top"].set_visible(False) # rendre bordure haut non visible
+            ax.spines["top"].set_visible(False)  # rendre bordure haut non visible
             ax.spines["right"].set_visible(False)
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%d"))
-            fig.autofmt_xdate(rotation=45)#rotation de l'axe date pour eviter chevauchement
-            ax.tick_params(labelsize=8)#taille de police des valeurs et les titres des axes
+            fig.autofmt_xdate(
+                rotation=45
+            )  # rotation de l'axe date pour eviter chevauchement
+            ax.tick_params(
+                labelsize=8
+            )  # taille de police des valeurs et les titres des axes
         self.calories_canvas, self.calories_widget = self._embed(fig, card)
 
     def _chart_macros_pie_grid(self, parent, row, col):
@@ -335,7 +339,7 @@ class StatsPage(ctk.CTkFrame):
             )
             ax.set_axis_off()
         ax.set_position((0.15, 0.1, 0.7, 0.8))
-        fig.tight_layout()#margin
+        fig.tight_layout()  # margin
         if total > 0:
             ax.legend(
                 MACRO_LABELS, loc="center left", bbox_to_anchor=(1, 0.5), fontsize=8
@@ -415,7 +419,7 @@ class StatsPage(ctk.CTkFrame):
         self._draw_caracteristics_chart(card)
 
     def _draw_caracteristics_chart(self, card):
-        #draw all caracteristics  with the option to choose the time delay
+        # draw all caracteristics  with the option to choose the time delay
         fig, ax = plt.subplots(figsize=(6, 2.5))
         if not self.macrosDated["proteins"]:
             ax.text(
@@ -702,7 +706,6 @@ class StatsPage(ctk.CTkFrame):
             for widget in self.table_rows[-1]:
                 widget.destroy()
             self.table_rows.pop()
-
 
     def _on_add_mesure(self, event):
         """

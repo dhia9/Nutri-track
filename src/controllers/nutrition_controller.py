@@ -8,7 +8,7 @@ import src.views.food_quantity as food_quantity
 import src.views.message_box as message_box
 import unicodedata
 from src.views.fav_win import FavorieMenuWindow
-from src.views.suggestedMenus import SuggestedMenuWindow
+from src.views.suggested_menus import SuggestedMenuWindow
 
 
 class NutritionController:
@@ -18,7 +18,9 @@ class NutritionController:
         self.current_profile = self.main_controller.current_profile
         self.current_date = datetime.now()
         self.favorite_menus = (
-            self.main_controller.current_profile.favorites_menus if self.main_controller.current_profile else set()
+            self.main_controller.current_profile.favorites_menus
+            if self.main_controller.current_profile
+            else set()
         )  # Récupérer les menus favoris depuis les paramètres
         self.suggested_menus = None
 
@@ -443,19 +445,19 @@ class NutritionController:
         fav_win = FavorieMenuWindow(self.view.winfo_toplevel(), self.main_controller)
         fav_win.wait_window()  # Attendre que la fenêtre soit fermée
 
-    def show_Suggested_menus(self, event=None):
+    def show_suggested_menus(self, event=None):
         """Affiche la fenêtre des menus proposés par l'algorithme"""
         nap = int(self.current_profile.suggestCaracteristics["nap"])
         meals_per_day = int(self.current_profile.suggestCaracteristics["meals_per_day"])
         self.suggested_menus = self.current_profile.generate_menu(
             self.main_controller.food_data, nap, meals_per_day
         )
-        Suggestion_win = SuggestedMenuWindow(
+        suggestion_win = SuggestedMenuWindow(
             self.view.winfo_toplevel(), self.main_controller
         )
-        Suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
+        suggestion_win.wait_window()  # Attendre que la fenêtre soit fermée
 
-    def mealPerD_change(self, event=None):
+    def meal_per_d_change(self, event=None):
         """Met à jour le nombre de repas par jour et sauvegarde."""
         try:
             meals_per_day = int(self.view.input_mealPerD.get())

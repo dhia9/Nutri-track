@@ -18,9 +18,11 @@ class Settings(JsonSerializable):
         self.appearance_mode = "dark"  # Mode d'apparence (dark/light)
         self.theme = "#2DBA7F"  # Nom du thème (couleur)
 
-        os.makedirs(appdirs.user_data_dir("Nutritrack"), exist_ok=True) #création du dossier si pas déja fait
+        os.makedirs(
+            appdirs.user_data_dir("Nutritrack"), exist_ok=True
+        )  # création du dossier si pas déja fait
         # créer le fichier settings.json s'il n'existe pas déjà
-        if not os.path.isfile(SETTINGS_PATH):#verification d'existence du fichier
+        if not os.path.isfile(SETTINGS_PATH):  # verification d'existence du fichier
             self.serialize(
                 SETTINGS_PATH
             )  # Créer un fichier JSON vide avec les données initiales
@@ -149,7 +151,7 @@ class Settings(JsonSerializable):
                 # Ajouter le profil à la liste des profils
                 self.profiles.append(profile)
 
-                # Charger les menus favoris s'ils existent 
+                # Charger les menus favoris s'ils existent
                 if "favorites_menus" in data_profile:
                     for data_menu in data_profile["favorites_menus"]:
                         # Initialiser un objet Menu avec ses attributs

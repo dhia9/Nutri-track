@@ -456,7 +456,7 @@ class NutritionPage(ctk.CTkFrame):
             0,
             str(self.controller.current_profile.suggestCaracteristics["meals_per_day"]),
         )
-        self.input_mealPerD.bind("<KeyRelease>", self.controller.mealPerD_change)
+        self.input_mealPerD.bind("<KeyRelease>", self.controller.meal_per_d_change)
         self.bouton_suggestion = ctk.CTkButton(
             self.suggestion_card,
             text="Suggérer",
@@ -470,7 +470,7 @@ class NutritionPage(ctk.CTkFrame):
         )
 
         self.bouton_suggestion.grid(row=2, column=2, columnspan=1, pady=(0, 10), padx=7)
-        self.bouton_suggestion.bind("<Button-1>", self.controller.show_Suggested_menus)
+        self.bouton_suggestion.bind("<Button-1>", self.controller.show_suggested_menus)
 
     def _configure_frame_grid(self, frame):
         """Factorisation : Configure la grille d'un frame avec poids égal"""
