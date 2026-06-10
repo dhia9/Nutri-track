@@ -13,7 +13,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
             main_controller: Le contrôleur principal de l'application.
         """
         super().__init__(parent)
-        self.list_menus_fav = main_controller.settings.favorites_menus
+        self.list_menus_fav = main_controller.current_profile.favorites_menus if main_controller.current_profile else set()
         self.main_controller = main_controller
         self.nutrition_controller = main_controller.controllers.get("Nutrition")
 
@@ -77,7 +77,6 @@ class FavorieMenuWindow(ctk.CTkToplevel):
     def display_favorite_menus(self):
         """Affiche la liste des menus favoris avec leur composition."""
         # Récupérer les menus favoris du profil actuel (actualiser depuis les settings)
-        self.list_menus_fav = self.main_controller.settings.favorites_menus
         favorite_menus_data = list(
             self.list_menus_fav
         )  # Convertir en liste pour itérer facilement
@@ -294,7 +293,7 @@ class FavorieMenuWindow(ctk.CTkToplevel):
         Args:
             menu: Le menu à supprimer.
         """
-        self.main_controller.settings.favorites_menus.discard(
+        self.main_controller.current_profile.favorites_menus.discard(
             menu
         )  # Supprimer du set des favoris
         self.display_favorite_menus()  # Rafraîchir l'affichage

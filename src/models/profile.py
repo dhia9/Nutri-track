@@ -28,6 +28,7 @@ class Profile(Model):
         self.eating_habits = []
         self.mesures_corporelles = []
         self.suggestCaracteristics = {"nap": 1.55, "meals_per_day": 3}
+        self.favorites_menus = set()
 
     def get_imc(self):
         """Calcule l'Indice de Masse Corporelle (IMC) du profil.

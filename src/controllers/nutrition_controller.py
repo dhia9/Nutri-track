@@ -18,7 +18,7 @@ class NutritionController:
         self.current_profile = self.main_controller.current_profile
         self.current_date = datetime.now()
         self.favorite_menus = (
-            self.main_controller.settings.favorites_menus
+            self.main_controller.current_profile.favorites_menus if self.main_controller.current_profile else set()
         )  # Récupérer les menus favoris depuis les paramètres
         self.suggested_menus = None
 
@@ -251,7 +251,10 @@ class NutritionController:
 
         if matching_favorite:
             # Enlever le favori avec la même composition
-            self.favorite_menus.remove(matching_favorite)
+            try:
+                self.favorite_menus.remove(matching_favorite)
+            except KeyError:
+                pass  # Si le menu n'était pas dans les favoris, ignorer l'erreur
         else:
             self.favorite_menus.add(menu)
         # Mettre à jour l'affichage
