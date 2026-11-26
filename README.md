@@ -9,7 +9,7 @@
     ·
     <a href="RAPPORT_EVALUATION.md">Rapport</a>
     ·
-    <a href="[RAPPORT_EVALUATION.md](https://github.com/user-attachments/assets/3470ed3e-adeb-4116-8b9c-839076bf0d3c)">Demo</a>
+    <a href="https://github.com/user-attachments/assets/3470ed3e-adeb-4116-8b9c-839076bf0d3c">Demo</a>
    
   </p>
 </p>
